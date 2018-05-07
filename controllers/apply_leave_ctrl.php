@@ -56,7 +56,7 @@ class apply_leave_ctrl extends CI_Controller{
 	$data['rptemail'] = $this->display_model->getrptemail($this->session->userdata('v_UserName'));
 	//echo "nilai email : " . $data['rptemail'][0]->v_email;
 	//exit();
-	$this->session->userdata('v_userid')
+	$this->session->userdata('v_userid');
 	$this->load->library('../controllers/email');
 	$this->email->send_mail_frmout($data['rptemail'][0]->v_email);
 	

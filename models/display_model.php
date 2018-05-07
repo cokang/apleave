@@ -934,7 +934,7 @@ parent::__construct();
 		return $query_result;
 	}
 	
-	function getrptemail($userid){
+	function getrptemail2($userid){
 		$this->db->select('a.v_email, a.v_UserName');
 		$this->db->from('pmis2_sa_user a');
 		$this->db->join('group b','a.v_UserID = b.group_sup_id ');

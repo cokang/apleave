@@ -5,12 +5,14 @@ class LoginController extends CI_Controller {
 	function __construct() {
         parent::__construct();
 		$this->load->helper(array('form','html','url','html'));
-		$this->load->model('loginModel');
+		$this->load->model('loginmodel');
 		
 	}
 	
-	 public function index(){
-            $this->load->view('Login');
+	
+	public function index($em=''){
+	 		$data['errormsg']=$em;
+            $this->load->view('Login',$data);
 	}
 	
 	
@@ -21,34 +23,48 @@ class LoginController extends CI_Controller {
   	$this->index();
 	}
 	
+	
+	
 	function validate_credentials()
 	{
-		$this->load->model('loginModel');
+		if($this->input->post("name") !="" && $this->input->post("password") !="" ){
+			$this->load->model('loginModel');
 		//$query = $this->loginModel->validate();
 		$queryu = $this->loginModel->validateu();
 		$this->load->model('outside_model');
 		$query = $this->outside_model->validate();
-		$this->load->model('loginModel');
-		if($query && $queryu)
-		{
-		
-			$data = array
-				('v_UserName'=>$this->input->post('name'),
-				'v_password' =>$this->input->post('password'),
-				 //'username'=>$session_data['i.file_name'],
-				'hosp_code'=>'IIUM',
-				'is_logged_in'=>TRUE,);
-			$this->session->set_userdata($data);
-		//print_r($data);
-		//exit();
-		
-			$url =site_url('Controllers/apply_leave');
-			redirect($url, 'refresh');
-		}
-		else
-		{
+//		$this->load->model('loginModel');
+//		print_r($queryu);
+//		print_r($query);
+//		exit();
+		//if($query && $queryu)
+		if($queryu)
+{			
+				$data = array
+					('v_UserName'=>$this->input->post('name'),
+					'v_password' =>$this->input->post('password'),
+					 //'username'=>$session_data['i.file_name'],
+					'hosp_code'=>'IIUM',
+					'is_logged_in'=>TRUE,);
+				$this->session->set_userdata($data);
+			//print_r($data);
+			//exit();
 			
-			$this->index();
+				$url =site_url('Controllers/apply_leave');
+				redirect($url, 'refresh');
+			}else{
+				$errormsg = '<span style="color:red"><i class="fa fa-exclamation-circle"></i> Username And Password Are Not Match.</span>';
+				$this->index($errormsg);
+			}
+		}else{
+			if($this->input->post("name")=="" && $this->input->post("password")==""){
+				$errormsg = '<span style="color:red"><i class="fa fa-exclamation-circle"></i> No Username And Password.</span>';
+			}elseif($this->input->post("password")=="" && $this->input->post("name")!=""){
+				$errormsg = '<span style="color:red"><i class="fa fa-exclamation-circle"></i> Please Enter Your Password.</span>';
+			}else{
+				$errormsg = '<span style="color:red"><i class="fa fa-exclamation-circle"></i> Please Enter Your Username.</span>';
+			}
+			$this->index($errormsg);
 		}
 	
 	}

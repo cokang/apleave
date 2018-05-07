@@ -21,7 +21,7 @@
                     <div class="col-sm-6">
                         <h4>Login To AdvancePact e-Leave <i class="fa fa-lock" area-hidden="true"></i></h4>
                         <h5>Enter Your Username And Password To Log On</h5>
-
+                        <?php echo $errormsg;?>
                         <?php $hidden = array('class' => 'login-form','role' => 'form');?>
                         <?php echo form_open('logincontroller/validate_credentials',$hidden);?>
                             <input type="text" placeholder="Username" id="form-username" name="name">

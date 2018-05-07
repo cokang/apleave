@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
+//date_default_timezone_set('Asia/Kuala_Lumpur');//or change to whatever timezone you want
 class Controllers extends CI_Controller {
 
 
@@ -7,7 +7,8 @@ class Controllers extends CI_Controller {
 	function do_upload(){
 		///$url = $this->input->post('continue') ? $this->input->post('continue') : site_url('contentcontroller/select');
 		//$config['upload_path'] = 'C:\inetpub\wwwroot\FEMSHospital_v3\uploadfile';
-		$config['upload_path'] = 'C:\xampp\htdocs\leave\sick_leave_img';
+		//$config['upload_path'] = 'C:\xampp\htdocs\leave\sick_leave_img';
+                $config['upload_path'] = '/var/www/vhosts/file.advancepact.com/httpdocs/sick_leave_img';
 		$config['allowed_types'] = 'gif|jpg|png';
 		$config['max_size']	= '5000';
 		$config['max_width']  = 'auto';
@@ -73,8 +74,8 @@ class Controllers extends CI_Controller {
 		$data['year'] = ($this->input->get('y') <> 0) ? $this->input->get('y') : date('Y');
 		$data['leave_type'] = $this->display_model->leave_type();
 		$data['probationchk'] = $this->display_model->probationchk($this->session->userdata('v_UserName'));
-		$this->load->model('outside_model');
-		$data['outside'] = $this->outside_model->firsttest();
+		//$this->load->model('outside_model');
+		//$data['outside'] = $this->outside_model->firsttest();
 		//$data['outside'] = $this->outside_model->firsttestsql();
 //		print_r($data['outside']);
 //		echo "ajajajajajajjaja" . $data['outside'][0]->v_UserName . "<br>";
@@ -1199,4 +1200,18 @@ class Controllers extends CI_Controller {
 		$this->load->view('Main_print',$data);
 		$this->load->view('footer');
 	}
+	
+	//bazli 3/5/18
+	public function employee_guide()
+	{
+		$this->load->model('display_model');
+		$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
+		$data['hrrow'] = $this->display_model->gethrrow($this->session->userdata('v_UserName'));
+		$this->load->view('Head');
+		$this->load->view('top');
+		$this->load->view('left',$data);
+		$this->load->view('employee_guide');
+		$this->load->view('footer');
+	}
+	
 }

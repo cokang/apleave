@@ -5,6 +5,7 @@ function __construct() {
 parent::__construct();
 
 }
+/*
 	function firsttest(){
 		$DBo = $this->load->database('mainn', TRUE);
 		$DBo->select('v_UserName');
@@ -30,7 +31,7 @@ parent::__construct();
 		$DBo->close();
 		return $query_result;
 	}
-	
+	*/
 	function validate()
 	{
 		$DBo = $this->load->database('ibu', TRUE);
@@ -38,7 +39,7 @@ parent::__construct();
 		$DBo->where('v_password',md5($this->input->post('password')));
 		$query = $DBo->get('pmis2_sa_user');
 		$DBo->close();
-		if( $query->num_rows ==1)
+		if( $query->num_rows() ==1)
 		{
 			return TRUE;
 		}

@@ -1,6 +1,6 @@
 <?php
 
- class loginModel extends CI_Model{
+ class Loginmodel extends CI_Model{
 		
 	function validate()
 	{
@@ -37,6 +37,7 @@
 		
 	//echo $this->input->post('name');
 	//exit();
+	//$this->db=$this->load->database('default');
 		$this->db->where('v_userid', $this->input->post('name'));
 		//$this->db->where('v_password',md5($this->input->post('password')));
 		$query = $this->db->get('pmis2_sa_user');
@@ -49,13 +50,14 @@
 		//$this->db->where('saU.v_userid', $this->input->post('name'));
 		//$this->db->where('i.file_name', $this-);
 		//$query = $this->db->get();
-		
-//echo $this->db->last_query();
+//		print_r($query);
+//		echo "lalalalalalal";
+//echo $this->db->last_query() . $query->num_rows();
 //exit();
 
 		//echo $this->input->post('username') . $this->input->post('password');
 		//exit;
-		if( $query->num_rows ==1)
+		if( $query->num_rows() ==1)
 		{
 			return TRUE;
 
