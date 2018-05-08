@@ -37,8 +37,8 @@ class LoginController extends CI_Controller {
 //		print_r($queryu);
 //		print_r($query);
 //		exit();
-		//if($query && $queryu)
-		if($queryu)
+		if($query && $queryu)
+		//if($queryu)
 {			
 				$data = array
 					('v_UserName'=>$this->input->post('name'),
@@ -77,10 +77,13 @@ class LoginController extends CI_Controller {
 		}
 	function chgPassword()       
     {
-		$this->load->model('loginModel');
-		$query1 = $this->loginModel->matchpass();
+		//$this->load->model('loginModel');
+		$this->load->model('outside_model');
+		//$query1 = $this->loginModel->matchpass();
+		$query1 = $this->outside_model->matchpass();
 			if($query1){
-		$query = $this->loginModel->changpasswrd($this->session->userdata('v_UserName'),$this->input->post('npassword'));
+		//$query = $this->loginModel->changpasswrd($this->session->userdata('v_UserName'),$this->input->post('npassword'));
+		$query = $this->outside_model->changpasswrd($this->session->userdata('v_UserName'),$this->input->post('npassword'));
     	//$this->session->set_flashdata('message','<span class="label label-info">Password changed!</span>');
     	echo "<script type='text/javascript'>alert('Password is updated!')</script>";
     	redirect('LoginController','refresh') ;

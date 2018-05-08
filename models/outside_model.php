@@ -45,5 +45,30 @@ parent::__construct();
 		}
 	}	
 	
+	function matchpass(){
+	  $DBo = $this->load->database('ibu', TRUE);
+		$DBo->where('v_userid', $this->session->userdata('v_UserName'));
+		$DBo->where('v_password',md5($this->session->userdata('v_password')));
+		$query = $DBo->get('pmis2_sa_user');
+		$DBo->close();
+		if( $query->num_rows() ==1)
+		{
+			return TRUE;
+		}
+	}	
+	
+	function changpasswrd($username, $npassword) 
+	{
+	$DBo = $this->load->database('ibu', TRUE);
+	$DBo->set('v_password',md5($npassword));
+	$DBo->where('v_UserID', $username);
+	$DBo->update('pmis2_sa_user');
+	//echo $this->db->last_query();
+	//exit();
+  	return $DBo->affected_rows() > 0; 
+		$DBo->close();
+
+  	}
+	
 }
 ?>
