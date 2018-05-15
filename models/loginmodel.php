@@ -25,7 +25,7 @@
 
 		//echo $this->input->post('username') . $this->input->post('password');
 		//exit;
-		if( $query->num_rows ==1)
+		if( $query->num_rows() ==1)
 		{
 			return TRUE;
 
@@ -118,7 +118,7 @@
 		$this->db->where('v_userid', $this->session->userdata('v_UserName'));
 		$this->db->where('v_password',md5($this->session->userdata('v_password')));
 		$query = $this->db->get('pmis2_sa_user');
-		if( $query->num_rows ==1)
+		if( $query->num_rows() ==1)
 		{
 			return TRUE;
 		}

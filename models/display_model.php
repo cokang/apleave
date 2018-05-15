@@ -75,7 +75,7 @@ parent::__construct();
 		$this->db->order_by('R.leave_from','Desc');
 		$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		echo $this->db->last_query();
+		//echo $this->db->last_query();
 		//exit();
 		$query_result = $query->result();
 		return $query_result;
@@ -940,6 +940,17 @@ parent::__construct();
 		$this->db->join('group b','a.v_UserID = b.group_sup_id ');
 		//$this->db->where('b.group_sup_id ',$this->session->userdata('v_UserName')); 
 		$this->db->where('b.group_name ',$userid); 
+		$query = $this->db->get();
+		//echo $this->db->last_query();
+		//exit();
+		$query_result = $query->result();
+		return $query_result;
+	}
+	
+	function getbhguser($userid){
+		$this->db->select('v_GroupID');
+		$this->db->from('pmis2_sa_user');
+		$this->db->where('v_UserID',$userid); 
 		$query = $this->db->get();
 		//echo $this->db->last_query();
 		//exit();
