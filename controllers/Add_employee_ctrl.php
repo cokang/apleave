@@ -1,6 +1,15 @@
 <?php
 
 class add_employee_ctrl extends CI_Controller{
+
+	public function __construct(){
+		parent::__construct();
+		$this->is_logged_in = $this->session->userdata("is_logged_in");
+		if( !$this->is_logged_in ){
+			redirect("/");
+		}
+	}
+	
 	function index(){
 	$userid = $this->input->post('emp_uname');
 	$emp_type = $this->input->post('emp_type');

@@ -1,6 +1,15 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class check_availability extends CI_Controller {
+
+	public function __construct(){
+		parent::__construct();
+		$this->is_logged_in = $this->session->userdata("is_logged_in");
+		if( !$this->is_logged_in ){
+			redirect("/");
+		}
+	}
+
 	public function index(){
 		//$data['test'] = $this->input->get('type');
 		$this->load->model('display_model');

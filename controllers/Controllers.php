@@ -2,7 +2,15 @@
 //date_default_timezone_set('Asia/Kuala_Lumpur');//or change to whatever timezone you want
 class Controllers extends CI_Controller {
 
+	private $is_logged_in;
 
+	public function __construct(){
+		parent::__construct();
+		$is_logged_in = $this->session->userdata("is_logged_in");
+		if( !$is_logged_in ){
+			redirect("/");
+		}
+	}
 
 	function do_upload(){
 		///$url = $this->input->post('continue') ? $this->input->post('continue') : site_url('contentcontroller/select');

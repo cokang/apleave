@@ -8,7 +8,7 @@
         <ul class="dropdown-menu dropdown-user">
           <li><a href="#"><i class="fa fa-user fa-fw"></i> Hi, <?php echo ucwords($this->session->userdata('v_UserName'))?> </a> </li>
           <li class="divider"></li>
-          <li><a href="<?php echo base_url(); ?>"><i class="fa fa-sign-out fa-fw"></i> Logout</a> </li>
+          <li><a href="<?php echo site_url(); ?>/logincontroller/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a> </li>
         </ul>
         <!-- /.dropdown-user --> 
       </li>

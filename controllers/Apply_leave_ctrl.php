@@ -1,6 +1,14 @@
 <?php
 
 class apply_leave_ctrl extends CI_Controller{
+
+	public function __construct(){
+		parent::__construct();
+		$this->is_logged_in = $this->session->userdata("is_logged_in");
+		if( !$this->is_logged_in ){
+			redirect("/");
+		}
+	}
 	
 	function index(){
 	$this->load->model('insert_model');

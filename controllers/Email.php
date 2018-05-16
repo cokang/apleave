@@ -4,7 +4,11 @@
       function __construct() { 
          parent::__construct(); 
          $this->load->library('session'); 
-         $this->load->helper('form'); 
+         $this->load->helper('form');  
+				 $this->is_logged_in = $this->session->userdata("is_logged_in"); 
+         if( !$this->is_logged_in ){
+            redirect("/");
+         }
       } 
 		
       public function index() { 

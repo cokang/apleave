@@ -1,6 +1,15 @@
 <?php
 
 class leave_approval_ctrl extends CI_Controller{
+
+	public function __construct(){
+		parent::__construct();
+		$this->is_logged_in = $this->session->userdata("is_logged_in");
+		if( !$this->is_logged_in ){
+			redirect("/");
+		}
+	}
+
 	function index(){
 	$status = $this->input->get('status');
 	$userid = $this->input->get('name');

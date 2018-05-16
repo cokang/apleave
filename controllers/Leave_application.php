@@ -1,6 +1,15 @@
 <?php
 
 class leave_application extends CI_Controller{
+
+	public function __construct(){
+		parent::__construct();
+		$this->is_logged_in = $this->session->userdata("is_logged_in");
+		if( !$this->is_logged_in ){
+			redirect("/");
+		}
+	}
+	
 	function index(){
 		$data['userid'] = $this->input->get('name');
 		$data['regid'] = $this->input->get('id');
