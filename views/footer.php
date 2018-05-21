@@ -18,39 +18,6 @@
 
 
 
-<!-- pdf -->
-<script src="<?=base_url();?>js/pdfviewer.js"></script>
-
-<script type="text/javascript">
-	$(document).ready(function() {
-		$(".pdf-container").pdfviewer({
-			scale: 2,
-			onDocumentLoaded: function() {
-				var num = $(this).data('pdfviewer').pages();
-				$(this).data('pdfviewer').autoFit();
-				//alert('onDocumentLoaded:'+num);		
-			},
-			onPrevPage: function() { 
-				//alert('onPrevPage'); 
-				return true; 
-			},
-			onNextPage: function() { 
-				//alert('onNextPage'); 
-				return true; 
-			},
-			onBeforeRenderPage: function(num) {
-				//alert('onBeforeRenderPage'); 
-				return true;
-			},
-			onRenderedPage: function(num) {
-				//alert('onRenderedPage'); 
-			}
-		});
-	});
-</script>
-
-
-
 <script type="text/javascript">
 //$(document).ready(function() {	
 	//$( "#from" ).datepicker({ dateFormat: 'yy-mm-dd' });				

@@ -69,6 +69,11 @@ parent::__construct();
 		$DBo->close();
 
   	}
+		
+	function addemployee($insert_data){
+	$DBo = $this->load->database('ibu', TRUE);
+	$DBo->insert('pmis2_sa_user', $insert_data);
+	}
 	
 }
 ?>

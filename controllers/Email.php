@@ -7,6 +7,14 @@
          $this->load->helper('form');  
 				 $this->is_logged_in = $this->session->userdata("is_logged_in"); 
          if( !$this->is_logged_in ){
+				 		if( $_SERVER['REQUEST_METHOD']!="POST" ){
+								$url = uri_string();
+								if( $_SERVER['QUERY_STRING'] ){
+								$url = $url."?".$_SERVER['QUERY_STRING'];
+								}
+								$redirect = array("url"=> $url);
+								$this->session->set_userdata( $redirect );
+								}
             redirect("/");
          }
       } 

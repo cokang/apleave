@@ -145,7 +145,7 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 									 'v_password' => md5($this->input->post('emp_pass'))
 									);
 				$this->insert_model->addemployee($insert_data);
-
+				
 				if ($emp_type == 'Head'){
 					$head_data = array(
 									   'group_name' => $this->input->post('dept_code'),
@@ -161,7 +161,17 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 											);
 					$this->insert_model->addprobation($probation_stat);
 				}
+
 				
+				$this->load->model('outside_model');
+				
+				$insert_data2 = array(
+									 'v_UserID' => $this->input->post('emp_uname'),
+									 'v_UserName' => $this->input->post('emp_name'),
+									 'v_password' => md5($this->input->post('emp_pass'))
+									);
+				
+				$this->outside_model->addemployee($insert_data2);
 				//echo $this->db->last_query();
 				//exit();
 			}

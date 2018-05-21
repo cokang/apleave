@@ -11,8 +11,12 @@ class LoginController extends CI_Controller {
 	
 	
 	public function index($em=''){
-	 		$data['errormsg']=$em;
-            $this->load->view('Login',$data);
+			if( !$this->session->userdata("is_logged_in") ){
+			$data['errormsg']=$em;
+			$this->load->view('Login',$data);
+		}else{
+			redirect($this->url, "refresh");
+		}
 	}
 	
 	
@@ -51,6 +55,10 @@ class LoginController extends CI_Controller {
 			//exit();
 			
 				$url =site_url('Controllers/apply_leave');
+				if( $this->session->userdata("url") ){
+					$url = $this->session->userdata("url");
+				}
+				$this->session->unset_userdata("url");
 				redirect($url, 'refresh');
 			}else{
 				$errormsg = '<span style="color:red"><i class="fa fa-exclamation-circle"></i> Username And Password Are Not Match.</span>';
