@@ -24,7 +24,8 @@ class LoginController extends CI_Controller {
  	{
  		
   	$this->session->sess_destroy();
-  	$this->index();
+		redirect("/");//$this->index();
+  	//$this->index();
 	}
 	
 	
@@ -98,8 +99,8 @@ class LoginController extends CI_Controller {
 			}
 			else {
 				echo "<script type='text/javascript'>alert('Username or Password are not match!')</script>";
-				
-				redirect('LoginController','refresh') ;
+				$this->logout();
+				//redirect('LoginController','refresh') ;
 				//$this->index();
 			}	
 	}

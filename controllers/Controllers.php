@@ -93,9 +93,9 @@ class Controllers extends CI_Controller {
 		//$this->load->model('outside_model');
 		//$data['outside'] = $this->outside_model->firsttest();
 		//$data['outside'] = $this->outside_model->firsttestsql();
-//		print_r($data['outside']);
-//		echo "ajajajajajajjaja" . $data['outside'][0]->v_UserName . "<br>";
-//		echo "nilai data : " . $data['outside'][0]->v_UserName;
+		//		print_r($data['outside']);
+		//		echo "ajajajajajajjaja" . $data['outside'][0]->v_UserName . "<br>";
+		//		echo "nilai data : " . $data['outside'][0]->v_UserName;
 		//echo "ajajajajajajjaja" . $data['outside'][0]->v_Asset_name . "<br>";
 		//echo "nilai data : " . $data['outside'][0]->v_Asset_name;
 		
@@ -157,8 +157,8 @@ class Controllers extends CI_Controller {
 		else{
 			$data['excol'] = array();
 		}
-//print_r($data['excol']);
-//exit();
+		//print_r($data['excol']);
+		//exit();
 		isset($_REQUEST['sel_year']) ? $data['fyear'] = $_REQUEST['sel_year'] : $data['fyear'] = $data['year'];
 		isset($_REQUEST['dept']) && $_REQUEST['dept'] != '0' ? $data['dept_L'] = $_REQUEST['dept'] : $data['dept_L'] = 'All';
 		isset($_REQUEST['staff_name']) ? $data['staffname'] = $_REQUEST['staff_name'] : $data['staffname'] = '';
@@ -800,6 +800,16 @@ class Controllers extends CI_Controller {
 	public function leave_Limit()
 	{
 		$this->load->model('display_model');
+		
+		$data['family_sick_leave']	= json_decode(json_encode($this->display_model->leave_type()),true)[5]['entitle_days'];
+		$data["maternity_leave"]	= json_decode(json_encode($this->display_model->leave_type()),true)[6]['entitle_days'];
+		$data["paternity_leave"]	= json_decode(json_encode($this->display_model->leave_type()),true)[7]['entitle_days'];
+		$data["marriage_leave"]		= json_decode(json_encode($this->display_model->leave_type()),true)[8]['entitle_days'];
+		$data["unrecorded_leave"]	= json_decode(json_encode($this->display_model->leave_type()),true)[9]['entitle_days'];
+		$data["study_leave"]		= json_decode(json_encode($this->display_model->leave_type()),true)[10]['entitle_days'];
+		$data["transfer_leave"]		= json_decode(json_encode($this->display_model->leave_type()),true)[11]['entitle_days'];
+		$data["hajj_leave"]			= json_decode(json_encode($this->display_model->leave_type()),true)[12]['entitle_days'];
+
 		$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
 		$data['hrrow'] = $this->display_model->gethrrow($this->session->userdata('v_UserName'));
 		$this->load->view('Head');
@@ -1228,6 +1238,10 @@ class Controllers extends CI_Controller {
 		$this->load->view('left',$data);
 		$this->load->view('employee_guide');
 		$this->load->view('footer');
+	}
+
+	function cancel_applied($id){
+		
 	}
 	
 }

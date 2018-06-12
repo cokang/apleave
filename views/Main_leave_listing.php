@@ -42,8 +42,8 @@
                     <td><?= isset($row->leave_from) ? date('d-m-Y',strtotime($row->leave_from)) : '' ?></td>
                     <td><?= isset($row->leave_to) ? date('d-m-Y',strtotime($row->leave_to)) : '' ?></td>
                     <td><a href="#" onclick="return showDialog('<?= $row->id ?>','listing','<?= $limit ?>','<?= $start ?>')">View Reason</a><div id="dialog" style="display:none;"><div id="myDialogText"></div></td>
-                    <td><?= isset($row->leave_status) ? $row->leave_status : '' ?></td>
-					          <td><?= !(isset($row->leave_status)) ||  $row->leave_status == '' ? '<a href="'.base_url().'index.php/Controllers/print_out?id='.$row->id.'" >Print</a>' : '' ?></td> 
+                    <td><?= isset($row->leave_status) ? $row->leave_status : 'Pending' ?></td>
+					          <td><?= !(isset($row->leave_status)) ||  $row->leave_status == '' ? '<a href="'.base_url().'index.php/Controllers/print_out?id='.$row->id.'" ><i class="fa fa-print fa-fw" title="Print"></i></a> | <a href="#" onclick="cancelrequest(this)" data-id="'.$row->id.'" data-toggle="confirmation" data-user="'.$row->user_id.'"><i class="fa fa-times fa-fw" title="Cancel Request"></i></a>' : '' ?></td> 
                     <?php $start++ ?>
                   </tr>
                 </tbody>
@@ -70,3 +70,25 @@
     <!-- /.row --> 
   </div>
   <!-- /#page-wrapper --> 
+
+
+
+  <script type="text/javascript">
+      function cancelrequest(e){
+        var answer = confirm("Are You Sure Want To Cancel This Request?");
+        if (answer) {
+          var id      = $(e).data("id");
+          var user_id = $(e).data("user");
+          $.ajax({
+            url: "<?=site_url()?>/leave_approval_ctrl",
+            data:{name:user_id,id:id,status:"Cancelled",ref:1},
+            type:"GET",
+            success: function(data){
+              if(data==1){
+                location.reload();
+              }
+            }
+          });
+        }
+      }
+  </script>

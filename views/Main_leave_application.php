@@ -24,7 +24,7 @@
               <table class="table" id="no-more-tableshead">
                 <thead>
                   <tr>
-                    <th colspan="4" bgcolor="#eee"><b>Leave Detail</b></th>
+                    <th colspan="4" bgcolor="#eee"><b>Leave Detail</b>  - Status: <?=isset($leavedet[0]->leave_status) ? $leavedet[0]->leave_status : '<span class="alert-info">Pending</span>' ?></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -63,11 +63,22 @@
                   <tr bgcolor="#eee">
                     <?php if (!isset($leavedet[0]->leave_status)) { ?>
                     <th style="text-align:right;"><?php echo anchor ('leave_approval_ctrl?name='.$userid.'&id='.$regid.'&status=Accepted','Accept'); ?></th>
-                    <th><?php echo anchor ('leave_approval_ctrl?name='.$userid.'&id='.$regid.'&status=Rejected','Reject'); ?></th>
+                    <!-- <th><?php echo anchor ('leave_approval_ctrl?name='.$userid.'&id='.$regid.'&status=Rejected','Reject'); ?></th> -->
+                    <th><a style="cursor:pointer;" onclick="reject(this)" data-id="<?=$regid;?>" data-user="<?=$userid;?>" id="reject">Reject</a></th>
                     <?php } else { ?>
                     <th style="text-align:right;">Accept</th>
                     <th>Reject</th>
                     <?php } ?>
+                  </tr>
+                  <tr id="rejectremarkform" class="hidden">
+                    <th colspan="2">
+                      <p>Rejected Remark:</p>
+                      <textarea class="form-control" name="rejectremark" id="rejectremark"></textarea>
+                      <center style="margin-top: 10px;">
+                        <button class="btn btn-primary" id="btn-reject" onclick="submitreject(this)">Rejected</button>
+                        <button class="btn btn-default" onclick="cancelreject(this)">Cancel</button>
+                      </center>
+                    </th>
                   </tr>
                 </thead>
               </table>
@@ -166,3 +177,34 @@
     <!-- /.row --> 
   </div>
   <!-- /#page-wrapper --> 
+
+<script type="text/javascript">
+  function reject(e){
+    $("#rejectremarkform").find("small").empty();
+    $("#rejectremarkform").removeClass("hidden");
+    $("#btn-reject").attr("data-id", $(e).data("id"));
+    $("#btn-reject").attr("data-user", $(e).data("user"));
+  }
+  function cancelreject(e){
+    $("#rejectremark").val("");
+    $("#rejectremarkform").addClass("hidden");
+    $("#btn-reject").removeAttr("data-id");
+    $("#btn-reject").removeAttr("data-user");
+  }
+  function submitreject(e){
+    $(e).parent().parent().find("small").empty();
+    var rejectedremark= $("#rejectremark").val();
+    var user_id       = $(e).data("user");
+    var id            = $(e).data("id");
+    if(rejectedremark!=""){
+      window.location.href = "<?=site_url()?>/leave_approval_ctrl?name=" + user_id + "&id=" + id + "&status=Rejected&rejectedremark=" + rejectedremark;
+      // $.ajax({
+      //   url: "<?=site_url()?>/leave_approval_ctrl",
+      //   data:{name:user_id,id:id,status:"Rejected",rejectedremark:rejectedremark},
+      //   type:"GET"
+      // });
+    }else{
+      $("#rejectremark").after("<small style='color:red'>Please Fill This Form.</small>");
+    }
+  }
+</script>

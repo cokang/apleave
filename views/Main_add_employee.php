@@ -13,6 +13,9 @@
                         <div class="panel-heading">
                             ADD EMPLOYEE
                         </div>
+                        <?php if( $this->session->flashdata("msg") ){?>
+                        <?="<div class='alert alert-warning alert-dismissible'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><strong>Failed!</strong>   ".$this->session->flashdata("msg")."</div>";?>
+                        <?php }?>
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-lg-6">

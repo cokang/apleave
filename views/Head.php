@@ -1132,6 +1132,7 @@ function validate_form(){
   $("#statelist").css("border-color","#D9D8D4");
   //$("#hosp_code").css("border-color","#D9D8D4");
   $("#phone_no").css("border-color","#D9D8D4");
+  $("#phone_no").parent().find("small").empty();
   
   var error=0;
   var err_msg="";
@@ -1169,6 +1170,23 @@ function validate_form(){
     $("#phone_no").css("border-color","red");
     error=1;
   }
+  
+  if( $("#phone_no").val()!="" ){
+    if( isNaN($("#phone_no").val()) ){
+      $("#phone_no").css("border-color","red");
+      $("#phone_no").after("<small style='color:red'>Phone Number Cannot Be String.</small>");
+      error=1;
+    }else if($("#phone_no").val().charAt(0) != 0 && $("#phone_no").val().charAt(1)){
+      $("#phone_no").css("border-color","red");
+      $("#phone_no").after("<small style='color:red'>Phone Number Must Start With 01....</small>");
+      error=1;
+    }else if($("#phone_no").val()!="" && $("#phone_no").val().length < 10){
+      $("#phone_no").css("border-color","red");
+      $("#phone_no").after("<small style='color:red'>Phone Number Not Completed.</small>");
+      error=1;
+    }
+  }
+
   if($("#emp_type").val()=="0"){
     $("#emp_type").css("border-color","red");
     error=1;

@@ -52,21 +52,21 @@ function empleave_exist($value1,$variable1,$value2,$variable2){
 
 }
 function addemployee($insert_data){
-$this->db->insert('pmis2_sa_user', $insert_data);
+	$this->db->insert('pmis2_sa_user', $insert_data);
 }
 function addheademployee($head_data){
-$this->db->insert('group', $head_data);
+	$this->db->insert('group', $head_data);
 }
 function addprobation($probation_stat){
-$this->db->insert('staff_probation', $probation_stat);
+	$this->db->insert('staff_probation', $probation_stat);
 }
 function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
-			$this->db->select($value1);
+			$this->db->select("$value1, $value2");
 			$this->db->where($value1,$variable1);
-			$this->db->where($value2,$variable2);
+			// $this->db->where($value2,$variable2);
 			$query = $this->db->get('pmis2_sa_user');
-			
-			if($query->num_rows()>0){
+
+			if( $query->num_rows()>0 && $query->row()->$value2==$variable2 ){
 
 				$this->load->model('update_model');
 				$insert_data = array(
@@ -130,7 +130,7 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 				//echo $this->db->last_query();
 				//exit();
 			}
-			else{
+			else if( $query->num_rows()<0 ){
 				$insert_data = array(
 									 'v_UserID' => $this->input->post('emp_uname'),
 									 'v_UserName' => $this->input->post('emp_name'),
@@ -174,6 +174,10 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 				$this->outside_model->addemployee($insert_data2);
 				//echo $this->db->last_query();
 				//exit();
+			}
+			else{
+				$this->session->set_flashdata("msg","Username Already Exists.");
+				return false;
 			}
 
 }

@@ -39,7 +39,7 @@
 	//exit();
 	//$this->db=$this->load->database('default');
 		$this->db->where('v_userid', $this->input->post('name'));
-		//$this->db->where('v_password',md5($this->input->post('password')));
+		$this->db->where('v_password',md5($this->input->post('password')));
 		$query = $this->db->get('pmis2_sa_user');
 	
 

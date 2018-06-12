@@ -19,16 +19,27 @@ class leave_approval_ctrl extends CI_Controller{
 	}
 
 	function index(){
-	$status = $this->input->get('status');
-	$userid = $this->input->get('name');
-	$regid = $this->input->get('id');
+		$status = $this->input->get('status');
+		$userid = $this->input->get('name');
+		$regid = $this->input->get('id');
+		$reject_remark = "";
+		if( isset($_GET["rejectedremark"]) ){
+			$reject_remark = $this->input->get("rejectedremark");
+		}
 
-	$insert_data = array('leave_status' => $status,
-						'leave_approved_by' => $this->session->userdata('v_UserName'),
-						'date_approved' => date('Y-m-d'));
-	$this->load->model('update_model');
-	$this->update_model->updatestatus($insert_data,$userid,$regid);
-	redirect('Controllers/leave_approved');
+		$insert_data = array(
+							'leave_status' => $status,
+							'leave_approved_by' => $this->session->userdata('v_UserName'),
+							'reject_remark'	=> $reject_remark,
+							'date_approved' => date('Y-m-d')
+						);
+		$this->load->model('update_model');
+		$this->update_model->updatestatus($insert_data,$userid,$regid);
+		if( !isset($_GET["ref"]) ){
+			redirect('Controllers/leave_approved');
+		}else{
+			echo true;
+		}
 	}
 }
 ?>

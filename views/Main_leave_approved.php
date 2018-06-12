@@ -42,7 +42,7 @@
                     <td><?=isset($row->leave_from) ? $row->leave_from : '' ?></td>
                     <td><?=isset($row->leave_to) ? $row->leave_to : '' ?></td>
                     <td><a href="#" onclick="return showDialog('<?= $row->id ?>','approval','<?= $limit ?>','<?= $start ?>','<?=$row->v_GroupID?>')">View Reason</a><div id="dialog" style="display:none;"><div id="myDialogText"></div></td>
-                    <td><?= isset($row->leave_status) ? $row->leave_status : '' ?></td>
+                    <td><?= isset($row->leave_status) ? $row->leave_status : 'Pending' ?></td>
                     <td><?= $row->leave_status == 'Accepted' ? anchor ('leave_approval_ctrl?name='.$row->user_id.'&id='.$row->id.'&status=Cancelled','Cancel') : '' ?></td>
                   </tr>
                 <?php $start++ ?>
