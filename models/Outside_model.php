@@ -61,9 +61,10 @@ parent::__construct();
 	{
 	$DBo = $this->load->database('ibu', TRUE);
 	$DBo->set('v_password',md5($npassword));
+	$DBo->set('v_sec_dt', 'now()',false);
 	$DBo->where('v_UserID', $username);
 	$DBo->update('pmis2_sa_user');
-	//echo $this->db->last_query();
+	//echo $DBo->last_query();
 	//exit();
   	return $DBo->affected_rows() > 0; 
 		$DBo->close();
@@ -73,6 +74,22 @@ parent::__construct();
 	function addemployee($insert_data){
 	$DBo = $this->load->database('ibu', TRUE);
 	$DBo->insert('pmis2_sa_user', $insert_data);
+	}
+	
+	function validate4($userid)
+	{
+		$DBo = $this->load->database('ibu', TRUE);
+		$DBo->select('datediff(now(), IFNULL(a.v_sec_dt,now())) AS dayer, b.valid_period',false) ;
+		$DBo->where('v_userid', $userid);
+		$DBo->join('pmis2_sa_passvalidity b','a.v_hospitalcode = b.hosp');
+		$query = $DBo->get('pmis2_sa_user a');
+		
+		//echo $DBo->last_query();
+		
+		//exit();
+	
+		return $query->result();
+		
 	}
 	
 }

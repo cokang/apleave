@@ -1239,6 +1239,19 @@ class Controllers extends CI_Controller {
 		$this->load->view('employee_guide');
 		$this->load->view('footer');
 	}
+	
+	//bazli add new function 13/6/18
+	public function system_manual()
+	{
+		$this->load->model('display_model');
+		$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
+		$data['hrrow'] = $this->display_model->gethrrow($this->session->userdata('v_UserName'));
+		$this->load->view('Head');
+		$this->load->view('top');
+		$this->load->view('left',$data);
+		$this->load->view('system_manual');
+		$this->load->view('footer');
+	}
 
 	function cancel_applied($id){
 		

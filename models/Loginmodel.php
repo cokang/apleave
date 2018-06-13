@@ -175,6 +175,17 @@
 		$query = $this->db->get('pmis2_sa_service');
 		return $query->result();
 	}	
+
+	function userdata(){
+		$this->db->where('v_userid', $this->input->post('name'));
+		//$this->db->where('v_password',md5($this->input->post('password')));
+		$query = $this->db->get('pmis2_sa_user');
+		if( $query->num_rows()==1 ){
+			return $query->result_array();
+		}else{
+			return false;
+		}
+	}
 	
  }
  

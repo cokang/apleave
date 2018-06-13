@@ -1,8 +1,14 @@
 <?php echo form_open('logincontroller/chgPassword');?>
 <div id="page-wrapper">
+<?php 
+ $tulisape = "";
+ if ($this->session->userdata('passvalidity') == "invalid") {
+    			 $tulisape = "(PASSWORD EXPIRED)";
+					 } 
+?>
     <div class="row">
       <div class="col-lg-12">
-        <h1 class="page-header">CHANGE PASSWORD</h1>
+        <h1 class="page-header">CHANGE PASSWORD <?=$tulisape?></h1>
       </div>
       
       <!-- /.col-lg-2 --> 
@@ -14,7 +20,7 @@
     <div class="row">
       <div class="col-lg-5">
         <div class="panel panel-default">
-          <div class="panel-heading"> CHANGE PASSWORD </div>
+          <div class="panel-heading"> CHANGE PASSWORD <?=$tulisape?></div>
           <div class="panel-body">
             <div class="row">
               <div class="col-lg-12"> <span class="error_message" id="message_sp" style="display:none;"> </span>
