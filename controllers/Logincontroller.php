@@ -59,7 +59,7 @@ class LoginController extends CI_Controller {
 					
 							'v_UserName'	=>$this->input->post('name'),
 					'v_Name'=>$this->loginModel->userdata()[0]['v_UserName'],
-					'v_password' =>$this->input->post('password'),
+//					'v_password' =>$this->input->post('password'),
 					'passvalidity' =>$passisvalid,
 					 //'username'=>$session_data['i.file_name'],
 						'apsb_no'		=>$this->loginModel->userdata()[0]['apsb_no'],
