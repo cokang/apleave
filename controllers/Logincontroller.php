@@ -104,6 +104,7 @@ class LoginController extends CI_Controller {
 		}
 	function chgPassword()       
     {
+		/*
 		//$this->load->model('loginModel');
 		$this->load->model('outside_model');
 		//$query1 = $this->loginModel->matchpass();
@@ -128,6 +129,17 @@ class LoginController extends CI_Controller {
 				//redirect('LoginController','refresh') ;
 				//$this->index();
 			}	
+			*/
+		$this->load->model('outside_model');
+			$query = $this->outside_model->changpasswrd($this->session->userdata('v_UserName'),$this->input->post('npassword'));
+		//exit();
+    	//$this->session->set_flashdata('message','<span class="label label-info">Password changed!</span>');
+    	echo "<script type='text/javascript'>alert('Password was updated!')</script>";
+					 if ($this->session->userdata('passvalidity') == "valid") {
+    			 redirect('Controllers/apply_leave','refresh') ;
+					 } else {
+					 redirect('logincontroller/logout','refresh') ;
+					 }
 	}
 
 	function create_member()
