@@ -47,8 +47,8 @@ class Controllers extends CI_Controller {
 			$data['error'] = array($this->upload->display_errors());
 			$this->load->view('Head');
 			$this->load->view('top');
-			$this->load->view('left');
-			$this->load->view('Main',$data);
+			$this->load->view('left',$data);
+			$this->load->view('Main');
 			$this->load->view('footer');
 		}
 		else
