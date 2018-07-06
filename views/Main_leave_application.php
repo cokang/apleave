@@ -50,7 +50,9 @@
                 </tr>
                 <tr class="">
                   <th style="text-align:right;"><b>Reason:</b></th>
-                  <td data-title="Reason:" align="left" colspan="3"><?=isset($leavedet[0]->leave_remarks) ? $leavedet[0]->leave_remarks : '' ?></td>
+                  <td data-title="Reason:" align="left"><?=isset($leavedet[0]->leave_remarks) ? $leavedet[0]->leave_remarks : '' ?></td>
+                  <th style="text-align:right;"><b>Reliever:</b></th>
+                  <td data-title="Reliever:" align="left"><?=isset($leavedet[0]->employee_replaced) ? $leavedet[0]->employee_replaced : '' ?></td>
                 </tr>
                 <?php if($leavedet[0]->leave_type == '2' OR $leavedet[0]->leave_type == '3') { ?>
                 <tr class="">
@@ -112,81 +114,81 @@
                 </tr>
               </thead>
               <?php foreach($samedateleave as $row): ?>
-              <?php 
+                <?php 
 
-              $fromdate = $row->leave_from;
-              $todate = ($row->leave_to) ? $row->leave_to : $row->leave_from;
+                $fromdate = $row->leave_from;
+                $todate = ($row->leave_to) ? $row->leave_to : $row->leave_from;
 
-              $begin = strtotime($fromdate);
-              $end   = strtotime($todate);
+                $begin = strtotime($fromdate);
+                $end   = strtotime($todate);
 
-              if ($row->v_hospitalcode == 'JB'){
-                $holiday_array = $JB_hol;
-              }
-              elseif($row->v_hospitalcode == 'MKA'){
-                $holiday_array = $MKA_hol;
-              }
-              elseif($row->v_hospitalcode == 'NS'){
-                $holiday_array = $NS_hol;
-              }
-              elseif($row->v_hospitalcode == 'SEL'){
-                $holiday_array = $SEL_hol;
-              }
-
-              $no_days  = 0;
-              $weekends = 0;
-              while ($begin <= $end) {
-                $no_days++; // no of days in the given interval
-                $what_day = date("N", $begin);
-                //echo "$what_day".$what_day;
-                if($row->v_hospitalcode == 'JB'){
-                  if (($what_day == 5) || ($what_day == 6) || (in_array($begin, $holiday_array))) { // 5 and 6 are weekend days
-                    $weekends++;
-                  }
+                if ($row->v_hospitalcode == 'JB'){
+                  $holiday_array = $JB_hol;
                 }
-                else{
-                  if ($what_day > 5 || (in_array($begin, $holiday_array))) { // 6 and 7 are weekend days
-                    $weekends++;
-                  }
+                elseif($row->v_hospitalcode == 'MKA'){
+                  $holiday_array = $MKA_hol;
                 }
-                $begin += 86400; // +1 day
-              };
-              $noleave = $no_days - $weekends;
+                elseif($row->v_hospitalcode == 'NS'){
+                  $holiday_array = $NS_hol;
+                }
+                elseif($row->v_hospitalcode == 'SEL'){
+                  $holiday_array = $SEL_hol;
+                }
 
-              ?>
-              <tbody>
-                <tr>
-                  <td data-title="Applicant Name:"><?=isset($row->v_UserName) ? $row->v_UserName : '' ?></td>
-                  <td data-title="Leave Type:"><?=isset($row->leave_type) ? $row->leave_type : '' ?></td>
-                  <td data-title="From:"><?=isset($row->leave_from) ? date('d-m-Y',strtotime($row->leave_from)) : '' ?></td>
-                  <td data-title="To:"><?=isset($row->leave_to) ? date('d-m-Y',strtotime($row->leave_to)) : '' ?></td>
-                  <td data-title="No of days:"><?=isset($noleave) ? $noleave : '' ?></td>
-                  <td data-title="Reason:"><?=isset($row->leave_remarks) ? $row->leave_remarks : '' ?></td>
-                </tr>
-              </tbody>
+                $no_days  = 0;
+                $weekends = 0;
+                while ($begin <= $end) {
+                  $no_days++; // no of days in the given interval
+                  $what_day = date("N", $begin);
+                  //echo "$what_day".$what_day;
+                  if($row->v_hospitalcode == 'JB'){
+                    if (($what_day == 5) || ($what_day == 6) || (in_array($begin, $holiday_array))) { // 5 and 6 are weekend days
+                      $weekends++;
+                    }
+                  }
+                  else{
+                    if ($what_day > 5 || (in_array($begin, $holiday_array))) { // 6 and 7 are weekend days
+                      $weekends++;
+                    }
+                  }
+                  $begin += 86400; // +1 day
+                };
+                $noleave = $no_days - $weekends;
+
+                ?>
+                <tbody>
+                  <tr>
+                    <td data-title="Applicant Name:"><?=isset($row->v_UserName) ? $row->v_UserName : '' ?></td>
+                    <td data-title="Leave Type:"><?=isset($row->leave_type) ? $row->leave_type : '' ?></td>
+                    <td data-title="From:"><?=isset($row->leave_from) ? date('d-m-Y',strtotime($row->leave_from)) : '' ?></td>
+                    <td data-title="To:"><?=isset($row->leave_to) ? date('d-m-Y',strtotime($row->leave_to)) : '' ?></td>
+                    <td data-title="No of days:"><?=isset($noleave) ? $noleave : '' ?></td>
+                    <td data-title="Reason:"><?=isset($row->leave_remarks) ? $row->leave_remarks : '' ?></td>
+                  </tr>
+                </tbody>
               <?php endforeach; ?>
-            </table>
-            <ul class="pagination">
-              <?php if ($rec[0]->jumlah > $limit){ ?>
-                <?php for ($i=1;$i<=$page;$i++){ ?>
-              <li class="paginate_button">&nbsp;<a href="?p=<?php echo $i?>&name=<?=$userid?>&id=<?=$regid?>"><?=$i?></a></li>
+              </table>
+              <ul class="pagination">
+                <?php if ($rec[0]->jumlah > $limit){ ?>
+                  <?php for ($i=1;$i<=$page;$i++){ ?>
+                <li class="paginate_button">&nbsp;<a href="?p=<?php echo $i?>&name=<?=$userid?>&id=<?=$regid?>"><?=$i?></a></li>
+                  <?php } ?>
+                <li class="paginate_button previous"><a href="?p=<?php echo $page?>&name=<?=$userid?>&id=<?=$regid?>">Next</a></li>
                 <?php } ?>
-              <li class="paginate_button previous"><a href="?p=<?php echo $page?>&name=<?=$userid?>&id=<?=$regid?>">Next</a></li>
-              <?php } ?>
-            </ul>
+              </ul>
+            </div>
+            <!-- /.table-responsive --> 
           </div>
-          <!-- /.table-responsive --> 
+          <!-- /.panel-body --> 
         </div>
-        <!-- /.panel-body --> 
+        <!-- /.panel --> 
       </div>
-      <!-- /.panel --> 
-    </div>
-    <!-- /.col-lg-9 --> 
+      <!-- /.col-lg-9 --> 
 
+    </div>
+    <!-- /.row --> 
   </div>
-  <!-- /.row --> 
-</div>
-<!-- /#page-wrapper --> 
+  <!-- /#page-wrapper --> 
 
 <script type="text/javascript">
   function reject(e){

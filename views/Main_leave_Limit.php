@@ -37,7 +37,7 @@
                     <input name="unrecorded_l" id="unrecorded_l" type="text" class="form-control" value=""/>
                   </div>
                   <div class="form-group">
-                    <label>Total Entitlement of Study Leave <span style="color: blue;">- Current Value(<?=$study_leave;?>)</label>
+                    <label>Total Entitlement of Exam Leave <span style="color: blue;">- Current Value(<?=$study_leave;?>)</label>
                     <input name="study_l" id="study_l" type="text" class="form-control" value=""/>
                   </div>
                   <div class="form-group">

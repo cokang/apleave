@@ -21,9 +21,18 @@ class Controllers extends CI_Controller {
 	}
 
 	function do_upload(){
+			  $this->load->model('display_model');
+				$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
+				$data['hrrow'] = $this->display_model->gethrrow($this->session->userdata('v_UserName'));
+				$data['getgroupdet'] = $this->display_model->getgroupdet($this->session->userdata('v_UserName'));
+				$data['alternate'] = $this->display_model->alternate($this->session->userdata('v_UserName'),$data['getgroupdet'][0]->v_GroupID);
+				$data['year'] = ($this->input->get('y') <> 0) ? $this->input->get('y') : date('Y');
+				$data['leave_type'] = $this->display_model->leave_type();
+				$data['probationchk'] = $this->display_model->probationchk($this->session->userdata('v_UserName'));
 		///$url = $this->input->post('continue') ? $this->input->post('continue') : site_url('contentcontroller/select');
 		//$config['upload_path'] = 'C:\inetpub\wwwroot\FEMSHospital_v3\uploadfile';
 		//$config['upload_path'] = 'C:\xampp\htdocs\leave\sick_leave_img';
+		//$config['upload_path'] = "sick_leave_img/";
                 $config['upload_path'] = '/var/www/vhosts/file.advancepact.com/httpdocs/sick_leave_img';
 		$config['allowed_types'] = 'gif|jpg|png';
 		$config['max_size']	= '5000';
@@ -32,7 +41,7 @@ class Controllers extends CI_Controller {
 
 		$this->load->library('upload', $config);
 
-		if ( ! $this->upload->do_upload())
+		if ( ! $this->upload->do_upload('userfile'))
 		
 		{
 			$data['error'] = array($this->upload->display_errors());
@@ -59,14 +68,7 @@ class Controllers extends CI_Controller {
 				{
 				$data['upload_data'] = $this->upload->data();
 				$data['image'] = $data['upload_data']['file_name'];
-				$this->load->model('display_model');
-				$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
-				$data['hrrow'] = $this->display_model->gethrrow($this->session->userdata('v_UserName'));
-				$data['getgroupdet'] = $this->display_model->getgroupdet($this->session->userdata('v_UserName'));
-				$data['alternate'] = $this->display_model->alternate($this->session->userdata('v_UserName'),$data['getgroupdet'][0]->v_GroupID);
-				$data['year'] = ($this->input->get('y') <> 0) ? $this->input->get('y') : date('Y');
-				$data['leave_type'] = $this->display_model->leave_type();
-				$data['probationchk'] = $this->display_model->probationchk($this->session->userdata('v_UserName'));
+				
 				//$this->load->model('insert_model');
 				//$this->insert_model->sickleave_img($data['upload_data']);
 				

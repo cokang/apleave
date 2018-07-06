@@ -28,7 +28,7 @@
         writing-mode:  tb-rl;}
   div.printnone{display: none;}
   div.printshow{display:block !important;}
-  div.StartNewPage { page-break-before: always	}
+  div.StartNewPage { page-break-before: always  }
   @media (max-width:767px) {
      .table-responsive{margin-bottom:0px;overflow-y:none;border:0px;overflow-x:none;}
   }
@@ -202,6 +202,7 @@ function validate_form(){
 }
 
 function check_leave_availability(duration,year,probation){
+  var imgneeded = ['2','3','5','6','7','8','9','11','13'];
   $("#from").prop("disabled", false);     
   $("#to").prop("disabled", false);
 
@@ -229,8 +230,9 @@ function check_leave_availability(duration,year,probation){
     $("#from").val("");
     $("#to").val("");
   }
-   if(duration=="2" || duration=="3"){
-    $("#sick_leave_img").slideDown();  
+   // if(duration=="2" || duration=="3"){
+  if( imgneeded.includes(duration)==true ){
+    $("#sick_leave_img").slideDown();
   }else {
     $("#sick_leave_img").slideUp();  
   }
@@ -291,7 +293,7 @@ function check_leave_availability(duration,year,probation){
              $("#message_sp").slideDown("slow");
               
           
-             $("#leave_type").val("0");
+             $("#leave_type").val(duration);
              $("#from").val("");
              $("#to").val("");
              $("#from").prop("disabled", true);

@@ -65,7 +65,8 @@ parent::__construct();
 		return $query_result;
 	}	
 	function leaveapp($group,$limit,$start){
-		$this->db->select('R.*,U.v_GroupID');
+		$this->db->select('R.*,U.v_GroupID,U.v_UserName');
+		//$this->db->select('R.*,U.v_GroupID');
 		$this->db->from('employee_leave_req R');
 		$this->db->join('pmis2_sa_user U','R.user_id = U.v_UserID');
 		$this->db->join('group G','G.group_sup_id = U.v_UserID','left');
@@ -176,7 +177,8 @@ parent::__construct();
 		return $query_result;
 	}
 	function leaveacclim($userid,$year,$limit,$start){
-		$this->db->select('L.*,U.v_UserName');
+		//$this->db->select('L.*,U.v_UserName');
+		$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		$this->db->where('L.user_id',$userid);
@@ -194,7 +196,8 @@ parent::__construct();
 		$this->db->join('pmis2_sa_user U','R.user_id = U.v_UserID');
 		$this->db->where('user_id',$userid);
 		$this->db->where('YEAR(leave_from)',$year);
-		$this->db->where('leave_status','Accepted');
+		$this->db->where('leave_status','Approved');
+		//$this->db->where('leave_status','Accepted');
 		$query = $this->db->get();
 		//echo $this->db->last_query();
 		//exit();

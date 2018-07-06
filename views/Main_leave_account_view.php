@@ -79,7 +79,7 @@
 						<span style="display:inline-block; width:120px;"><input type="checkbox" name="excol_chk[]" id='ch5' value="Paternity"<?php echo set_checkbox('excol_chk[]', 'Paternity'); ?><?= in_array('Paternity',$excol) ? 'checked' : '' ?> onchange="return testchk(this.id)"> Paternity </span>
 						<span style="display:inline-block; width:120px;"><input type="checkbox" name="excol_chk[]" id='ch6' value="Marriage"<?php echo set_checkbox('excol_chk[]', 'Marriage'); ?><?= in_array('Marriage',$excol) ? 'checked' : '' ?> onchange="return testchk(this.id)"> Marriage </span>
 						<span style="display:inline-block; width:120px;"><input type="checkbox" name="excol_chk[]" id='ch7' value="Unrecorded"<?php echo set_checkbox('excol_chk[]', 'Unrecorded'); ?><?= in_array('Unrecorded',$excol) ? 'checked' : '' ?> onchange="return testchk(this.id)"> Unrecorded </span>
-						<span style="display:inline-block; width:120px;"><input type="checkbox" name="excol_chk[]" id='ch8' value="Study"<?php echo set_checkbox('excol_chk[]', 'Study'); ?><?= in_array('Study',$excol) ? 'checked' : '' ?> onchange="return testchk(this.id)"> Study </span>
+						<span style="display:inline-block; width:120px;"><input type="checkbox" name="excol_chk[]" id='ch8' value="Exam_Leave"<?php echo set_checkbox('excol_chk[]', 'Exam_Leave'); ?><?= in_array('Exam_Leave',$excol) ? 'checked' : '' ?> onchange="return testchk(this.id)"> Exam Leave </span>
 						<span style="display:inline-block; width:120px;"><input type="checkbox" name="excol_chk[]" id='ch9' value="Transfer"<?php echo set_checkbox('excol_chk[]', 'Transfer'); ?><?= in_array('Transfer',$excol) ? 'checked' : '' ?> onchange="return testchk(this.id)"> Transfer</span>
 						<span style="display:inline-block; width:120px;"><input type="checkbox" name="excol_chk[]" id='ch10' value="Hajj"<?php echo set_checkbox('excol_chk[]', 'Hajj'); ?><?= in_array('Hajj',$excol) ? 'checked' : '' ?> onchange="return testchk(this.id)"> Hajj</span>
 					</div>
@@ -104,6 +104,7 @@
 				<div class="panel-body">
 					<div class="table-responsive">
 						<div id="subscribers_list">
+						
 							<table class="table">
 								<thead>
 									<tr>
@@ -196,6 +197,7 @@
 										$begin += 86400; // +1 day
 									};
 									$noleave = $no_days - $weekends;
+									
 									if($list->user_id == $row->user_id){
 										if ($list->leave_type == '1'){  //annual leave
 											$ALtaken += $noleave;
@@ -302,7 +304,7 @@
 								else{
 									$SLbalance = $sickB;
 								}
-								$annualB = (isset($row->annual_leave) ? $row->annual_leave : 0) + (isset($row->carry_fwd_leave) ? $row->carry_fwd_leave : 0) - $ALtaken - $ELtaken - $FSEtaken - $MLEtaken - $PLEtaken - $MRLEtaken - $ULEtaken - $STLEtaken - $TLEtaken - $HLEtaken - (isset($SLEtaken) ? $SLEtaken : 0);
+								$annualB = (isset($row->annual_leave) ? $row->entitled : 0) + (isset($row->carry_fwd_leave) ? $row->carry_fwd_leave : 0) - $ALtaken - $ELtaken - $FSEtaken - $MLEtaken - $PLEtaken - $MRLEtaken - $ULEtaken - $STLEtaken - $TLEtaken - $HLEtaken - (isset($SLEtaken) ? $SLEtaken : 0);
 									if ($annualB < 0){
 										$ALEtaken = abs($annualB);
 										$ALbalance = 0;
@@ -358,7 +360,7 @@
 											$taken1 = $ULtaken + $ULEtaken;
 											$balance1 = $ULbalance;
 										}
-										elseif ($excol[0] == 'Study'){
+										elseif ($excol[0] == 'Exam_Leave'){
 											$eligable1 = isset($leave_type[10]->entitle_days) ? $leave_type[10]->entitle_days : 0;
 											$taken1 = $STLtaken + $STLEtaken;
 											$balance1 = $STLbalance;
@@ -410,7 +412,7 @@
 											$taken2 = $ULtaken + $ULEtaken;
 											$balance2 = $ULbalance;
 										}
-										elseif ($excol[1] == 'Study'){
+										elseif ($excol[1] == 'Exam_Leave'){
 											$eligable2 = isset($leave_type[10]->entitle_days) ? $leave_type[10]->entitle_days : 0;
 											$taken2 = $STLtaken + $STLEtaken;
 											$balance2 = $STLbalance;
@@ -431,11 +433,12 @@
 									<tbody>
 										<tr class="warning">
 											<td><?=($start+1)?></td>
-											<td><?=isset($row->v_UserName) ? $row->v_UserName : '' ?></td>
+											<td><?=isset($row->v_UserName) ? $row->v_UserName : '' ?><br><b>Entitlement - <?=isset($row->annual_leave) ? $row->annual_leave : 0 ?> </b></td>
 											<td>
 												<table style="width:100%" cellpadding="5" cellspacing="5" border="0">
 													<tr>
-														<td class="col-lg-2">E - <?=isset($row->annual_leave) ? $row->annual_leave : 0 ?></td>                       
+														<td class="col-lg-2">E - <?=isset($row->annual_leave) ? $row->entitled  : 0 ?></td>
+													       <b></b>             
 														<td class="col-lg-2">E - <?=isset($row->sick_leave) ? $row->sick_leave : 0 ?></td>                       
 														<td class="col-lg-2">E - <?=isset($leave_type[2]->limit_days) ? $leave_type[2]->limit_days : 0?></td> 
 														<?php if ($excol) { ?>
