@@ -82,7 +82,7 @@ parent::__construct();
 		$query_result = $query->result();
 		return $query_result;
 	}
-	function leavedet($userid,$regid){
+	function leavedetbc($userid,$regid){
 		$this->db->select('R.*,U.v_hospitalcode,im.file_name');
 		$this->db->from('employee_leave_req R');
 		$this->db->join('sick_leave_img im','R.user_id = im.user_id AND R.id = im.leavereq_id','left');
@@ -95,6 +95,22 @@ parent::__construct();
 		$query_result = $query->result();
 		return $query_result;
 	}
+	function leavedet($userid,$regid){
+	//echo "klklklkll:";
+		$this->db->select('R.*,U.v_hospitalcode,im.file_name,UR.v_UserName as employee_replaced');
+		$this->db->from('employee_leave_req R');
+		$this->db->join('sick_leave_img im','R.user_id = im.user_id AND R.id = im.leavereq_id','left');
+		$this->db->join('pmis2_sa_user U','R.user_id = U.v_UserID');
+		$this->db->join('pmis2_sa_user UR','R.employee_replaced = UR.v_UserID','left');
+		$this->db->where('R.user_id',$userid);
+		$this->db->where('R.id',$regid);
+		$query = $this->db->get();
+		echo $this->db->last_query();
+		// exit();
+		$query_result = $query->result();
+		return $query_result;
+	}
+	
 	function samedateleave_c($fromdate,$todate,$userid){
 		$this->db->select('COUNT(*) AS jumlah');
 		//$this->db->where('leave_from',$fromdate);
@@ -104,7 +120,7 @@ parent::__construct();
 		$this->db->from('employee_leave_req R');
 		$this->db->join('pmis2_sa_user U','U.v_UserID = R.user_id');
 		$query = $this->db->get();
-		echo $this->db->last_query();
+		//echo $this->db->last_query();
 		//exit();
 		$query_result = $query->result();
 		return $query_result;
@@ -323,7 +339,8 @@ parent::__construct();
 		return $query_result;
 	}
 	function leaveaccall($year,$limit,$start){ //d4
-		$this->db->select('L.*,U.v_UserName');
+		//$this->db->select('L.*,U.v_UserName');
+		$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		//$this->db->where('user_id',$userid);
@@ -349,7 +366,8 @@ parent::__construct();
 		return $query_result;
 	}
 	function leaveaccalld($dept,$year,$limit,$start){ //d2
-		$this->db->select('L.*,U.v_UserName');
+		//$this->db->select('L.*,U.v_UserName');
+		$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		$this->db->where('U.v_GroupID',$dept);
@@ -375,7 +393,8 @@ parent::__construct();
 		return $query_result;
 	}
 	function leaveaccallds($dept,$staff,$year,$limit,$start){ //d1
-		$this->db->select('L.*,U.v_UserName');
+		//$this->db->select('L.*,U.v_UserName');
+		$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		$this->db->where('U.v_GroupID',$dept);
@@ -403,7 +422,8 @@ parent::__construct();
 		return $query_result;
 	}
 	function leaveaccalls($staff,$year,$limit,$start){ //d3
-		$this->db->select('L.*,U.v_UserName');
+		//$this->db->select('L.*,U.v_UserName');
+		$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		//$this->db->where('U.v_GroupID',$dept);
@@ -431,7 +451,8 @@ parent::__construct();
 		return $query_result;
 	}
 	function leaveaccallda($dept,$apsbno,$year,$limit,$start){ //d5
-		$this->db->select('L.*,U.v_UserName');
+		//$this->db->select('L.*,U.v_UserName');
+		$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		$this->db->where('U.v_GroupID',$dept);
@@ -459,7 +480,8 @@ parent::__construct();
 		return $query_result;
 	}
 	function leaveaccalldsa($dept,$staff,$apsbno,$year,$limit,$start){ //d6
-		$this->db->select('L.*,U.v_UserName');
+		//$this->db->select('L.*,U.v_UserName');
+		$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		$this->db->where('U.v_GroupID',$dept);
@@ -489,7 +511,8 @@ parent::__construct();
 		return $query_result;
 	}
 	function leaveaccalla($apsbno,$year,$limit,$start){ //d7
-		$this->db->select('L.*,U.v_UserName');
+		//$this->db->select('L.*,U.v_UserName');
+		$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		//$this->db->where('U.v_GroupID',$dept);
@@ -517,7 +540,8 @@ parent::__construct();
 		return $query_result;
 	}
 	function leaveaccallsa($staff,$apsbno,$year,$limit,$start){ //d8
-		$this->db->select('L.*,U.v_UserName');
+		//$this->db->select('L.*,U.v_UserName');
+		$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		//$this->db->where('U.v_GroupID',$dept);

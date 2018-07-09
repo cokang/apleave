@@ -114,7 +114,7 @@ $(document).ready(function() {
 
   //$( "#from" ).datepicker({ dateFormat: 'yy-mm-dd' }); 
   
-  //$( "#from" ).datepicker({ dateFormat: 'yy-mm-dd' });
+  $( "#from" ).datepicker({ dateFormat: 'yy-mm-dd' });
   $( "#to" ).datepicker({ dateFormat: 'dd-mm-yy' });
   $( "#date_calendar" ).datepicker({ dateFormat: 'dd-mm-yy' });
 });
