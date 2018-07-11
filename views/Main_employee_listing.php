@@ -1,3 +1,4 @@
+
 <div id="page-wrapper">
     <div class="row">
       <div class="col-lg-12">
@@ -47,13 +48,17 @@
                 <?php endforeach; ?>
               </table>
               <ul class="pagination">
-                <?php if ($rec[0]->jumlah > $limit){ ?>
-                <?php for ($i=1;$i<=$page;$i++){ ?>
-                <li class="paginate_button">&nbsp;<a href="?p=<?php echo $i?>"><?=$i?></a></li>
-                <?php } ?>
-                <li class="paginate_button previous"><a href="?p=<?php echo $page?>">Next</a></li>
+                <?php if ($rec[0]->jumlah > $limit){ ?>						
+						<?php if ($this->input->get('p') != ''){ ?>
+						<li><a href="?p=1"> <i class="fa fa-chevron-circle-left" style="color:green"></i> First Page </a></li>
+					  	<li><a href="?p=<?=($this->input->get('p') > 1 ? $this->input->get('p')-1 : 1)?>">Prev</a></li> 
+						<?php } ?>
+						<li><a href=""><?=($this->input->get('p') ? $this->input->get('p') : 1)?></a></li>
+		               <li class="paginate_button previous"><a href="?p=<?php echo $page?>">Next</a></li>
+						<li><a href="?p=<?php echo ceil($rec[0]->jumlah/$limit);?>"> Last Page <i class="fa fa-chevron-circle-right" style="color:red;"></i></a></li>				
                 <?php } ?>
               </ul>
+			  
             </div>
             <!-- /.table-responsive --> 
           </div>

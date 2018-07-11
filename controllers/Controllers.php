@@ -92,6 +92,7 @@ class Controllers extends CI_Controller {
 		$data['year'] = ($this->input->get('y') <> 0) ? $this->input->get('y') : date('Y');
 		$data['leave_type'] = $this->display_model->leave_type();
 		$data['probationchk'] = $this->display_model->probationchk($this->session->userdata('v_UserName'));
+		$data['applied_date'] = $this->display_model->applied_date($this->session->userdata('v_UserName'));
 		//$this->load->model('outside_model');
 		//$data['outside'] = $this->outside_model->firsttest();
 		//$data['outside'] = $this->outside_model->firsttestsql();
@@ -101,10 +102,10 @@ class Controllers extends CI_Controller {
 		//echo "ajajajajajajjaja" . $data['outside'][0]->v_Asset_name . "<br>";
 		//echo "nilai data : " . $data['outside'][0]->v_Asset_name;
 		
-		$this->load->view('Head');
+		$this->load->view('Head',$data);
 		$this->load->view('top');
-		$this->load->view('left',$data);
-		$this->load->view('Main',$data);
+		$this->load->view('left');
+		$this->load->view('Main');
 		$this->load->view('footer');
 	}
 	public function leave_listing()
@@ -202,6 +203,18 @@ class Controllers extends CI_Controller {
 		else{
 			$data['SEL_hol'][] = NULL;
 		}
+		
+		
+		$data['holidayPHG'] = $this->display_model->holidayPHG($data['fyear']);
+			if($data['holidayPHG']){
+			foreach ($data['holidayPHG'] as $key => $value) {
+			    $data['PHG_hol'][] = strtotime(date($value->date_holiday));
+			}
+		}
+		else{
+			$data['PHG_hol'][] = NULL;
+		}
+
 
 		if ($data['check'] == 'Own'){
 		//$data['leaveacc'] = $this->display_model->leaveacc($this->session->userdata('v_UserName'),$data['fyear']);
@@ -863,6 +876,16 @@ class Controllers extends CI_Controller {
 		else{
 			$data['SEL_hol'][] = NULL;
 		}
+		$data['holidayPHG'] = $this->display_model->holidayPHG(date('Y',strtotime($data['datecal'])));
+		if($data['holidayPHG']){
+			foreach ($data['holidayPHG'] as $key => $value) {
+			    $data['PHG_hol'][] = strtotime(date($value->date_holiday));
+			}
+		}
+		else{
+			$data['PHG_hol'][] = NULL;
+		}
+
 
 		$data['limit'] = 5;
 		isset($_GET['p']) ? $data['page'] = $_GET['p'] : $data['page'] = 1;

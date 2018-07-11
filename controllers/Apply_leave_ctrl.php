@@ -81,5 +81,22 @@ class apply_leave_ctrl extends CI_Controller{
 		
 		redirect('Controllers/leave_listing');
 	}
+
+         public function send_mail_frmout($emailto) { 
+         $from_email = "nezam@advancepact.com"; 
+         //$to_email = $this->input->post('email'); 
+         $to_email = $emailto; 
+   
+         //Load email library 
+         $this->load->library('email'); 
+   
+         $this->email->from($from_email, 'AP LEAVE System'); 
+         $this->email->to($to_email);
+         $this->email->subject('Leave Application Notice'); 
+         $this->email->message('A leave application is pending your approval  -> http://aphrms.advancepact.com/index.php/Controllers/leave_approved?tab=9'); 
+   
+         //Send mail 
+         $this->email->send();
+      } 
 }
 ?>

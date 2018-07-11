@@ -97,7 +97,7 @@
                   <img src="<?php echo base_url(); ?>sick_leave_img/<?=$image?>" width="100%" title="Choose Your Picture" onclick="getFile()" name="file_name" id="file_name" value="picture"/>
                 </div>
                 <?php }else{ ?>
-                <div class="form-group" id="sick_leave_img">
+                <div class="form-group" id="sick_leave_img" style="display: none;">
                   <label>Image Reference</label><br />
                   <div id="yourBtn"><img src="<?php echo base_url(); ?>sick_leave_img/<?= isset($image) == TRUE ? $image : 'No_image_available.jpg'?>" class="col-lg-12" title="Choose Your Picture" id="file_name" onclick="getFile()" name="file_name" value="<?= isset($image) == TRUE ? $image : 'No_image_available.jpg'?>"/></div>
 

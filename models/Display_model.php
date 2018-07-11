@@ -82,19 +82,7 @@ parent::__construct();
 		$query_result = $query->result();
 		return $query_result;
 	}
-	function leavedetbc($userid,$regid){
-		$this->db->select('R.*,U.v_hospitalcode,im.file_name');
-		$this->db->from('employee_leave_req R');
-		$this->db->join('sick_leave_img im','R.user_id = im.user_id AND R.id = im.leavereq_id','left');
-		$this->db->join('pmis2_sa_user U','R.user_id = v_UserID');
-		$this->db->where('R.user_id',$userid);
-		$this->db->where('R.id',$regid);
-		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
-		$query_result = $query->result();
-		return $query_result;
-	}
+	
 	function leavedet($userid,$regid){
 	//echo "klklklkll:";
 		$this->db->select('R.*,U.v_hospitalcode,im.file_name,UR.v_UserName as employee_replaced');
@@ -105,7 +93,7 @@ parent::__construct();
 		$this->db->where('R.user_id',$userid);
 		$this->db->where('R.id',$regid);
 		$query = $this->db->get();
-		echo $this->db->last_query();
+		//echo $this->db->last_query();
 		// exit();
 		$query_result = $query->result();
 		return $query_result;
@@ -575,7 +563,8 @@ parent::__construct();
 		$this->db->from('employee_leave_req R');
 		$this->db->join('pmis2_sa_user U','R.user_id = U.v_UserID');
 		$this->db->where('YEAR(leave_from)',$year);
-		$this->db->where('leave_status','Accepted');
+		//$this->db->where('leave_status','Accepted');
+		$this->db->where('leave_status','Approved');
 		$query = $this->db->get();
 		//echo $this->db->last_query();
 		//exit();
@@ -588,7 +577,8 @@ parent::__construct();
 		$this->db->join('pmis2_sa_user U','R.user_id = U.v_UserID');
 		$this->db->where('U.v_GroupID',$dept);
 		$this->db->where('YEAR(R.leave_from)',$year);
-		$this->db->where('R.leave_status','Accepted');
+		//$this->db->where('R.leave_status','Accepted');
+		$this->db->where('R.leave_status','Approved');
 		$query = $this->db->get();
 		//echo $this->db->last_query();
 		//exit();
@@ -601,7 +591,8 @@ parent::__construct();
 		$this->db->join('pmis2_sa_user U','R.user_id = U.v_UserID');
 		$this->db->where('U.v_GroupID',$dept);
 		$this->db->where('YEAR(R.leave_from)',$year);
-		$this->db->where('R.leave_status','Accepted');
+		//$this->db->where('R.leave_status','Accepted');
+		$this->db->where('R.leave_status','Approved');
 		$this->db->like('U.v_UserName',$staff);
 		$query = $this->db->get();
 		//echo $this->db->last_query();
@@ -615,7 +606,8 @@ parent::__construct();
 		$this->db->join('pmis2_sa_user U','R.user_id = U.v_UserID');
 		//$this->db->where('U.v_GroupID',$dept);
 		$this->db->where('YEAR(R.leave_from)',$year);
-		$this->db->where('R.leave_status','Accepted');
+		//$this->db->where('R.leave_status','Accepted');
+		$this->db->where('R.leave_status','Approved');
 		$this->db->like('U.v_UserName',$staff);
 		$query = $this->db->get();
 		//echo $this->db->last_query();
@@ -629,7 +621,8 @@ parent::__construct();
 		$this->db->join('pmis2_sa_user U','R.user_id = U.v_UserID');
 		$this->db->where('U.v_GroupID',$dept);
 		$this->db->where('YEAR(R.leave_from)',$year);
-		$this->db->where('R.leave_status','Accepted');
+		//$this->db->where('R.leave_status','Accepted');
+		$this->db->where('R.leave_status','Approved');
 		$this->db->like('U.apsb_no',$apsbno);
 		$query = $this->db->get();
 		//echo $this->db->last_query();
@@ -643,7 +636,8 @@ parent::__construct();
 		$this->db->join('pmis2_sa_user U','R.user_id = U.v_UserID');
 		$this->db->where('U.v_GroupID',$dept);
 		$this->db->where('YEAR(R.leave_from)',$year);
-		$this->db->where('R.leave_status','Accepted');
+		//$this->db->where('R.leave_status','Accepted');
+		$this->db->where('R.leave_status','Approved');
 		$this->db->like('U.v_UserName',$staff);
 		$this->db->like('U.apsb_no',$apsbno);
 		$query = $this->db->get();
@@ -658,7 +652,8 @@ parent::__construct();
 		$this->db->join('pmis2_sa_user U','R.user_id = U.v_UserID');
 		//$this->db->where('U.v_GroupID',$dept);
 		$this->db->where('YEAR(R.leave_from)',$year);
-		$this->db->where('R.leave_status','Accepted');
+		//$this->db->where('R.leave_status','Accepted');
+		$this->db->where('R.leave_status','Approved');
 		$this->db->like('U.apsb_no',$apsbno);
 		$query = $this->db->get();
 		//echo $this->db->last_query();
@@ -672,7 +667,8 @@ parent::__construct();
 		$this->db->join('pmis2_sa_user U','R.user_id = U.v_UserID');
 		//$this->db->where('U.v_GroupID',$dept);
 		$this->db->where('YEAR(R.leave_from)',$year);
-		$this->db->where('R.leave_status','Accepted');
+		//$this->db->where('R.leave_status','Accepted');
+		$this->db->where('R.leave_status','Approved');
 		$this->db->like('U.apsb_no',$apsbno);
 		$this->db->like('U.v_UserName',$staff);
 		$query = $this->db->get();
@@ -829,6 +825,18 @@ parent::__construct();
 		$query_result = $query->result();
 		return $query_result;
 	}
+	function holidayPHG($year){
+		$this->db->select('date_holiday');
+		$this->db->from('holiday_list');
+		$this->db->where('state','PHG');
+		$this->db->where('YEAR(date_holiday)',$year);
+		$query = $this->db->get();
+		//echo $this->db->last_query();
+		/* echo "pahang";
+		exit(); */
+		$query_result = $query->result();
+		return $query_result;
+	}
 	function leave_type(){
 		$this->db->select('*');
 		$this->db->from('leave_type');
@@ -930,7 +938,8 @@ parent::__construct();
 		$this->db->where('user_id',$userid);
 		$this->db->where('leave_from <= ',$fromdate);
 		$this->db->where('YEAR(leave_from)',$year);
-		$this->db->where('leave_status','Accepted');
+		//$this->db->where('leave_status','Accepted');
+		$this->db->where('leave_status','Approved');
 		$query = $this->db->get();
 		//echo $this->db->last_query();
 		//exit();
@@ -984,6 +993,19 @@ parent::__construct();
 		//echo $this->db->last_query();
 		//exit();
 		$query_result = $query->result();
+		return $query_result;
+	}
+
+	function applied_date($userid){
+		$this->db->select('leave_from,leave_to');
+		$this->db->from('employee_leave_req');
+		$this->db->where('user_id',$userid);
+		$this->db->where_in("leave_status", array("Pending", "Cancelled"));//where leave_status cancel/rejected/null
+		$this->db->or_where("leave_status", NULL); 
+		$query = $this->db->get();
+		// echo $this->db->last_query();
+		// exit();
+		$query_result = $query->result_array();
 		return $query_result;
 	}
 	

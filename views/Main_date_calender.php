@@ -60,8 +60,12 @@
                 elseif($row->v_hospitalcode == 'SEL'){
                   $holiday_array = $SEL_hol;
                 }
+				 elseif($row->v_hospitalcode == 'PHG'){
+				  $holiday_array = $PHG_hol;
+			    }
+				
                 
-                $no_days  = 0;
+                  $no_days  = 0;
                   $weekends = 0;
                   while ($begin <= $end) {
                       $no_days++; // no of days in the given interval
@@ -72,6 +76,11 @@
                           $weekends++;
                         }
                       }
+					  elseif($row->v_hospitalcode == NULL ){					   	
+					    if ($what_day > 5 ) { // 6 and 7 are weekend days
+						   $weekends++;
+						}
+					 }
                       else{
                         if ($what_day > 5 || (in_array($begin, $holiday_array))) { // 6 and 7 are weekend days
                           $weekends++;

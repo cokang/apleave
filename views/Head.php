@@ -87,6 +87,20 @@
   padding:10px 15px;
 }
 </style>
+<?php 
+$i=0;
+$leave_from = array();
+$leave_to   = array();
+foreach($applied_date as $row){
+  // array_push($leave_from, $row['leave_from']);
+  // array_push($leave_to, $row['leave_to']);
+  $leave_from[$i] = date("d-m-Y", strtotime($row['leave_from']));
+  $leave_to[$i]   = date("d-m-Y", strtotime($row['leave_to']));
+  $i++;
+}
+$leave_from = implode(",", array_values($leave_from));
+$leave_to = implode(",", array_values($leave_to));
+?>
 <!-- Page-Level Demo Scripts - Forms - Use for reference -->
 <link href="<?php echo base_url(); ?>/css/jquery-ui.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="<?php echo base_url(); ?>/js/jquery9.js"></script> 
@@ -119,7 +133,6 @@ $(document).ready(function() {
   $( "#date_calendar" ).datepicker({ dateFormat: 'dd-mm-yy' });
 });
 function validate_form(){
-  
   var $picture = $('#file_name').attr('value');
   //alert($picture);
   $("#from").css("border-color","#D9D8D4");
@@ -146,6 +159,10 @@ function validate_form(){
     error=1;
   }
   
+
+  if($("#from").val()!="" || $("#from").val()!="From"){
+    
+  }
 
   if($("#duration").val()=="Full Day"){
     if($("#to").val()=="" || $("#to").val()=="To"){
@@ -253,7 +270,7 @@ function check_leave_availability(duration,year,probation){
               // $("#from").prop("disabled", false);  
             }
             else if(json['ALbalance']<=0){
-               $("#message_sp").removeClass();  
+               $("#message_sp").removeClass();
                $("#message_sp").addClass("error_message");
                $("#message_sp").text("You have no Annual Leave(s) remaining.");
                $("#message_sp").slideDown("slow");
@@ -563,7 +580,9 @@ function check_days_available(){
           $("#to").val("");
         }
       }
-  });   
+  });
+
+  check_dateAvailabality();
 }
 
 function no_of_days() {
@@ -583,7 +602,30 @@ function fromChange(from){
     $("#leave_type").val("0")
     $("#to").prop("disabled", false); 
   }
-      
+
+  check_dateAvailabality();
+}
+
+function check_dateAvailabality(){
+  var from            = $("#from").val();
+  var to              = $("#to").val();
+  var hasApplied_from = "<?php echo $leave_from?>";
+  hasApplied_fromArr  = hasApplied_from.split(",");
+  var hasApplied_to   = "<?php echo $leave_to?>";
+  hasApplied_toArr    = hasApplied_to.split(",");
+
+  if( hasApplied_from.length > 0 && hasApplied_to.length > 0 ){
+    if( ( from!="" && hasApplied_fromArr.includes(from) ) || to!="" && hasApplied_toArr.includes(to) ){
+      $("#message_sp").removeClass();
+      $("#message_sp").addClass("error_message");
+      $("#message_sp").text("You have applied leave on this date. Please check your leave requests.");
+      $("#message_sp").slideDown("slow");
+    }else{
+      $("#message_sp").slideUp("slow");
+    }
+  }else{
+    return true;
+  }
 }
 
 /*function check_duration(duration){ 
