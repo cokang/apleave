@@ -41,7 +41,9 @@ class apply_leave_ctrl extends CI_Controller{
 			//$i=0;
 			do {
 				//echo ++$i."<br>";
-				$data['regid'] = $this->display_model->get_reqid(date("Y-m-d",strtotime($this->input->post('from_leavedate'))),$this->session->userdata('v_UserName'));
+				//$data['regid'] = $this->display_model->get_reqid(date("Y-m-d",strtotime($this->input->post('from_leavedate'))),$this->session->userdata('v_UserName'));
+			  $data['regid'][0]->id		= $this->db->insert_id();
+				$data['regid'][0]->user_id	= $this->session->userdata('v_UserName');
 			} while (!$data['regid']);
 			//print_r($data['regid']);
 			//exit();
@@ -81,6 +83,58 @@ class apply_leave_ctrl extends CI_Controller{
 		
 		redirect('Controllers/leave_listing');
 	}
+	
+	
+
+	public function check_dateAvailabality(){
+		$this->load->model("display_model");
+		$applied_date = $this->display_model->applied_date($this->session->userdata('v_UserName'));
+		if( !empty($applied_date) ){
+			// if( isset($_POST['appliedFrom']) ){
+			// 	date("Y-m-d", strtotime($_POST['appliedFrom']));
+			// 	foreach ($applied_date as $row) {
+					$this->check_range( $_POST['appliedFrom'], $_POST['appliedTo'], $this->session->userdata('v_UserName'));
+			// 	}
+			// }
+		}else{
+			return true;
+		}
+	}
+
+	public function check_range($fromdate,$todate,$userid){
+		if($fromdate!=""){
+			$fromdate 	= date("Y-m-d", strtotime($fromdate));
+		}
+		if($todate!=""){
+			$todate		= date("Y-m-d", strtotime($todate));
+		}
+		$this->db->select('count(*) as has_applied');
+		$this->db->where('leave_from',$fromdate);
+
+		if( $fromdate!="" && $todate=="" ){
+			$this->db->where("'".$fromdate."' BETWEEN R.leave_from AND R.leave_to", NULL, FALSE);
+		}
+		if( $fromdate=="" && $todate!="" ){
+			$this->db->where("'".$todate."' BETWEEN R.leave_from AND R.leave_to", NULL, FALSE);
+		}
+		if( $fromdate!="" && $todate!="" ){
+			$this->db->where("'".$fromdate."' BETWEEN R.leave_from AND R.leave_to", NULL, FALSE);
+			$this->db->or_where("'".$todate."' BETWEEN R.leave_from AND R.leave_to", NULL, FALSE);
+			$this->db->or_where("R.leave_from BETWEEN '$fromdate' AND '$todate'", NULL, FALSE);
+			$this->db->or_where("R.leave_to BETWEEN '$fromdate' AND '$todate'", NULL, FALSE);
+		}
+
+		$this->db->where('user_id',$userid);
+		$this->db->from('employee_leave_req R');
+		$this->db->join('pmis2_sa_user U','U.v_UserID = R.user_id');
+		$query = $this->db->get()->row()->has_applied;
+		// echo $this->db->last_query();
+		// exit();
+		// $query_result = $query->result();
+		echo $query; // pakai utk return value js
+		// return $query_result;
+	}
+
 
          public function send_mail_frmout($emailto) { 
          $from_email = "nezam@advancepact.com"; 

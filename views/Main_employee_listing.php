@@ -1,4 +1,5 @@
 
+
 <div id="page-wrapper">
     <div class="row">
       <div class="col-lg-12">
@@ -18,8 +19,18 @@
       <!-- /.col-lg-6 -->
       <div class="col-lg-6" style="width:80%">
         <div class="panel panel-default">
-          <div class="panel-heading"> </div>
+          <div class="panel-heading"> 
+		  <form method="">
+		   <div class="input-group"style="width:40%">
+        <input type="text" class="form-control" placeholder="Search by Name or Apsb No" value="<?php echo $this->input->get('sc')?>" name="sc"/>
+        <div class="input-group-btn">
+         <button class="btn btn-primary" type="submit">
+            <span class="fa fa-search"></span>
+          </button>
+        </div></div></form>		  
+		  </div>
           <!-- /.panel-heading -->
+
           <div class="panel-body">
             <div class="table-responsive">
               <table class="table">
@@ -32,6 +43,7 @@
                     <th>Action</th>
                   </tr>
                 </thead>
+				<?php  if (!empty($stafflist)) {?>
                 <?php foreach($stafflist as $row): ?>
                 <tbody>
                   <tr class="">
@@ -43,9 +55,15 @@
                         <a href="<?php echo base_url(); ?>index.php/Controllers/add_leaves?employee_name=<?=isset($row->v_UserID) ? $row->v_UserID : '' ?>" > Update Leaves </a>
                     </td>
                   </tr>
-                </tbody>
-                <?php $start++ ?>
+				       <?php $start++ ?>
                 <?php endforeach; ?>
+				<?php }else { ?>
+				<tr align="center" style="background:white;">
+	    					<td colspan="5"><span style="color:red;">NO RECORDS FOUND FOR THIS EMPLOYEE.</span></td>
+	    				</tr>
+						<?php } ?>
+                </tbody>
+           
               </table>
               <ul class="pagination">
                 <?php if ($rec[0]->jumlah > $limit){ ?>						

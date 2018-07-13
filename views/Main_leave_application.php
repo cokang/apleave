@@ -159,7 +159,7 @@
                 <tbody>
                   <tr>
                     <td data-title="Applicant Name:"><?=isset($row->v_UserName) ? $row->v_UserName : '' ?></td>
-                    <td data-title="Leave Type:"><?=isset($row->leave_type) ? $row->leave_type : '' ?></td>
+                    <td data-title="Leave Type:"><?=isset($row->leave_name) ? $row->leave_name : '' ?></td>
                     <td data-title="From:"><?=isset($row->leave_from) ? date('d-m-Y',strtotime($row->leave_from)) : '' ?></td>
                     <td data-title="To:"><?=isset($row->leave_to) ? date('d-m-Y',strtotime($row->leave_to)) : '' ?></td>
                     <td data-title="No of days:"><?=isset($noleave) ? $noleave : '' ?></td>

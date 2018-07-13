@@ -119,7 +119,7 @@ class leave_application extends CI_Controller{
 		}
 		//$data['samedateleave'] = $this->display_model->samedateleave($data['fromdate'],$data['userid'],$data['limit'],$data['start']);
 		//echo "lalalalallalazzz : ".$data['fromdate'];
-		$data['samedateleave'] = $this->display_model->samedateleave($begin,$end,$data['userid'],$data['limit'],$data['start']);
+		$data['samedateleave'] = $this->display_model->samedateleave($begin2,$end2,$data['userid'],$data['limit'],$data['start']);
 		//same date
 
 		//leavebalance

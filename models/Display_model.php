@@ -114,13 +114,15 @@ parent::__construct();
 		return $query_result;
 	}
 	function samedateleave($fromdate,$todate,$userid,$limit,$start){
-		$this->db->select('R.*,U.v_UserName,U.v_hospitalcode');
+		//$this->db->select('R.*,U.v_UserName,U.v_hospitalcode');
+		$this->db->select('R.*,U.v_UserName,U.v_hospitalcode, LT.leave_name');
 		//$this->db->where('leave_from',$fromdate);
 		$this->db->where("'".$fromdate."' BETWEEN R.leave_from AND R.leave_to", NULL, FALSE);
 		$this->db->or_where("'".$todate."' BETWEEN R.leave_from AND R.leave_to", NULL, FALSE);
 		$this->db->where('user_id <>',$userid);
 		$this->db->from('employee_leave_req R');
 		$this->db->join('pmis2_sa_user U','U.v_UserID = R.user_id');
+		$this->db->join('leave_type LT', 'R.leave_type = LT.id');
 		$this->db->limit($limit,$start);
 		$query = $this->db->get();
 		//echo $this->db->last_query();
@@ -137,13 +139,19 @@ parent::__construct();
 		$query_result = $query->result();
 		return $query_result;
 	}
-	function stafflistlim($limit,$start){
+	function stafflistlim($staff,$limit,$start){
 		$this->db->select('v_UserID,v_UserName,v_GroupID');
 		$this->db->from('pmis2_sa_user');
+
+		$searcharray = array(
+                'apsb_no' => $staff,
+                'v_UserName' => $staff,
+            );
+            $this->db->or_like($searcharray);
 		$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+	/* 	echo $this->db->last_query();
+	    exit(); */
 		$query_result = $query->result();
 		return $query_result;
 	}

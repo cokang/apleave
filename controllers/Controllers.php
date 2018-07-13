@@ -29,6 +29,7 @@ class Controllers extends CI_Controller {
 				$data['year'] = ($this->input->get('y') <> 0) ? $this->input->get('y') : date('Y');
 				$data['leave_type'] = $this->display_model->leave_type();
 				$data['probationchk'] = $this->display_model->probationchk($this->session->userdata('v_UserName'));
+				$data['applied_date'] = $this->display_model->applied_date($this->session->userdata('v_UserName'));
 		///$url = $this->input->post('continue') ? $this->input->post('continue') : site_url('contentcontroller/select');
 		//$config['upload_path'] = 'C:\inetpub\wwwroot\FEMSHospital_v3\uploadfile';
 		//$config['upload_path'] = 'C:\xampp\htdocs\leave\sick_leave_img';
@@ -45,9 +46,9 @@ class Controllers extends CI_Controller {
 		
 		{
 			$data['error'] = array($this->upload->display_errors());
-			$this->load->view('Head');
+			$this->load->view('Head',$data);
 			$this->load->view('top');
-			$this->load->view('left',$data);
+			$this->load->view('left');
 			$this->load->view('Main');
 			$this->load->view('footer');
 		}
@@ -72,10 +73,10 @@ class Controllers extends CI_Controller {
 				//$this->load->model('insert_model');
 				//$this->insert_model->sickleave_img($data['upload_data']);
 				
-				$this->load->view('Head');
+				$this->load->view('Head',$data);
 				$this->load->view('top');
-				$this->load->view('left',$data);
-				$this->load->view('Main',$data);
+				$this->load->view('left');
+				$this->load->view('Main');
 				$this->load->view('footer');
 				}
 		}
@@ -772,7 +773,8 @@ class Controllers extends CI_Controller {
 			$data['next'] = ++$data['page'];
 		}
 
-		$data['stafflist'] = $this->display_model->stafflistlim($data['limit'],$data['start']);
+		//$data['stafflist'] = $this->display_model->stafflistlim($data['limit'],$data['start']);
+    $data['stafflist'] = $this->display_model->stafflistlim($this->input->get('sc'),$data['limit'],$data['start']);
 		$this->load->view('Head');
 		$this->load->view('top');
 		$this->load->view('left',$data);
@@ -838,6 +840,7 @@ class Controllers extends CI_Controller {
 		$this->load->model('display_model');
 		$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
 		$data['hrrow'] = $this->display_model->gethrrow($this->session->userdata('v_UserName'));
+				$data['applied_date'] = $this->display_model->applied_date($this->session->userdata('v_UserName'));
 		isset($_REQUEST['date_calendar']) ? $data['datecal'] = date("d-m-Y",strtotime($_REQUEST['date_calendar'])) : $data['datecal'] = date("d-m-Y");
 
 		$data['holidayJB'] = $this->display_model->holidayJB(date('Y',strtotime($data['datecal'])));
@@ -902,9 +905,9 @@ class Controllers extends CI_Controller {
 
 		//echo $data['datecal'];
 		//exit();
-		$this->load->view('Head');
+		$this->load->view('Head',$data);
 		$this->load->view('top');
-		$this->load->view('left',$data);
+		$this->load->view('left');
 		$this->load->view('Main_date_calender');
 		$this->load->view('footer');
 	}
