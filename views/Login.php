@@ -16,7 +16,7 @@
                 <div class="col-md-12 loginbox">
                     <div class="col-md-6">
                         <img src="<?php echo base_url();?>images/logo.png" class="logo">
-                        <h2>Advance Pact e-Leave</h2>
+                        <h2>Advance Pact e-Leave<?php  //echo "version ci : " . CI_VERSION; ?></h2>
                         <img src="<?php echo base_url();?>images/login_image.png" class="login-img">
                     </div>
                     <div class="col-md-6">
