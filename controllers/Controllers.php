@@ -43,7 +43,7 @@ class Controllers extends CI_Controller {
 		$this->load->library('upload', $config);
 
 		if ( ! $this->upload->do_upload('userfile'))
-		
+
 		{
 			$data['error'] = array($this->upload->display_errors());
 			$this->load->view('Head',$data);
@@ -69,10 +69,10 @@ class Controllers extends CI_Controller {
 				{
 				$data['upload_data'] = $this->upload->data();
 				$data['image'] = $data['upload_data']['file_name'];
-				
+
 				//$this->load->model('insert_model');
 				//$this->insert_model->sickleave_img($data['upload_data']);
-				
+
 				$this->load->view('Head',$data);
 				$this->load->view('top');
 				$this->load->view('left');
@@ -102,7 +102,7 @@ class Controllers extends CI_Controller {
 		//		echo "nilai data : " . $data['outside'][0]->v_UserName;
 		//echo "ajajajajajajjaja" . $data['outside'][0]->v_Asset_name . "<br>";
 		//echo "nilai data : " . $data['outside'][0]->v_Asset_name;
-		
+
 		$this->load->view('Head',$data);
 		$this->load->view('top');
 		$this->load->view('left');
@@ -137,7 +137,7 @@ class Controllers extends CI_Controller {
 		$this->load->view('footer');
 	}
 	public function leave_account_view()
-	{	
+	{
 		$this->load->model('display_model');
 		$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
 		$data['hrrow'] = $this->display_model->gethrrow($this->session->userdata('v_UserName'));
@@ -148,17 +148,14 @@ class Controllers extends CI_Controller {
 		isset($_REQUEST['ch_bx']) ? $data['check'] = $_REQUEST['ch_bx'] : $data['check'] = 'Own';
 		//isset($_REQUEST['excol_chk']) ? $data['excol'] = $_REQUEST['excol_chk'] : $data['excol'] = array();
 		$this->input->get('excol1') != '' || $this->input->get('excol2') != '' ? $data['excolt'] = array($this->input->get('excol1'),$this->input->get('excol2')) : $data['excolt'] = array();
-		
+
 		if (isset($_REQUEST['excol_chk'])) {
 			$data['excol'] = $_REQUEST['excol_chk'];
-		}
-		elseif ($this->input->get('excol1') != '' AND $this->input->get('excol2') != '') {
+		}elseif ($this->input->get('excol1') != '' AND $this->input->get('excol2') != '') {
 			$data['excol'] = array($this->input->get('excol1'),$this->input->get('excol2'));
-		}
-		elseif ($this->input->get('excol1') != '' AND $this->input->get('excol2') == '') {
+		}elseif ($this->input->get('excol1') != '' AND $this->input->get('excol2') == '') {
 			$data['excol'] = array($this->input->get('excol1'));
-		}
-		else{
+		}else{
 			$data['excol'] = array();
 		}
 		//print_r($data['excol']);
@@ -173,200 +170,181 @@ class Controllers extends CI_Controller {
 			foreach ($data['holidayJB'] as $key => $value) {
 			    $data['JB_hol'][] = strtotime(date($value->date_holiday));
 			}
-		}
-		else{
+		}else{
 			$data['JB_hol'][] = NULL;
 		}
+
 		$data['holidayMKA'] = $this->display_model->holidayMKA($data['fyear']);
 		if($data['holidayMKA']){
 			foreach ($data['holidayMKA'] as $key => $value) {
 			    $data['MKA_hol'][] = strtotime(date($value->date_holiday));
 			}
-		}
-		else{
+		}else{
 			$data['MKA_hol'][] = NULL;
 		}
+
 		$data['holidayNS'] = $this->display_model->holidayNS($data['fyear']);
 		if($data['holidayNS']){
 			foreach ($data['holidayNS'] as $key => $value) {
 			    $data['NS_hol'][] = strtotime(date($value->date_holiday));
 			}
-		}
-		else{
+		}else{
 			$data['NS_hol'][] = NULL;
 		}
+
 		$data['holidaySEL'] = $this->display_model->holidaySEL($data['fyear']);
 		if($data['holidaySEL']){
 			foreach ($data['holidaySEL'] as $key => $value) {
 			    $data['SEL_hol'][] = strtotime(date($value->date_holiday));
 			}
-		}
-		else{
+		}else{
 			$data['SEL_hol'][] = NULL;
 		}
-		
-		
+
 		$data['holidayPHG'] = $this->display_model->holidayPHG($data['fyear']);
-			if($data['holidayPHG']){
+		if($data['holidayPHG']){
 			foreach ($data['holidayPHG'] as $key => $value) {
 			    $data['PHG_hol'][] = strtotime(date($value->date_holiday));
 			}
-		}
-		else{
+		}else{
 			$data['PHG_hol'][] = NULL;
 		}
 
-
 		if ($data['check'] == 'Own'){
-		//$data['leaveacc'] = $this->display_model->leaveacc($this->session->userdata('v_UserName'),$data['fyear']);
-		//$data['tleavetaken'] = $this->display_model->tleavetaken($this->session->userdata('v_UserName'),$data['fyear']);
+			//$data['leaveacc'] = $this->display_model->leaveacc($this->session->userdata('v_UserName'),$data['fyear']);
+			//$data['tleavetaken'] = $this->display_model->tleavetaken($this->session->userdata('v_UserName'),$data['fyear']);
+
+				$data['limit'] = 4;
+				isset($_GET['p']) ? $data['page'] = $_GET['p'] : $data['page'] = 1;
+				$data['start'] = ($data['page'] * $data['limit']) - $data['limit'];
+
+				$data['rec'] = $this->display_model->leaveacc_c($this->session->userdata('v_UserName'),$data['fyear']);
+				if($data['rec'][0]->jumlah > ($data['page'] * $data['limit']) ){
+					$data['next'] = ++$data['page'];
+				}
+				$data['leaveacc'] = $this->display_model->leaveacclim($this->session->userdata('v_UserName'),$data['fyear'],$data['limit'],$data['start']);
+				foreach ($data['leaveacc'] as $hajj){
+					$data['hajjdata'] = $this->display_model->hajjdata($hajj->user_id);
+					$data['hajj'][] = array('user_id' => $hajj->user_id,
+										  'hajjdet' => $data['hajjdata']);
+				}
+				$data['tleavetaken'] = $this->display_model->tleavetaken($this->session->userdata('v_UserName'),$data['fyear']);
+				$data['leave_type'] = $this->display_model->leave_type();
+			//print_r($data['leave_type']);
+			//exit();
+		}else{
+			//isset($_REQUEST['dept']) && $_REQUEST['dept'] != '0' ? $data['dept_L'] = $_REQUEST['dept'] : $data['dept_L'] = 'All';
+			//isset($_REQUEST['staff_name']) ? $data['staffname'] = $_REQUEST['staff_name'] : $data['staffname'] = '';
+			//$data['leaveacc'] = $this->display_model->leaveaccallb($data['fyear']);
+			//$data['tleavetaken'] = $this->display_model->tleavetakenall($data['fyear']);
 
 			$data['limit'] = 4;
 			isset($_GET['p']) ? $data['page'] = $_GET['p'] : $data['page'] = 1;
 			$data['start'] = ($data['page'] * $data['limit']) - $data['limit'];
 
-			$data['rec'] = $this->display_model->leaveacc_c($this->session->userdata('v_UserName'),$data['fyear']);
+			if ($data['dept_L'] != 'All'){
+				if ($data['staffname'] != '' && $data['apsbno'] == ''){ //1
+					$data['rec'] = $this->display_model->leaveaccallds_c($data['dept_L'],$data['staffname'],$data['fyear']);
+				}elseif ($data['staffname'] == '' && $data['apsbno'] != '') { //5
+					$data['rec'] = $this->display_model->leaveaccallda_c($data['dept_L'],$data['apsbno'],$data['fyear']);
+				}elseif ($data['staffname'] != '' && $data['apsbno'] != '') { //6
+					$data['rec'] = $this->display_model->leaveaccalldsa_c($data['dept_L'],$data['staffname'],$data['apsbno'],$data['fyear']);
+				}else{ //2
+					$data['rec'] = $this->display_model->leaveaccalld_c($data['dept_L'],$data['fyear']);
+				}
+			}else{
+				if ($data['staffname'] != '' && $data['apsbno'] == ''){ //3
+					$data['rec'] = $this->display_model->leaveaccalls_c($data['staffname'],$data['fyear']);
+				}elseif ($data['staffname'] == '' && $data['apsbno'] != '') { //7
+					$data['rec'] = $this->display_model->leaveaccalla_c($data['apsbno'],$data['fyear']);
+				}elseif ($data['staffname'] != '' && $data['apsbno'] != '') { //8
+					$data['rec'] = $this->display_model->leaveaccallas_c($data['staffname'],$data['apsbno'],$data['fyear']);
+				}else{ //4
+					$data['rec'] = $this->display_model->leaveaccall_c($data['fyear']);
+				}
+			}
+
 			if($data['rec'][0]->jumlah > ($data['page'] * $data['limit']) ){
 				$data['next'] = ++$data['page'];
 			}
-			$data['leaveacc'] = $this->display_model->leaveacclim($this->session->userdata('v_UserName'),$data['fyear'],$data['limit'],$data['start']);
-			foreach ($data['leaveacc'] as $hajj){
-				$data['hajjdata'] = $this->display_model->hajjdata($hajj->user_id);
-				$data['hajj'][] = array('user_id' => $hajj->user_id,
-									  'hajjdet' => $data['hajjdata']);
-			}
-			$data['tleavetaken'] = $this->display_model->tleavetaken($this->session->userdata('v_UserName'),$data['fyear']);
-			$data['leave_type'] = $this->display_model->leave_type();
-		//print_r($data['leave_type']);
-		//exit();
-		}
-		else{
-		//isset($_REQUEST['dept']) && $_REQUEST['dept'] != '0' ? $data['dept_L'] = $_REQUEST['dept'] : $data['dept_L'] = 'All';
-		//isset($_REQUEST['staff_name']) ? $data['staffname'] = $_REQUEST['staff_name'] : $data['staffname'] = '';
-		//$data['leaveacc'] = $this->display_model->leaveaccallb($data['fyear']);
-		//$data['tleavetaken'] = $this->display_model->tleavetakenall($data['fyear']);
 
-		$data['limit'] = 4;
-		isset($_GET['p']) ? $data['page'] = $_GET['p'] : $data['page'] = 1;
-		$data['start'] = ($data['page'] * $data['limit']) - $data['limit'];
-
-		if ($data['dept_L'] != 'All'){
-			if ($data['staffname'] != '' && $data['apsbno'] == ''){ //1
-				$data['rec'] = $this->display_model->leaveaccallds_c($data['dept_L'],$data['staffname'],$data['fyear']);
-			}
-			elseif ($data['staffname'] == '' && $data['apsbno'] != '') { //5
-				$data['rec'] = $this->display_model->leaveaccallda_c($data['dept_L'],$data['apsbno'],$data['fyear']);
-			}
-			elseif ($data['staffname'] != '' && $data['apsbno'] != '') { //6
-				$data['rec'] = $this->display_model->leaveaccalldsa_c($data['dept_L'],$data['staffname'],$data['apsbno'],$data['fyear']);
-			}
-			else{ //2
-				$data['rec'] = $this->display_model->leaveaccalld_c($data['dept_L'],$data['fyear']);
-			}
-		}
-		else{
-			if ($data['staffname'] != '' && $data['apsbno'] == ''){ //3
-				$data['rec'] = $this->display_model->leaveaccalls_c($data['staffname'],$data['fyear']);
-			}
-			elseif ($data['staffname'] == '' && $data['apsbno'] != '') { //7
-				$data['rec'] = $this->display_model->leaveaccalla_c($data['apsbno'],$data['fyear']);
-			}
-			elseif ($data['staffname'] != '' && $data['apsbno'] != '') { //8
-				$data['rec'] = $this->display_model->leaveaccallas_c($data['staffname'],$data['apsbno'],$data['fyear']);
-			}
-			else{ //4
-				$data['rec'] = $this->display_model->leaveaccall_c($data['fyear']);
-			}
-		}
-
-		if($data['rec'][0]->jumlah > ($data['page'] * $data['limit']) ){
-			$data['next'] = ++$data['page'];
-		}
-
-		if ($data['dept_L'] != 'All'){
-			if ($data['staffname'] != '' && $data['apsbno'] == ''){ //d1
-				$data['leaveacc'] = $this->display_model->leaveaccallds($data['dept_L'],$data['staffname'],$data['fyear'],$data['limit'],$data['start']);
-				foreach ($data['leaveacc'] as $hajj){
-					$data['hajjdata'] = $this->display_model->hajjdata($hajj->user_id);
-					$data['hajj'][] = array('user_id' => $hajj->user_id,
-										  'hajjdet' => $data['hajjdata']);
+			if ($data['dept_L'] != 'All'){
+				if ($data['staffname'] != '' && $data['apsbno'] == ''){ //d1
+					$data['leaveacc'] = $this->display_model->leaveaccallds($data['dept_L'],$data['staffname'],$data['fyear'],$data['limit'],$data['start']);
+					foreach ($data['leaveacc'] as $hajj){
+						$data['hajjdata'] = $this->display_model->hajjdata($hajj->user_id);
+						$data['hajj'][] = array('user_id' => $hajj->user_id,
+											  'hajjdet' => $data['hajjdata']);
+					}
+					$data['tleavetaken'] = $this->display_model->tleavetakenallds($data['dept_L'],$data['staffname'],$data['fyear']);
+					$data['leave_type'] = $this->display_model->leave_type();
+				}elseif ($data['staffname'] == '' && $data['apsbno'] != ''){ //d5
+					$data['leaveacc'] = $this->display_model->leaveaccallda($data['dept_L'],$data['apsbno'],$data['fyear'],$data['limit'],$data['start']);
+					foreach ($data['leaveacc'] as $hajj){
+						$data['hajjdata'] = $this->display_model->hajjdata($hajj->user_id);
+						$data['hajj'][] = array('user_id' => $hajj->user_id,
+											  'hajjdet' => $data['hajjdata']);
+					}
+					$data['tleavetaken'] = $this->display_model->tleavetakenallda($data['dept_L'],$data['apsbno'],$data['fyear']);
+					$data['leave_type'] = $this->display_model->leave_type();
+				}elseif ($data['staffname'] != '' && $data['apsbno'] != ''){ //d6
+					$data['leaveacc'] = $this->display_model->leaveaccalldsa($data['dept_L'],$data['staffname'],$data['apsbno'],$data['fyear'],$data['limit'],$data['start']);
+					foreach ($data['leaveacc'] as $hajj){
+						$data['hajjdata'] = $this->display_model->hajjdata($hajj->user_id);
+						$data['hajj'][] = array('user_id' => $hajj->user_id,
+											  'hajjdet' => $data['hajjdata']);
+					}
+					$data['tleavetaken'] = $this->display_model->tleavetakenalldsa($data['dept_L'],$data['staffname'],$data['apsbno'],$data['fyear']);
+					$data['leave_type'] = $this->display_model->leave_type();
+				}else{ //d2
+					$data['leaveacc'] = $this->display_model->leaveaccalld($data['dept_L'],$data['fyear'],$data['limit'],$data['start']);
+					foreach ($data['leaveacc'] as $hajj){
+						$data['hajjdata'] = $this->display_model->hajjdata($hajj->user_id);
+						$data['hajj'][] = array('user_id' => $hajj->user_id,
+											  'hajjdet' => $data['hajjdata']);
+					}
+					$data['tleavetaken'] = $this->display_model->tleavetakenalld($data['dept_L'],$data['fyear']);
+					$data['leave_type'] = $this->display_model->leave_type();
 				}
-				$data['tleavetaken'] = $this->display_model->tleavetakenallds($data['dept_L'],$data['staffname'],$data['fyear']);
-				$data['leave_type'] = $this->display_model->leave_type();
-			}
-			elseif ($data['staffname'] == '' && $data['apsbno'] != ''){ //d5
-				$data['leaveacc'] = $this->display_model->leaveaccallda($data['dept_L'],$data['apsbno'],$data['fyear'],$data['limit'],$data['start']);
-				foreach ($data['leaveacc'] as $hajj){
-					$data['hajjdata'] = $this->display_model->hajjdata($hajj->user_id);
-					$data['hajj'][] = array('user_id' => $hajj->user_id,
-										  'hajjdet' => $data['hajjdata']);
+			}else{
+				if ($data['staffname'] != '' && $data['apsbno'] == ''){ //d3
+					$data['leaveacc'] = $this->display_model->leaveaccalls($data['staffname'],$data['fyear'],$data['limit'],$data['start']);
+					foreach ($data['leaveacc'] as $hajj){
+						$data['hajjdata'] = $this->display_model->hajjdata($hajj->user_id);
+						$data['hajj'][] = array('user_id' => $hajj->user_id,
+											  'hajjdet' => $data['hajjdata']);
+					}
+					$data['tleavetaken'] = $this->display_model->tleavetakenalls($data['staffname'],$data['fyear']);
+					$data['leave_type'] = $this->display_model->leave_type();
+				}elseif ($data['staffname'] == '' && $data['apsbno'] != ''){ //d7
+					$data['leaveacc'] = $this->display_model->leaveaccalla($data['apsbno'],$data['fyear'],$data['limit'],$data['start']);
+					foreach ($data['leaveacc'] as $hajj){
+						$data['hajjdata'] = $this->display_model->hajjdata($hajj->user_id);
+						$data['hajj'][] = array('user_id' => $hajj->user_id,
+											  'hajjdet' => $data['hajjdata']);
+					}
+					$data['tleavetaken'] = $this->display_model->tleavetakenalla($data['apsbno'],$data['fyear']);
+					$data['leave_type'] = $this->display_model->leave_type();
+				}elseif ($data['staffname'] != '' && $data['apsbno'] != ''){ //d8
+					$data['leaveacc'] = $this->display_model->leaveaccallsa($data['staffname'],$data['apsbno'],$data['fyear'],$data['limit'],$data['start']);
+					foreach ($data['leaveacc'] as $hajj){
+						$data['hajjdata'] = $this->display_model->hajjdata($hajj->user_id);
+						$data['hajj'][] = array('user_id' => $hajj->user_id,
+											  'hajjdet' => $data['hajjdata']);
+					}
+					$data['tleavetaken'] = $this->display_model->tleavetakenallsa($data['staffname'],$data['apsbno'],$data['fyear']);
+					$data['leave_type'] = $this->display_model->leave_type();
+				}else{ //d4
+					$data['leaveacc'] = $this->display_model->leaveaccall($data['fyear'],$data['limit'],$data['start']);
+					foreach ($data['leaveacc'] as $hajj){
+						$data['hajjdata'] = $this->display_model->hajjdata($hajj->user_id);
+						$data['hajj'][] = array('user_id' => $hajj->user_id,
+											  'hajjdet' => $data['hajjdata']);
+					}
+					$data['tleavetaken'] = $this->display_model->tleavetakenall($data['fyear']);
+					$data['leave_type'] = $this->display_model->leave_type();
 				}
-				$data['tleavetaken'] = $this->display_model->tleavetakenallda($data['dept_L'],$data['apsbno'],$data['fyear']);
-				$data['leave_type'] = $this->display_model->leave_type();
 			}
-			elseif ($data['staffname'] != '' && $data['apsbno'] != ''){ //d6
-				$data['leaveacc'] = $this->display_model->leaveaccalldsa($data['dept_L'],$data['staffname'],$data['apsbno'],$data['fyear'],$data['limit'],$data['start']);
-				foreach ($data['leaveacc'] as $hajj){
-					$data['hajjdata'] = $this->display_model->hajjdata($hajj->user_id);
-					$data['hajj'][] = array('user_id' => $hajj->user_id,
-										  'hajjdet' => $data['hajjdata']);
-				}
-				$data['tleavetaken'] = $this->display_model->tleavetakenalldsa($data['dept_L'],$data['staffname'],$data['apsbno'],$data['fyear']);
-				$data['leave_type'] = $this->display_model->leave_type();
-			}
-			else{ //d2
-				$data['leaveacc'] = $this->display_model->leaveaccalld($data['dept_L'],$data['fyear'],$data['limit'],$data['start']);
-				foreach ($data['leaveacc'] as $hajj){
-					$data['hajjdata'] = $this->display_model->hajjdata($hajj->user_id);
-					$data['hajj'][] = array('user_id' => $hajj->user_id,
-										  'hajjdet' => $data['hajjdata']);
-				}
-				$data['tleavetaken'] = $this->display_model->tleavetakenalld($data['dept_L'],$data['fyear']);
-				$data['leave_type'] = $this->display_model->leave_type();
-			}
-		}
-		else{
-			if ($data['staffname'] != '' && $data['apsbno'] == ''){ //d3
-				$data['leaveacc'] = $this->display_model->leaveaccalls($data['staffname'],$data['fyear'],$data['limit'],$data['start']);
-				foreach ($data['leaveacc'] as $hajj){
-					$data['hajjdata'] = $this->display_model->hajjdata($hajj->user_id);
-					$data['hajj'][] = array('user_id' => $hajj->user_id,
-										  'hajjdet' => $data['hajjdata']);
-				}
-				$data['tleavetaken'] = $this->display_model->tleavetakenalls($data['staffname'],$data['fyear']);
-				$data['leave_type'] = $this->display_model->leave_type();
-			}
-			elseif ($data['staffname'] == '' && $data['apsbno'] != ''){ //d7
-				$data['leaveacc'] = $this->display_model->leaveaccalla($data['apsbno'],$data['fyear'],$data['limit'],$data['start']);
-				foreach ($data['leaveacc'] as $hajj){
-					$data['hajjdata'] = $this->display_model->hajjdata($hajj->user_id);
-					$data['hajj'][] = array('user_id' => $hajj->user_id,
-										  'hajjdet' => $data['hajjdata']);
-				}
-				$data['tleavetaken'] = $this->display_model->tleavetakenalla($data['apsbno'],$data['fyear']);
-				$data['leave_type'] = $this->display_model->leave_type();
-			}
-			elseif ($data['staffname'] != '' && $data['apsbno'] != ''){ //d8
-				$data['leaveacc'] = $this->display_model->leaveaccallsa($data['staffname'],$data['apsbno'],$data['fyear'],$data['limit'],$data['start']);
-				foreach ($data['leaveacc'] as $hajj){
-					$data['hajjdata'] = $this->display_model->hajjdata($hajj->user_id);
-					$data['hajj'][] = array('user_id' => $hajj->user_id,
-										  'hajjdet' => $data['hajjdata']);
-				}
-				$data['tleavetaken'] = $this->display_model->tleavetakenallsa($data['staffname'],$data['apsbno'],$data['fyear']);
-				$data['leave_type'] = $this->display_model->leave_type();
-			}
-			else{ //d4
-				$data['leaveacc'] = $this->display_model->leaveaccall($data['fyear'],$data['limit'],$data['start']);
-				foreach ($data['leaveacc'] as $hajj){
-					$data['hajjdata'] = $this->display_model->hajjdata($hajj->user_id);
-					$data['hajj'][] = array('user_id' => $hajj->user_id,
-										  'hajjdet' => $data['hajjdata']);
-				}
-				$data['tleavetaken'] = $this->display_model->tleavetakenall($data['fyear']);
-				$data['leave_type'] = $this->display_model->leave_type();
-			}
-		}
 
 		}
 
@@ -428,7 +406,7 @@ class Controllers extends CI_Controller {
 		else{
 			$data['SEL_hol'][] = NULL;
 		}
-		
+
 		if ($data['check'] == 'Own'){
 		$data['leaveacc'] = $this->display_model->leaveacc($this->session->userdata('v_UserName'),$data['fyear']);
 		$data['tleavetaken'] = $this->display_model->tleavetaken($this->session->userdata('v_UserName'),$data['fyear']);
@@ -565,7 +543,7 @@ class Controllers extends CI_Controller {
 		}
 
 		$data['reportto'] = $this->display_model->reportto($data['username']);
-		
+
 		$this->load->view('Head');
 		$this->load->view('top');
 		$this->load->view('left',$data);
@@ -573,7 +551,7 @@ class Controllers extends CI_Controller {
 		$this->load->view('footer');
 	}
 	public function add_leaves()
-	{	
+	{
 		$this->load->model('display_model');
 		$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
 		$data['hrrow'] = $this->display_model->gethrrow($this->session->userdata('v_UserName'));
@@ -631,7 +609,7 @@ class Controllers extends CI_Controller {
 
 				$begin = strtotime($data['fromhdate']);
 			    $end   = strtotime($data['tohdate']);
-			    
+
 			    $no_days  = 0;
 		        $weekends = 0;
 		        while ($begin <= $end) {
@@ -733,14 +711,14 @@ class Controllers extends CI_Controller {
 					}
 		        }
 			}
-			
+
 			$data['SLbalance'] = (isset($data['prleaveacc'][0]->sick_leave) ? $data['prleaveacc'][0]->sick_leave : 0) - $data['SLtaken'];
 				if ($data['SLbalance'] < 0){
 					$data['SLEtaken'] = abs($data['SLbalance']);
 				}
 
-			
-			$data['annualB'] = (isset($data['prleaveacc'][0]->annual_leave) ? $data['prleaveacc'][0]->annual_leave : 0) + (isset($data['prleaveacc'][0]->carry_fwd_leave) ? $data['prleaveacc'][0]->carry_fwd_leave : 0) 
+
+			$data['annualB'] = (isset($data['prleaveacc'][0]->annual_leave) ? $data['prleaveacc'][0]->annual_leave : 0) + (isset($data['prleaveacc'][0]->carry_fwd_leave) ? $data['prleaveacc'][0]->carry_fwd_leave : 0)
 			 						- $data['ALtaken'] - $data['ELtaken'] - $data['FSEtaken'] - $data['PLEtaken'] - $data['MLEtaken']  - $data['MRLEtaken']  - $data['ULEtaken']  - $data['STLEtaken']  - $data['TLEtaken']
 			 						- $data['HLEtaken'] - (isset($data['SLEtaken']) ? $data['SLEtaken'] : 0);
 
@@ -805,7 +783,7 @@ class Controllers extends CI_Controller {
 		$this->load->view('Main_leave_approved',$data);
 		$this->load->view('footer');
 	}
-	
+
 	public function update_constants()
 	{
 		$this->load->view('Head');
@@ -817,7 +795,7 @@ class Controllers extends CI_Controller {
 	public function leave_Limit()
 	{
 		$this->load->model('display_model');
-		
+
 		$data['family_sick_leave']	= json_decode(json_encode($this->display_model->leave_type()),true)[5]['entitle_days'];
 		$data["maternity_leave"]	= json_decode(json_encode($this->display_model->leave_type()),true)[6]['entitle_days'];
 		$data["paternity_leave"]	= json_decode(json_encode($this->display_model->leave_type()),true)[7]['entitle_days'];
@@ -840,8 +818,9 @@ class Controllers extends CI_Controller {
 		$this->load->model('display_model');
 		$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
 		$data['hrrow'] = $this->display_model->gethrrow($this->session->userdata('v_UserName'));
-				$data['applied_date'] = $this->display_model->applied_date($this->session->userdata('v_UserName'));
+		$data['applied_date'] = $this->display_model->applied_date($this->session->userdata('v_UserName'));
 		isset($_REQUEST['date_calendar']) ? $data['datecal'] = date("d-m-Y",strtotime($_REQUEST['date_calendar'])) : $data['datecal'] = date("d-m-Y");
+		isset($_REQUEST['date_calendar_to']) ? $data['datecalto'] = date("d-m-Y",strtotime($_REQUEST['date_calendar_to'])) : $data['datecalto'] = date("d-m-Y");
 
 		$data['holidayJB'] = $this->display_model->holidayJB(date('Y',strtotime($data['datecal'])));
 		if($data['holidayJB']){
@@ -895,11 +874,11 @@ class Controllers extends CI_Controller {
 		$data['start'] = ($data['page'] * $data['limit']) - $data['limit'];
 
 		//$data['rec'] = $this->display_model->datecalendar_c($data['datecal']);
-		$data['rec'] = $this->display_model->datecalendar_c(date("Y-m-d",strtotime($data['datecal'])));
+		$data['rec'] = $this->display_model->datecalendar_c(date("Y-m-d",strtotime($data['datecal'])), date("Y-m-d",strtotime($data['datecalto'])));
 		if($data['rec'][0]->jumlah > ($data['page'] * $data['limit']) ){
 			$data['next'] = ++$data['page'];
 		}
-		$data['datecalendar'] = $this->display_model->datecalendar(date("Y-m-d",strtotime($data['datecal'])),$data['limit'],$data['start']);
+		$data['datecalendar'] = $this->display_model->datecalendar(date("Y-m-d",strtotime($data['datecal'])),$data['limit'],$data['start'],date("Y-m-d",strtotime($data['datecalto'])));
 		//print_r($data['datecalendar']);
 		//exit();
 
@@ -933,7 +912,7 @@ class Controllers extends CI_Controller {
 			$data['holiday_list'] = $this->display_model->holiday_list($this->session->userdata('v_UserName'),date('Y',strtotime($data['record'][0]->leave_from)));
 		}
 		else{
-			$data['holiday_list'] = $this->display_model->holiday_list($this->input->get('userid'),date('Y',strtotime($data['record'][0]->leave_from)));	
+			$data['holiday_list'] = $this->display_model->holiday_list($this->input->get('userid'),date('Y',strtotime($data['record'][0]->leave_from)));
 		}
 		//print_r($data['leavedet']);
 		//echo '<br><br>';
@@ -986,7 +965,7 @@ class Controllers extends CI_Controller {
 		else{
 			$data['SEL_hol'][] = NULL;
 		}
-		
+
 		//$data['userleave'] = $this->display_model->userleave($data['record'][0]->leave_type);
 		$data['leave_type'] = $this->display_model->leave_type();
 
@@ -996,7 +975,7 @@ class Controllers extends CI_Controller {
 		//totalleavetaken
 		$begin = strtotime($data['fromdate']);
 	    $end   = strtotime($data['todate']);
-	    
+
 	    $no_days  = 0;
         $weekends = 0;
         while ($begin <= $end) {
@@ -1020,14 +999,14 @@ class Controllers extends CI_Controller {
 
 		//leavebalance
 		$yearapplied = date('Y',strtotime($data['fromdate']));
-		
+
 		if ($this->input->get('userid') == ''){
 			$data['leaveacc'] = $this->display_model->leaveacc($this->session->userdata('v_UserName'),$yearapplied);
 			$data['tleavetaken'] = $this->display_model->tleavetakenprint($this->session->userdata('v_UserName'),$data['fromdate'],$yearapplied);
 		}
 		else{
 			$data['leaveacc'] = $this->display_model->leaveacc($this->input->get('userid'),$yearapplied);
-			$data['tleavetaken'] = $this->display_model->tleavetakenprint($this->input->get('userid'),$data['fromdate'],$yearapplied);	
+			$data['tleavetaken'] = $this->display_model->tleavetakenprint($this->input->get('userid'),$data['fromdate'],$yearapplied);
 		}
 
 		//print_r($data['leaveacc']);
@@ -1063,7 +1042,7 @@ class Controllers extends CI_Controller {
 
 			$begin = strtotime($data['fromhdate']);
 		    $end   = strtotime($data['tohdate']);
-		    
+
 		    $no_days  = 0;
 	        $weekends = 0;
 	        while ($begin <= $end) {
@@ -1179,7 +1158,7 @@ class Controllers extends CI_Controller {
 				//$data['balanceleave'] = 0;
 			}
 		if ($data['record'][0]->leave_type == '1'){
-		$data['annualB'] = (isset($data['leaveacc'][0]->annual_leave) ? $data['leaveacc'][0]->annual_leave : 0) + (isset($data['leaveacc'][0]->carry_fwd_leave) ? $data['leaveacc'][0]->carry_fwd_leave : 0) 
+		$data['annualB'] = (isset($data['leaveacc'][0]->annual_leave) ? $data['leaveacc'][0]->annual_leave : 0) + (isset($data['leaveacc'][0]->carry_fwd_leave) ? $data['leaveacc'][0]->carry_fwd_leave : 0)
 		 						- $data['ALtaken'] - $data['ELtaken'] - $data['FSEtaken'] - $data['PLEtaken'] - $data['MLEtaken']  - $data['MRLEtaken']  - $data['ULEtaken']  - $data['STLEtaken']  - $data['TLEtaken']
 		 						- $data['HLEtaken'] - (isset($data['SLEtaken']) ? $data['SLEtaken'] : 0);
 
@@ -1254,7 +1233,7 @@ class Controllers extends CI_Controller {
 		$this->load->view('Main_print',$data);
 		$this->load->view('footer');
 	}
-	
+
 	//bazli 3/5/18
 	public function employee_guide()
 	{
@@ -1267,7 +1246,7 @@ class Controllers extends CI_Controller {
 		$this->load->view('employee_guide');
 		$this->load->view('footer');
 	}
-	
+
 	//bazli add new function 13/6/18
 	public function system_manual()
 	{
@@ -1282,7 +1261,7 @@ class Controllers extends CI_Controller {
 	}
 
 	function cancel_applied($id){
-		
+
 	}
-	
+
 }
