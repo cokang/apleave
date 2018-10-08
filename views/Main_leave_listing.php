@@ -13,7 +13,7 @@
     
     <!-- /.row -->
     <div class="row"> 
-      
+    
       <!-- /.col-lg-7 -->
       <div class="col-lg-7">
         <div class="panel panel-default">
@@ -38,7 +38,7 @@
                   <tr class="">
                     
                     <td><?= ($start+1) ?></td>
-                    <td><?= isset($row->user_id) ? $row->user_id : '' ?></td>
+                    <td><?= isset($row->v_UserName) ? ucwords($row->v_UserName) : '' ?></td>
                     <td><?= isset($row->leave_from) ? date('d-m-Y',strtotime($row->leave_from)) : '' ?></td>
                     <td><?= isset($row->leave_to) ? date('d-m-Y',strtotime($row->leave_to)) : '' ?></td>
                     <td><a href="#" onclick="return showDialog('<?= $row->id ?>','listing','<?= $limit ?>','<?= $start ?>')">View Reason</a><div id="dialog" style="display:none;"><div id="myDialogText"></div></td>

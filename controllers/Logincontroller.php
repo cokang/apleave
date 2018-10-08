@@ -1,15 +1,15 @@
-<?php 
+<?php
 
 class LoginController extends CI_Controller {
-	
+
 	function __construct() {
         parent::__construct();
 		$this->load->helper(array('form','html','url','html'));
 		$this->load->model('loginmodel');
-		
+
 	}
-	
-	
+
+
 	public function index($em=''){
 			if( !$this->session->userdata("is_logged_in") ){
 			$data['errormsg']=$em;
@@ -18,18 +18,18 @@ class LoginController extends CI_Controller {
 			redirect($this->url, "refresh");
 		}
 	}
-	
-	
+
+
 	function logout()
  	{
- 		
+
   	$this->session->sess_destroy();
 		redirect("/");//$this->index();
   	//$this->index();
 	}
-	
-	
-	
+
+
+
 	function validate_credentials()
 	{
 		if($this->input->post("name") !="" && $this->input->post("password") !="" ){
@@ -39,13 +39,13 @@ class LoginController extends CI_Controller {
 		$queryu = $this->loginModel->userdata();
 		$this->load->model('outside_model');
 		$query = $this->outside_model->validate();
-		$query4 = $this->outside_model->validate4($this->input->post('name'));	
+		$query4 = $this->outside_model->validate4($this->input->post('name'));
 		$passisvalid = "valid";
 		if ($query4[0]->dayer > $query4[0]->valid_period) {
 		$passisvalid = "invalid";
 		//$url =site_url('logincontroller/index?login=login&pass=exp');
 		//	redirect($url);
-		
+
 		}
 //		$this->load->model('loginModel');
 //		print_r($queryu);
@@ -53,11 +53,12 @@ class LoginController extends CI_Controller {
 //		exit();
 		if($query && $queryu)
 		//if($queryu)
-{			
+{
 				$data = array
 					(
-					
-							'v_UserName'	=>$this->input->post('name'),
+
+					//		'v_UserName'	=>$this->input->post('name'),
+					'v_UserName'=>$this->loginModel->userdata()[0]['v_UserID'],
 					'v_Name'=>$this->loginModel->userdata()[0]['v_UserName'],
 //					'v_password' =>$this->input->post('password'),
 					'passvalidity' =>$passisvalid,
@@ -68,7 +69,7 @@ class LoginController extends CI_Controller {
 				$this->session->set_userdata($data);
 			//print_r($data);
 			//exit();
-			
+
 			if ($passisvalid == "invalid") {
 				$url =site_url('Controllers/change_password');
 			} else {
@@ -93,16 +94,16 @@ class LoginController extends CI_Controller {
 			}
 			$this->index($errormsg);
 		}
-	
+
 	}
-	
+
 	function signup()
 		{
-			
+
 			$this->load->view('signup_form');
-			
+
 		}
-	function chgPassword()       
+	function chgPassword()
     {
 		/*
 		//$this->load->model('loginModel');
@@ -128,7 +129,7 @@ class LoginController extends CI_Controller {
 				$this->logout();
 				//redirect('LoginController','refresh') ;
 				//$this->index();
-			}	
+			}
 			*/
 		$this->load->model('outside_model');
 			$query = $this->outside_model->changpasswrd($this->session->userdata('v_UserName'),$this->input->post('npassword'));
@@ -144,36 +145,36 @@ class LoginController extends CI_Controller {
 
 	function create_member()
 	{
-		
+
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('first_name','Name','trim|required');
 		$this->form_validation->set_rules('last_name','Last Name','trim|required');
 		$this->form_validation->set_rules('email','Email','trim|required');
 		$this->form_validation->set_rules('username','Username','trim|required');
 		$this->form_validation->set_rules('password2','Password Confirmation','trim|required|matches[password]');
-		
+
 		if($this->form_validation->run()==FALSE)
 		{
-			$this->signup();	
+			$this->signup();
 		}
-		
+
 		else
 		{
 		$this->load->model('loginModel');
 		if($query = $this->loginModel->create_member())
 		{
-			
-			
+
+
 			$this->load->view('signup_successful');
 		}
 		else
 		{
-			
+
 			$this->load->view('signup_form');
-			
+
 		}
 		}
 	}
-	
+
 }
 ?>
