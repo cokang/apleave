@@ -878,7 +878,8 @@ class Controllers extends CI_Controller {
 		if($data['rec'][0]->jumlah > ($data['page'] * $data['limit']) ){
 			$data['next'] = ++$data['page'];
 		}
-		$data['datecalendar'] = $this->display_model->datecalendar(date("Y-m-d",strtotime($data['datecal'])),$data['limit'],$data['start'],date("Y-m-d",strtotime($data['datecalto'])));
+		$data['getgroupdet'] = $this->display_model->getgroupdet($this->session->userdata('v_UserName'));
+		$data['datecalendar'] = $this->display_model->datecalendar(date("Y-m-d",strtotime($data['datecal'])),$data['limit'],$data['start'],date("Y-m-d",strtotime($data['datecalto'])), $data['getgroupdet'][0]->v_GroupID);
 		//print_r($data['datecalendar']);
 		//exit();
 

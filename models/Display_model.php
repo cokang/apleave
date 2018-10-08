@@ -63,26 +63,27 @@ parent::__construct();
 		//exit();
 		$query_result = $query->result();
 		return $query_result;
-	}	
+	}
 	function leaveapp($group,$limit,$start){
 		$this->db->select('R.*,U.v_GroupID,U.v_UserName');
 		//$this->db->select('R.*,U.v_GroupID');
 		$this->db->from('employee_leave_req R');
 		$this->db->join('pmis2_sa_user U','R.user_id = U.v_UserID');
 		$this->db->join('group G','G.group_sup_id = U.v_UserID','left');
-		$this->db->where('U.v_UserID <>',$this->session->userdata('v_UserName'));
 		//$this->db->where('U.v_GroupID',$group);
-		$this->db->or_where('G.report_to',$this->session->userdata('v_UserName'));
+		//$this->db->or_where('G.report_to',$this->session->userdata('v_UserName'));
+		$this->db->where("(U.v_GroupID = '".$group. "' OR G.report_to = '".$this->session->userdata('v_UserName')."')");
+		$this->db->where('U.v_UserID <>',$this->session->userdata('v_UserName'));
 		//$this->db->order_by('R.leave_from','Desc');
 		$this->db->order_by('R.application_date','desc');
 		$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
+		echo $this->db->last_query();
 		//exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
-	
+
 	function leavedet($userid,$regid){
 	//echo "klklklkll:";
 		$this->db->select('R.*,U.v_hospitalcode,im.file_name,UR.v_UserName as employee_replaced');
@@ -98,7 +99,7 @@ parent::__construct();
 		$query_result = $query->result();
 		return $query_result;
 	}
-	
+
 	function samedateleave_c($fromdate,$todate,$userid){
 		$this->db->select('COUNT(*) AS jumlah');
 		//$this->db->where('leave_from',$fromdate);
@@ -113,16 +114,18 @@ parent::__construct();
 		$query_result = $query->result();
 		return $query_result;
 	}
-	function samedateleave($fromdate,$todate,$userid,$limit,$start){
+	function samedateleave($fromdate,$todate,$userid,$limit,$start,$group=''){
 		//$this->db->select('R.*,U.v_UserName,U.v_hospitalcode');
 		$this->db->select('R.*,U.v_UserName,U.v_hospitalcode, LT.leave_name');
 		//$this->db->where('leave_from',$fromdate);
 		$this->db->where("'".$fromdate."' BETWEEN R.leave_from AND R.leave_to", NULL, FALSE);
 		$this->db->or_where("'".$todate."' BETWEEN R.leave_from AND R.leave_to", NULL, FALSE);
-		$this->db->where('user_id <>',$userid);
+		//$this->db->where('user_id <>',$userid);
 		$this->db->from('employee_leave_req R');
 		$this->db->join('pmis2_sa_user U','U.v_UserID = R.user_id');
 		$this->db->join('leave_type LT', 'R.leave_type = LT.id');
+		$this->db->join('group G','G.group_sup_id = U.v_UserID','left');
+		$this->db->where("(U.v_GroupID = '".$group. "' OR G.report_to = '".$this->session->userdata('v_UserName')."')");
 		$this->db->limit($limit,$start);
 		$query = $this->db->get();
 		//echo $this->db->last_query();
@@ -165,7 +168,7 @@ parent::__construct();
 		return $query_result;
 	}
 	function leaveacc($userid,$year){
-		$this->db->select('L.*,U.v_UserName');
+		$this->db->select('L.*,U.v_UserName,U.v_UserName,ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		$this->db->where('L.user_id',$userid);
@@ -207,7 +210,11 @@ parent::__construct();
 		$this->db->from('employee_leave_req R');
 		$this->db->join('pmis2_sa_user U','R.user_id = U.v_UserID');
 		$this->db->where('user_id',$userid);
-		$this->db->where('YEAR(leave_from)',$year);
+		//$this->db->where('YEAR(leave_from)',$year);
+		$this->db->where("CASE
+							WHEN leave_from!='' THEN YEAR(leave_from) = '2018'
+							ELSE YEAR(leave_to) = '2018' AND leave_duration = 'Half Day'
+						END");
 		$this->db->where('leave_status','Approved');
 		//$this->db->where('leave_status','Accepted');
 		$query = $this->db->get();
@@ -229,7 +236,7 @@ parent::__construct();
 		$query_result = $query->result();
 		return $query_result;
 	}*/
-	
+
 	function leaveaccall_c($year){ //4
 		$this->db->select('COUNT(*) AS jumlah');
 		$this->db->from('employee_leave L');
@@ -886,10 +893,13 @@ parent::__construct();
 		$query_result = $query->num_rows();
 		return $query_result;
 	}
-	function datecalendar_c($fromdate){
+	function datecalendar_c($fromdate,$todate){
 		$this->db->select('COUNT(*) AS jumlah');
 		$this->db->where("'".$fromdate."' BETWEEN leave_from AND leave_to", NULL, FALSE);
-		//$this->db->where('leave_from',$fromdate);
+		$this->db->or_where("R.leave_from BETWEEN '".$fromdate."' AND '".$todate."'", NULL, FALSE);
+		$this->db->or_where("R.leave_to BETWEEN '".$fromdate."' AND '".$todate."'", NULL, FALSE);
+		// $this->db->where('R.leave_from >=',$fromdate);
+		// $this->db->where('R.leave_to <=',$todate);
 		//$this->db->where('user_id <>',$userid);
 		$this->db->from('employee_leave_req R');
 		$this->db->join('pmis2_sa_user U','U.v_UserID = R.user_id');
@@ -899,18 +909,24 @@ parent::__construct();
 		$query_result = $query->result();
 		return $query_result;
 	}
-	function datecalendar($fromdate,$limit,$start){
+	function datecalendar($fromdate,$limit,$start,$todate,$group=''){
 		$this->db->select('R.*,U.v_UserName,U.v_hospitalcode,T.leave_name');
 		//$this->db->where('user_id <>',$userid);
 		$this->db->from('employee_leave_req R');
 		$this->db->join('pmis2_sa_user U','U.v_UserID = R.user_id');
-		$this->db->join('leave_type T','T.id = R.leave_type');	
+		$this->db->join('leave_type T','T.id = R.leave_type');
+		$this->db->join('group G','G.group_sup_id = U.v_UserID','left');
+		$this->db->where("(U.v_GroupID = '".$group. "' OR G.report_to = '".$this->session->userdata('v_UserName')."')");
 		$this->db->where("'".$fromdate."' BETWEEN R.leave_from AND R.leave_to", NULL, FALSE);
-		//$this->db->where('leave_from',$fromdate);
+		$this->db->or_where("R.leave_from BETWEEN '".$fromdate."' AND '".$todate."'", NULL, FALSE);
+		$this->db->or_where("R.leave_to BETWEEN '".$fromdate."' AND '".$todate."'", NULL, FALSE);
+		/*$this->db->where('R.leave_from >=',$fromdate);
+		$this->db->where('R.leave_to <=',$todate);*/
 		$this->db->limit($limit,$start);
+		// $this->db->limit($limit);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo "<pre>".$this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -966,37 +982,37 @@ parent::__construct();
 		$query_result = $query->result();
 		return $query_result;
 	}
-	
+
 	function getrptemail($userid){
 		$this->db->select('a.v_email, a.v_UserName');
 		$this->db->from('pmis2_sa_user a');
 		$this->db->join('group b','a.v_UserID = b.report_to');
-		//$this->db->where('b.group_sup_id ',$this->session->userdata('v_UserName')); 
-		$this->db->where('b.group_sup_id ',$userid); 
+		//$this->db->where('b.group_sup_id ',$this->session->userdata('v_UserName'));
+		$this->db->where('b.group_sup_id ',$userid);
 		$query = $this->db->get();
 		//echo $this->db->last_query();
 		//exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
-	
+
 	function getrptemail2($userid){
 		$this->db->select('a.v_email, a.v_UserName');
 		$this->db->from('pmis2_sa_user a');
 		$this->db->join('group b','a.v_UserID = b.group_sup_id ');
-		//$this->db->where('b.group_sup_id ',$this->session->userdata('v_UserName')); 
-		$this->db->where('b.group_name ',$userid); 
+		//$this->db->where('b.group_sup_id ',$this->session->userdata('v_UserName'));
+		$this->db->where('b.group_name ',$userid);
 		$query = $this->db->get();
 		//echo $this->db->last_query();
 		//exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
-	
+
 	function getbhguser($userid){
 		$this->db->select('v_GroupID');
 		$this->db->from('pmis2_sa_user');
-		$this->db->where('v_UserID',$userid); 
+		$this->db->where('v_UserID',$userid);
 		$query = $this->db->get();
 		//echo $this->db->last_query();
 		//exit();
@@ -1008,14 +1024,57 @@ parent::__construct();
 		$this->db->select('leave_from,leave_to');
 		$this->db->from('employee_leave_req');
 		$this->db->where('user_id',$userid);
-		$this->db->where_in("leave_status", array("Pending", "Cancelled"));//where leave_status cancel/rejected/null
-		$this->db->or_where("leave_status", NULL); 
+		// $this->db->where_in("leave_status", array("Pending", "Cancelled"));//where leave_status cancel/rejected/null
+		// $this->db->or_where("leave_status", NULL);
+		$this->db->where("(`leave_status` IN('Pending', 'Cancelled') OR `leave_status` IS NULL)");
+		$this->db->where('leave_status','Declined');
 		$query = $this->db->get();
 		// echo $this->db->last_query();
 		// exit();
 		$query_result = $query->result_array();
 		return $query_result;
 	}
-	
+
+
+	function check_range($fromdate,$todate,$userid){
+			if($fromdate!=""){
+				$fromdate 	= date("Y-m-d", strtotime($fromdate));
+			}
+			if($todate!=""){
+				$todate		= date("Y-m-d", strtotime($todate));
+			}
+			$this->db->select('count(*) as has_applied');
+			// $this->db->where('leave_from',$fromdate);
+
+			if( $fromdate!="" && $todate=="" ){
+				$this->db->where("'".$fromdate."' BETWEEN R.leave_from AND R.leave_to", NULL, FALSE);
+			}
+			if( $fromdate=="" && $todate!="" ){
+				$this->db->where("'".$todate."' BETWEEN R.leave_from AND R.leave_to", NULL, FALSE);
+			}
+			if( $fromdate!="" && $todate!="" ){
+				// ori
+				// $this->db->where("'".$fromdate."' BETWEEN R.leave_from AND R.leave_to", NULL, FALSE);
+				// $this->db->or_where("'".$todate."' BETWEEN R.leave_from AND R.leave_to", NULL, FALSE);
+				// $this->db->or_where("R.leave_from BETWEEN '$fromdate' AND '$todate'", NULL, FALSE);
+				// $this->db->or_where("R.leave_to BETWEEN '$fromdate' AND '$todate'", NULL, FALSE);
+
+				$this->db->where("('".$fromdate."' BETWEEN R.leave_from AND R.leave_to OR '".$todate."' BETWEEN R.leave_from AND R.leave_to OR R.leave_from BETWEEN '$fromdate' AND '$todate' OR R.leave_to BETWEEN '$fromdate' AND '$todate')", NULL, FALSE);
+			}
+
+			$this->db->where('user_id',$userid);
+			$this->db->where("R.leave_status", "Approved");
+			// $this->db->where("R.leave_status IS NOT NULL", NULL, FALSE);
+			$this->db->from('employee_leave_req R');
+			$this->db->join('pmis2_sa_user U','U.v_UserID = R.user_id');
+			$query = $this->db->get()->row()->has_applied;
+			// echo $this->db->last_query();
+			// exit();
+			// $query_result = $query->result();
+			// echo $query; // pakai utk return value js
+			// return $query_result;
+		}
+
+
 }
 ?>

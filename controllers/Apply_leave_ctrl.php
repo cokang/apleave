@@ -17,7 +17,7 @@ class apply_leave_ctrl extends CI_Controller{
 			redirect("/");
 		}
 	}
-	
+
 	function index(){
 		$this->load->model('insert_model');
 		$insert_data = array(
@@ -68,7 +68,7 @@ class apply_leave_ctrl extends CI_Controller{
 			$this->insert_model->sickleave_img($insertimg_data);
 		}
 
-	
+
 		$this->load->model('display_model');
 		$data['rptemail'] = $this->display_model->getrptemail($this->session->userdata('v_UserName'));
 		if (!$data['rptemail']) {
@@ -80,11 +80,11 @@ class apply_leave_ctrl extends CI_Controller{
 		// $this->session->userdata('v_userid');
 		// $this->load->library('../controllers/email');
 		// $this->email->send_mail_frmout($data['rptemail'][0]->v_email);
-		
+
 		redirect('Controllers/leave_listing');
 	}
-	
-	
+
+
 
 	public function check_dateAvailabality(){
 		$this->load->model("display_model");
@@ -93,14 +93,15 @@ class apply_leave_ctrl extends CI_Controller{
 			// if( isset($_POST['appliedFrom']) ){
 			// 	date("Y-m-d", strtotime($_POST['appliedFrom']));
 			// 	foreach ($applied_date as $row) {
-					$this->check_range( $_POST['appliedFrom'], $_POST['appliedTo'], $this->session->userdata('v_UserName'));
+					$this->display_model->check_range( $_POST['appliedFrom'], $_POST['appliedTo'], $this->session->userdata('v_UserName'));
+					//$this->check_range( $_POST['appliedFrom'], $_POST['appliedTo'], $this->session->userdata('v_UserName'));
 			// 	}
 			// }
 		}else{
 			return true;
 		}
 	}
-
+/*
 	public function check_range($fromdate,$todate,$userid){
 		if($fromdate!=""){
 			$fromdate 	= date("Y-m-d", strtotime($fromdate));
@@ -134,23 +135,23 @@ class apply_leave_ctrl extends CI_Controller{
 		echo $query; // pakai utk return value js
 		// return $query_result;
 	}
+*/
 
+         public function send_mail_frmout($emailto) {
+         $from_email = "nezam@advancepact.com";
+         //$to_email = $this->input->post('email');
+         $to_email = $emailto;
 
-         public function send_mail_frmout($emailto) { 
-         $from_email = "nezam@advancepact.com"; 
-         //$to_email = $this->input->post('email'); 
-         $to_email = $emailto; 
-   
-         //Load email library 
-         $this->load->library('email'); 
-   
-         $this->email->from($from_email, 'AP LEAVE System'); 
+         //Load email library
+         $this->load->library('email');
+
+         $this->email->from($from_email, 'AP LEAVE System');
          $this->email->to($to_email);
-         $this->email->subject('Leave Application Notice'); 
-         $this->email->message('A leave application is pending your approval  -> http://aphrms.advancepact.com/index.php/Controllers/leave_approved?tab=9'); 
-   
-         //Send mail 
+         $this->email->subject('Leave Application Notice');
+         $this->email->message('A leave application is pending your approval  -> http://aphrms.advancepact.com/index.php/Controllers/leave_approved?tab=9');
+
+         //Send mail
          $this->email->send();
-      } 
+      }
 }
 ?>

@@ -185,10 +185,13 @@ class check_availability extends CI_Controller {
 		else{
 			$data['SLbalance'] = $data['sickB'];
 		}
+		$data['carry_fwd_leave'] = (isset($data['leaveacc'][0]->carry_fwd_leave) ? $data['leaveacc'][0]->carry_fwd_leave : 0);
 
-		$data['annualB'] = (isset($data['leaveacc'][0]->annual_leave) ? $data['leaveacc'][0]->annual_leave : 0) + (isset($data['leaveacc'][0]->carry_fwd_leave) ? $data['leaveacc'][0]->carry_fwd_leave : 0) 
-							- $data['ALtaken'] - $data['ELtaken'] - $data['FSEtaken'] - $data['PLEtaken'] - $data['MLEtaken']  - $data['MRLEtaken']  - $data['ULEtaken']  - $data['STLEtaken']  - $data['TLEtaken']
-							- $data['HLEtaken'] - (isset($data['SLEtaken']) ? $data['SLEtaken'] : 0);
+		$data['annualB'] = (isset($data['leaveacc'][0]->annual_leave) ? $data['leaveacc'][0]->annual_leave : 0) + (isset($data['leaveacc'][0]->carry_fwd_leave) ? $data['leaveacc'][0]->carry_fwd_leave : 0) - $data['ALtaken'] - $data['ELtaken'] - $data['FSEtaken'] - $data['PLEtaken'] - $data['MLEtaken']  - $data['MRLEtaken']  - $data['ULEtaken']  - $data['STLEtaken']  - $data['TLEtaken'] - $data['HLEtaken'] - (isset($data['SLEtaken']) ? $data['SLEtaken'] : 0);
+
+
+		// echo "isset(".$data['leaveacc'][0]->annual_leave.") ? ".$data['leaveacc'][0]->annual_leave." : 0) + (isset(".$data['leaveacc'][0]->carry_fwd_leave.") ? ".$data['leaveacc'][0]->carry_fwd_leave." : 0) - ".$data['ALtaken']." - ".$data['ELtaken']." - ".$data['FSEtaken']." - ".$data['PLEtaken']." - ".$data['MLEtaken']." - ".$data['MRLEtaken']." - ".$data['ULEtaken']." - ".$data['STLEtaken']." - ".$data['TLEtaken']." - ".$data['HLEtaken']." - ".(isset($data['SLEtaken']) ? $data['SLEtaken'] : 0);
+
 		if ($data['annualB'] < 0){
 			$data['ALEtaken'] = abs($data['annualB']);
 			$data['ALbalance'] = 0;

@@ -17,7 +17,7 @@ class leave_application extends CI_Controller{
 			redirect("/");
 		}
 	}
-	
+
 	function index(){
 		$data['userid'] = $this->input->get('name');
 		$data['regid'] = $this->input->get('id');
@@ -25,7 +25,7 @@ class leave_application extends CI_Controller{
 		$this->load->model('display_model');
 		$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
 		$data['hrrow'] = $this->display_model->gethrrow($this->session->userdata('v_UserName'));
-		
+
 		$data['leavedet'] = $this->display_model->leavedet($data['userid'],$data['regid']);
 		$data['holiday_list'] = $this->display_model->holiday_list($data['userid'],date('Y',strtotime($data['leavedet'][0]->leave_from)));
 		if ($data['holiday_list']){
@@ -73,7 +73,7 @@ class leave_application extends CI_Controller{
 		else{
 			$data['SEL_hol'][] = NULL;
 		}
-		
+
 		$data['userleave'] = $this->display_model->userleave($data['leavedet'][0]->leave_type);
 		$data['leave_type'] = $this->display_model->leave_type();
 
@@ -83,7 +83,7 @@ class leave_application extends CI_Controller{
 		//totalleavetaken
 		$begin = strtotime($data['fromdate']);
 	    $end   = strtotime($data['todate']);
-	    
+
 	    $no_days  = 0;
         $weekends = 0;
         while ($begin <= $end) {
@@ -119,7 +119,9 @@ class leave_application extends CI_Controller{
 		}
 		//$data['samedateleave'] = $this->display_model->samedateleave($data['fromdate'],$data['userid'],$data['limit'],$data['start']);
 		//echo "lalalalallalazzz : ".$data['fromdate'];
-		$data['samedateleave'] = $this->display_model->samedateleave($begin2,$end2,$data['userid'],$data['limit'],$data['start']);
+
+		$data['getgroupdet'] = $this->display_model->getgroupdet($this->session->userdata('v_UserName'));
+		$data['samedateleave'] = $this->display_model->samedateleave($begin2,$end2,$data['userid'],$data['limit'],$data['start'], $data['getgroupdet'][0]->v_GroupID);
 		//same date
 
 		//leavebalance
@@ -153,7 +155,7 @@ class leave_application extends CI_Controller{
 
 			$begin = strtotime($data['fromhdate']);
 		    $end   = strtotime($data['tohdate']);
-		    
+
 		    $no_days  = 0;
 	        $weekends = 0;
 	        while ($begin <= $end) {
@@ -263,7 +265,7 @@ class leave_application extends CI_Controller{
 				//$data['balanceleave'] = 0;
 			}
 		if ($data['leavedet'][0]->leave_type == '1'){
-		$data['annualB'] = (isset($data['leaveacc'][0]->annual_leave) ? $data['leaveacc'][0]->annual_leave : 0) + (isset($data['leaveacc'][0]->carry_fwd_leave) ? $data['leaveacc'][0]->carry_fwd_leave : 0) 
+		$data['annualB'] = (isset($data['leaveacc'][0]->annual_leave) ? $data['leaveacc'][0]->annual_leave : 0) + (isset($data['leaveacc'][0]->carry_fwd_leave) ? $data['leaveacc'][0]->carry_fwd_leave : 0)
 		 						- $data['ALtaken'] - $data['ELtaken'] - $data['FSEtaken'] - $data['PLEtaken'] - $data['MLEtaken']  - $data['MRLEtaken']  - $data['ULEtaken']  - $data['STLEtaken']  - $data['TLEtaken']
 		 						- $data['HLEtaken'] - (isset($data['SLEtaken']) ? $data['SLEtaken'] : 0);
 
@@ -317,8 +319,8 @@ class leave_application extends CI_Controller{
 		}
 		//leavebalance
 
-		
-		
+
+
 		$this->load->view('Head');
 		$this->load->view('top');
 		$this->load->view('left',$data);
