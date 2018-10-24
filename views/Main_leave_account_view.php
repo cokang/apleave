@@ -1,13 +1,13 @@
-	
+
 <div id="page-wrapper">
 	<div class="row">
 		<div class="col-lg-12">
 			<h1 class="page-header">Leave Balance</h1>
 		</div>
-		<!-- /.col-lg-12 --> 
+		<!-- /.col-lg-12 -->
 	</div>
-	<!-- /.row --> 
-  
+	<!-- /.row -->
+
 	<!-- /.row -->
 	<div class="col-lg-6 printnone">
 		<div class="panel panel-primary">
@@ -15,13 +15,13 @@
 				<form method="POST" action="">
 					<div class="form-group"><span class="error_message" id="message_sp" style="display:none;"> </span>
 						<label>Select Year</label>
-						<select name="sel_year" class="form-control"> 
+						<select name="sel_year" class="form-control">
 							<?php for($y=2015;$year>=$y;$year--){ ?>
 							<option value='<?= $year ?>'<?php echo set_select('sel_year',$year) ?> ><?= $year ?></option>
 							<?php } ?>
 						</select>
 					</div>
-					<?php if ($group[0]->v_GroupID == 'HR'){ ?>
+					<?php $people = array("APSB592", "APSB1150", "APSB1419", "APSB426", "APSB823", "APSB1256", "APSB1417"); if (($group[0]->v_GroupID == 'HR') || (in_array($group[0]->v_UserID, $people))){ ?>
 					<div class="form-group">
 						<input type="radio" name="ch_bx" value="All"<?php echo set_radio('ch_bx', 'All'); ?><?= $check == 'All' ? 'checked' : '' ?> onchange="return check_sort(this.value)"> All
 						<input type="radio" name="ch_bx" value="Own"<?php echo set_radio('ch_bx', 'Own'); ?><?= $check == 'Own' ? 'checked' : '' ?> onchange="return check_sort(this.value)"> Own
@@ -39,7 +39,7 @@
 					}
 					?>
 					<?php echo form_dropdown('dept', $dept, set_value('dept') ,  'class="form-control"');?>
-						<!--<select name="sel_dept" class="form-control" > 
+						<!--<select name="sel_dept" class="form-control" >
 							<option value='Department'>Department</option>
 						</select>-->
 					</div>
@@ -61,15 +61,15 @@
 					</div>
 					<?php } ?>
 					<label>Select Extra Columns</label>
-					<!--|| in_array('Unpaid',$excolt) 
-					|| in_array('Extended_Sick',$excolt) 
-					|| in_array('Family_Sick',$excolt) 
-					|| in_array('Maternity',$excolt) 
-					|| in_array('Paternity',$excolt) 
-					|| in_array('Marriage',$excolt) 
-					|| in_array('Unrecorded',$excolt) 
-					|| in_array('Study',$excolt) 
-					|| in_array('Transfer',$excolt) 
+					<!--|| in_array('Unpaid',$excolt)
+					|| in_array('Extended_Sick',$excolt)
+					|| in_array('Family_Sick',$excolt)
+					|| in_array('Maternity',$excolt)
+					|| in_array('Paternity',$excolt)
+					|| in_array('Marriage',$excolt)
+					|| in_array('Unrecorded',$excolt)
+					|| in_array('Study',$excolt)
+					|| in_array('Transfer',$excolt)
 					|| in_array('Hajj',$excolt) -->
 					<div class="form-group">
 						<span style="display:inline-block; width:120px;"><input type="checkbox" name="excol_chk[]" id='ch1' value="Unpaid"<?php echo set_checkbox('excol_chk[]', 'Unpaid'); ?><?= in_array('Unpaid',$excol) ? 'checked' : '' ?> onchange="return testchk(this.id)"> Unpaid </span>
@@ -90,10 +90,10 @@
 			</div>
 		</div>
 	</div>
-	<!-- /.row --> 
+	<!-- /.row -->
 
 	<!-- /.row -->
-	<div class="row"> 
+	<div class="row">
 
 		<!-- /.col-lg-6 -->
 		<div class="col-lg-12">
@@ -104,7 +104,7 @@
 				<div class="panel-body">
 					<div class="table-responsive">
 						<div id="subscribers_list">
-						
+
 							<table class="table">
 								<thead>
 									<tr>
@@ -114,7 +114,7 @@
 											<table cellpadding="5" cellspacing="5" border="0" style="width:100%">
 												<tr>
 													<td colspan="5" align="center"><strong>Leave Type</strong></td>
-												</tr>    
+												</tr>
 												<tr>
 													<th class="col-lg-2">Annual</th>
 													<th class="col-lg-2">Sick</th>
@@ -127,8 +127,8 @@
 													<th class="col-lg-2"><?=isset($excol[1]) ? str_replace("_"," ",$excol[1]) : '' ?></th>
 														<?php } ?>
 													<?php } ?>
-												</tr>  
-											</table>  
+												</tr>
+											</table>
 										</td>
 									</tr>
 								</thead>
@@ -176,11 +176,14 @@
 										}
 										elseif($list->v_hospitalcode == 'SEL'){
 											$holiday_array = $SEL_hol;
-										}   
-		                                elseif($list->v_hospitalcode == 'PHG'){
+										}
+		                elseif($list->v_hospitalcode == 'PHG'){
 											$holiday_array = $PHG_hol;
-										} 									
-									
+										}
+		                elseif($list->v_hospitalcode == 'KL'){
+											$holiday_array = $KL_hol;
+										}
+
 										$no_days  = 0;
 										$weekends = 0;
 										// $halfday += ($list->leave_duration=='Half Day') ? 0.5 : 0;
@@ -199,7 +202,7 @@
 												if (($what_day == 5) || ($what_day == 6) || (in_array($begin, $holiday_array))) { // 5 and 6 are weekend days
 													$weekends++;
 												}
-											}									
+											}
 											elseif($list->v_hospitalcode == NULL ){
 											//echo"kosong";
 											    if ($what_day > 5 ) { // 6 and 7 are weekend days
@@ -212,7 +215,7 @@
 													$weekends++;
 												}
 											}
-										
+
 											$begin += 86400; // +1 day
 										};
 // echo "<br>$no_days";
@@ -268,7 +271,7 @@
 												else{
 													$MRLtaken += $leave_type[8]->per_case_basis;
 													$MRLEtaken += ($noleave - $leave_type[8]->per_case_basis);
-												}  
+												}
 											}
 											elseif($list->leave_type == '10'){  //unrecorded leave
 												if ($noleave <= $leave_type[9]->per_case_basis){
@@ -309,7 +312,7 @@
 													$HLtaken += $leave_type[12]->per_case_basis;
 													$HLEtaken += ($noleave - $leave_type[12]->per_case_basis);
 												}
-											} 
+											}
 										} //
 									}
 
@@ -337,7 +340,8 @@
 									else{
 										$SLbalance = $sickB;
 									}
-									$annualB = (isset($row->annual_leave) ? $row->entitled : 0) + (isset($row->carry_fwd_leave) ? $row->carry_fwd_leave : 0) - $ALtaken - $ELtaken - $FSEtaken - $MLEtaken - $PLEtaken - $MRLEtaken - $ULEtaken - $STLEtaken - $TLEtaken - $HLEtaken - (isset($SLEtaken) ? $SLEtaken : 0);
+									//$annualB = (isset($row->annual_leave) ? $row->entitled : 0) + (isset($row->carry_fwd_leave) ? $row->carry_fwd_leave : 0) - $ALtaken - $ELtaken - $FSEtaken - $MLEtaken - $PLEtaken - $MRLEtaken - $ULEtaken - $STLEtaken - $TLEtaken - $HLEtaken - (isset($SLEtaken) ? $SLEtaken : 0);
+									$annualB = (isset($row->annual_leave) ? $row->entitled : 0) + (isset($row->carry_fwd_leave) ? $row->carry_fwd_leave : 0) - $ALtaken;
 										if ($annualB < 0){
 											$ALEtaken = abs($annualB);
 											$ALbalance = 0;
@@ -471,9 +475,9 @@
 												<table style="width:100%" cellpadding="5" cellspacing="5" border="0">
 													<tr>
 														<td class="col-lg-2">E - <?=isset($row->annual_leave) ? $row->entitled  : 0 ?></td>
-													       <b></b>             
-														<td class="col-lg-2">E - <?=isset($row->sick_leave) ? $row->sick_leave : 0 ?></td>                       
-														<td class="col-lg-2">E - <?=isset($leave_type[2]->limit_days) ? $leave_type[2]->limit_days : 0?></td> 
+													       <b></b>
+														<td class="col-lg-2">E - <?=isset($row->sick_leave) ? $row->sick_leave : 0 ?></td>
+														<td class="col-lg-2">E - <?=isset($leave_type[2]->limit_days) ? $leave_type[2]->limit_days : 0?></td>
 														<?php if ($excol) { ?>
 															<?php if (isset($excol[0])) { ?>
 																<?php if ($excol[0] != 'Unpaid' AND $excol[0] != 'Hajj' AND $excol[0] != 'Extended_Sick') { ?>
@@ -510,17 +514,17 @@
 														<?php } ?>
 													</tr>
 													<tr>
-														<td class="col-lg-2">C - <?=isset($row->carry_fwd_leave) ? $row->carry_fwd_leave : 0 ?></td>                       
-														<td class="col-lg-2"> </td>                       
+														<td class="col-lg-2">C - <?=isset($row->carry_fwd_leave) ? $row->carry_fwd_leave : 0 ?></td>
+														<td class="col-lg-2"> </td>
 														<td class="col-lg-2"></td>
 														<?php if ($excol) { ?>
 															<?php if (isset($excol[0])) { ?>
 														<td class="col-lg-2"></td>
 															<?php } ?>
 															<?php if (isset($excol[1])) { ?>
-														<td class="col-lg-2"></td> 
+														<td class="col-lg-2"></td>
 															<?php } ?>
-														<?php } ?>                
+														<?php } ?>
 													</tr>
 													<tr>
 														<td class="col-lg-2">T - <?=$ALtaken?></td>
@@ -529,7 +533,7 @@
 														<?php if ($excol) { ?>
 															<?php if (isset($excol[0])) { ?>
 																<?php if ($excol[0] != 'Unpaid' AND $excol[0] != 'Hajj' AND $excol[0] != 'Extended_Sick') { ?>
-														<td class="col-lg-2">T - <?=$taken1?></td> 
+														<td class="col-lg-2">T - <?=$taken1?></td>
 																<?php } else { ?>
 																	<?php if ($excol[0] == 'Unpaid' OR $excol[0] == 'Extended_Sick') { ?>
 														<td class="col-lg-2"></td>
@@ -545,7 +549,7 @@
 															<?php } ?>
 															<?php if (isset($excol[1])) { ?>
 																<?php if ($excol[1] != 'Unpaid' AND $excol[1] != 'Hajj' AND $excol[1] != 'Extended_Sick') { ?>
-														<td class="col-lg-2">T - <?=$taken2?></td> 
+														<td class="col-lg-2">T - <?=$taken2?></td>
 																<?php } else { ?>
 																	<?php if ($excol[1] == 'Unpaid' OR $excol[1] == 'Extended_Sick') { ?>
 														<td class="col-lg-2"></td>
@@ -580,11 +584,11 @@
 														<td class="col-lg-2"></td>
 																		<?php } ?>
 																	<?php } ?>
-																<?php } ?>  
+																<?php } ?>
 															<?php } ?>
 															<?php if (isset($excol[1])) { ?>
 																<?php if ($excol[1] != 'Unpaid' AND $excol[1] != 'Hajj' AND $excol[1] != 'Extended_Sick') { ?>
-														<td class="col-lg-2">B - <?=$balance2?></td> 
+														<td class="col-lg-2">B - <?=$balance2?></td>
 																<?php } else { ?>
 																	<?php if ($excol[1] == 'Unpaid' OR $excol[1] == 'Extended_Sick') { ?>
 														<td class="col-lg-2"></td>
@@ -600,7 +604,7 @@
 															<?php } ?>
 														<?php } ?>
 													</tr>
-												</table>    
+												</table>
 											</td>
 										</tr>
 										<?php $start++ ?>
@@ -623,18 +627,18 @@
 									</ul>
 								</div>
 							</div>
-							<!-- /.table-responsive --> 
+							<!-- /.table-responsive -->
 						</div>
-						<!-- /.panel-body --> 
+						<!-- /.panel-body -->
 					</div>
-					<!-- /.panel --> 
+					<!-- /.panel -->
 				</div>
-				<!-- /.col-lg-6 --> 
+				<!-- /.col-lg-6 -->
 
 			</div>
-			<!-- /.row --> 
+			<!-- /.row -->
 		</div>
-		<!-- /#page-wrapper --> 
+		<!-- /#page-wrapper -->
 
 <style type="text/css">
 

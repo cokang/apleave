@@ -8,6 +8,8 @@ function leavereq($insert_data){
 }
 function sickleave_img($insertimg_data){
 	$this->db->insert('sick_leave_img', $insertimg_data);
+	//echo $this->db->last_query();
+	//exit();
 }
 function addempleaves($insert_data){
 $this->db->insert('employee_leave', $insert_data);
@@ -16,9 +18,9 @@ function empleave_exist($value1,$variable1,$value2,$variable2){
 			$this->db->select($value1,$value2);
 			$this->db->where($value1,$variable1);
 			$this->db->where($value2,$variable2);
-			
+
 			$query = $this->db->get('employee_leave');
-			
+
 			if($query->num_rows()>0){
 
 				$this->load->model('update_model');
@@ -88,7 +90,7 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 										   );
 						$this->update_model->u_addheademployee($head_data,$variable1);
 				}
-				
+
 				if ($this->input->post('probation_stat') != 'Y'){
 					$this->db->select('userid');
 					$this->db->where('userid',$variable1);
@@ -109,14 +111,14 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 					$this->db->where('userid',$variable1);
 
 					$query = $this->db->get('staff_probation');
-				
+
 					if($query->num_rows()<=0){
 						$probation_stat = array(
 												'userid' => $this->input->post('emp_uname'),
 												'action_flag'  => $this->input->post('probation_stat'),
 												);
 						$this->insert_model->addprobation($probation_stat);
-					}	
+					}
 					else{
 						$probation_stat = array(
 											//'userid' => $this->input->post('emp_name'),
@@ -130,7 +132,7 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 				//echo $this->db->last_query();
 				//exit();
 			}
-			else if( $query->num_rows()<0 ){
+			else if( $query->num_rows()<1 ){
 				$insert_data = array(
 									 'v_UserID' => $this->input->post('emp_uname'),
 									 'v_UserName' => $this->input->post('emp_name'),
@@ -145,7 +147,7 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 									 'v_password' => md5($this->input->post('emp_pass'))
 									);
 				$this->insert_model->addemployee($insert_data);
-				
+
 				if ($emp_type == 'Head'){
 					$head_data = array(
 									   'group_name' => $this->input->post('dept_code'),
@@ -162,15 +164,15 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 					$this->insert_model->addprobation($probation_stat);
 				}
 
-				
+
 				$this->load->model('outside_model');
-				
+
 				$insert_data2 = array(
 									 'v_UserID' => $this->input->post('emp_uname'),
 									 'v_UserName' => $this->input->post('emp_name'),
 									 'v_password' => md5($this->input->post('emp_pass'))
 									);
-				
+
 				$this->outside_model->addemployee($insert_data2);
 				//echo $this->db->last_query();
 				//exit();
@@ -186,9 +188,9 @@ function leave_limit($insert_data){
 }
 function leave_limit_exist(){
 			$this->db->select('*');
-			
+
 			$query = $this->db->get('leave_type');
-			
+
 			if($query->num_rows()>0){
 			$insert_data = array(
 				array('leave_name' => 'Annual Leave',

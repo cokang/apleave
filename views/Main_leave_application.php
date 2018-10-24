@@ -3,17 +3,16 @@
     <div class="col-lg-12">
       <h1 class="page-header">Leave Application for User</h1>
     </div>
-    <!-- /.col-lg-12 --> 
+    <!-- /.col-lg-12 -->
   </div>
-  <!-- /.row --> 
-
-  <!-- /.row --> 
-
-  <!-- /.row --> 
+  <!-- /.row -->
 
   <!-- /.row -->
-  <div class="row"> 
 
+  <!-- /.row -->
+
+  <!-- /.row -->
+  <div class="row">
     <!-- /.col-lg-9 -->
     <div class="col-lg-9">
       <div class="panel panel-default">
@@ -46,6 +45,10 @@
                   <th style="text-align:right;"><b>Date of Application :</b></th>
                   <td data-title="Date of Application :" align="left"><?=isset($leavedet[0]->application_date) ? date('d-m-Y',strtotime($leavedet[0]->application_date)) : '' ?></td>
                   <th style="text-align:right;"><b>No. of Day/s Applied :</b></th>
+                  <?php
+                  if (($leavedet[0]->leave_duration == "Half Day") && ($leavedet[0]->leave_type == "11"))
+                  {$noleave = 0.5;}
+                  ?>
                   <td data-title="NO. of Working Days :" align="left"><?= isset($noleave) ? $noleave : '' ?></td>
                 </tr>
                 <tr class="">
@@ -54,7 +57,7 @@
                   <th style="text-align:right;"><b>Reliever:</b></th>
                   <td data-title="Reliever:" align="left"><?=isset($leavedet[0]->employee_replaced) ? $leavedet[0]->employee_replaced : '' ?></td>
                 </tr>
-                <?php if($leavedet[0]->leave_type == '2' OR $leavedet[0]->leave_type == '3') { ?>
+                <?php $whatimg = array('2','3','5','6','7','8','9','11','13'); if(in_array($leavedet[0]->leave_type, $whatimg)) { ?>
                 <tr class="">
                   <th style="text-align:right;"><b>Sick Leave Image:</b></th>
                   <td colspan="3" data-title="Sick Leave Image:">
@@ -114,7 +117,7 @@
                 </tr>
               </thead>
               <?php foreach($samedateleave as $row): ?>
-                <?php 
+                <?php
 
                 $fromdate = $row->leave_from;
                 $todate = ($row->leave_to) ? $row->leave_to : $row->leave_from;
@@ -133,6 +136,12 @@
                 }
                 elseif($row->v_hospitalcode == 'SEL'){
                   $holiday_array = $SEL_hol;
+                }
+                elseif($row->v_hospitalcode == 'PHG'){
+                  $holiday_array = $SEL_hol;
+                }
+                elseif($row->v_hospitalcode == 'KL'){
+                  $holiday_array = $KL_hol;
                 }
 
                 $no_days  = 0;
@@ -153,7 +162,10 @@
                   }
                   $begin += 86400; // +1 day
                 };
-                $noleave = $no_days - $weekends;
+
+                if (($leavedet[0]->leave_duration == "Half Day") && ($leavedet[0]->leave_type == "11"))
+                {$noleave = 0.5;} else
+                {$noleave = $no_days - $weekends;}
 
                 ?>
                 <tbody>
@@ -177,18 +189,18 @@
                 <?php } ?>
               </ul>
             </div>
-            <!-- /.table-responsive --> 
+            <!-- /.table-responsive -->
           </div>
-          <!-- /.panel-body --> 
+          <!-- /.panel-body -->
         </div>
-        <!-- /.panel --> 
+        <!-- /.panel -->
       </div>
-      <!-- /.col-lg-9 --> 
+      <!-- /.col-lg-9 -->
 
     </div>
-    <!-- /.row --> 
+    <!-- /.row -->
   </div>
-  <!-- /#page-wrapper --> 
+  <!-- /#page-wrapper -->
 
 <script type="text/javascript">
   function reject(e){

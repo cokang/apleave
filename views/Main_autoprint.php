@@ -4,20 +4,20 @@
       <?php if ($num == 1 OR $num%4 == 1){ ?>
       <h4 class="page-header">Leave account</h4>
     </div>
-    <!-- /.col-lg-12 --> 
+    <!-- /.col-lg-12 -->
   </div>
-  <!-- /.row --> 
-  
+  <!-- /.row -->
+
   <!-- /.row -->
   <div class="col-lg-12" style="margin-top:-20px;margin-bottom:-20px">
       <div style="display:inline-block; width:80%; float:left;"><h6>Year Selected : <?= $fyear ?> <br /> Data Selected : <?= $check?> <br /> Department : <?=$dept_L?></h6></div>
       <div style="display:inline-block; float:left;"><h6> E - Eligible<br /> C - Carry<br />T - Taken<br />B - Balance</h6></div>
   </div>
-  
-  
+
+
   <!-- /.row -->
-  <div class="row" > 
-    
+  <div class="row" >
+
     <!-- /.col-lg-6 -->
     <div class="col-lg-12" >
         <!-- /.panel-heading -->
@@ -66,7 +66,7 @@
 
                           $begin = strtotime($fromdate);
                           $end   = strtotime($todate);
-                            
+
                             if ($list->v_hospitalcode == 'JB'){
                               $holiday_array = $JB_hol;
                             }
@@ -78,6 +78,12 @@
                             }
                             elseif($list->v_hospitalcode == 'SEL'){
                               $holiday_array = $SEL_hol;
+                            }
+                            elseif($list->v_hospitalcode == 'PHG'){
+                              $holiday_array = $PHG_hol;
+                            }
+                            elseif($list->v_hospitalcode == 'KL'){
+                              $holiday_array = $KL_hol;
                             }
 
                               $no_days  = 0;
@@ -149,7 +155,7 @@
                                   else{
                                   $MRLtaken += $leave_type[8]->per_case_basis;
                                   $MRLEtaken += ($noleave - $leave_type[8]->per_case_basis);
-                                  }     
+                                  }
                                 }
                                 elseif($list->leave_type == '10'){  //unrecorded leave
                                   if ($noleave <= $leave_type[9]->per_case_basis){
@@ -242,67 +248,67 @@
                           <th>Hajj</th>
                         </tr>
                         <tr>
-                          <td>E - <?=isset($row->annual_leave) ? $row->annual_leave : 0 ?></td>                       
-                          <td>E - <?=isset($row->sick_leave) ? $row->sick_leave : 0 ?></td>                       
-                          <td>E - <?=isset($leave_type[2]->limit_days) ? $leave_type[2]->limit_days : 0?></td> 
-                          <td>T - <?=$UPLbalance?></td>                       
-                          <td>T - <?=$EXLbalance?></td>                       
-                          <td>E - <?=isset($leave_type[5]->entitle_days) ? $leave_type[5]->entitle_days : 0?></td> 
-                          <td>E - <?=isset($leave_type[6]->entitle_days) ? $leave_type[6]->entitle_days : 0?></td>                       
-                          <td>E - <?=isset($leave_type[7]->entitle_days) ? $leave_type[7]->entitle_days : 0?></td>                       
+                          <td>E - <?=isset($row->annual_leave) ? $row->annual_leave : 0 ?></td>
+                          <td>E - <?=isset($row->sick_leave) ? $row->sick_leave : 0 ?></td>
+                          <td>E - <?=isset($leave_type[2]->limit_days) ? $leave_type[2]->limit_days : 0?></td>
+                          <td>T - <?=$UPLbalance?></td>
+                          <td>T - <?=$EXLbalance?></td>
+                          <td>E - <?=isset($leave_type[5]->entitle_days) ? $leave_type[5]->entitle_days : 0?></td>
+                          <td>E - <?=isset($leave_type[6]->entitle_days) ? $leave_type[6]->entitle_days : 0?></td>
+                          <td>E - <?=isset($leave_type[7]->entitle_days) ? $leave_type[7]->entitle_days : 0?></td>
                           <td>E - <?=isset($leave_type[8]->entitle_days) ? $leave_type[8]->entitle_days : 0?></td>
-                          <td>E - <?=isset($leave_type[9]->entitle_days) ? $leave_type[9]->entitle_days : 0?></td> 
-                          <td>E - <?=isset($leave_type[10]->entitle_days) ? $leave_type[10]->entitle_days : 0?></td>                       
-                          <td>E - <?=isset($leave_type[11]->entitle_days) ? $leave_type[11]->entitle_days : 0?></td>                       
-                          <td>E - <?=isset($leave_type[12]->entitle_days) ? $leave_type[12]->entitle_days : 0?></td>                     
+                          <td>E - <?=isset($leave_type[9]->entitle_days) ? $leave_type[9]->entitle_days : 0?></td>
+                          <td>E - <?=isset($leave_type[10]->entitle_days) ? $leave_type[10]->entitle_days : 0?></td>
+                          <td>E - <?=isset($leave_type[11]->entitle_days) ? $leave_type[11]->entitle_days : 0?></td>
+                          <td>E - <?=isset($leave_type[12]->entitle_days) ? $leave_type[12]->entitle_days : 0?></td>
                         </tr>
                         <tr>
-                          <td>C - <?=isset($row->carry_fwd_leave) ? $row->carry_fwd_leave : 0 ?></td>                       
-                          <td></td>                       
+                          <td>C - <?=isset($row->carry_fwd_leave) ? $row->carry_fwd_leave : 0 ?></td>
                           <td></td>
-                          <td></td>                       
-                          <td></td> 
-                          <td></td>                       
-                          <td></td> 
-                          <td></td>                       
-                          <td></td> 
-                          <td></td>                       
-                          <td></td> 
-                          <td></td>                       
-                          <td></td>             
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
                         </tr>
                         <tr>
-                          <td>T - <?=$ALtaken?></td>                       
-                          <td>T - <?=$SLtaken?></td>                       
+                          <td>T - <?=$ALtaken?></td>
+                          <td>T - <?=$SLtaken?></td>
                           <td>T - <?=$ELtaken?></td>
-                          <td></td>                       
-                          <td></td>                       
+                          <td></td>
+                          <td></td>
                           <td>T - <?=$FStaken + $FSEtaken?></td>
-                          <td>T - <?=$MLtaken + $MLEtaken?></td>                       
-                          <td>T - <?=$PLtaken + $PLEtaken?></td>                       
+                          <td>T - <?=$MLtaken + $MLEtaken?></td>
+                          <td>T - <?=$PLtaken + $PLEtaken?></td>
                           <td>T - <?=$MRLtaken + $MRLEtaken?></td>
-                          <td>T - <?=$ULtaken + $ULEtaken?></td>                       
-                          <td>T - <?=$STLtaken + $STLEtaken?></td>                       
+                          <td>T - <?=$ULtaken + $ULEtaken?></td>
+                          <td>T - <?=$STLtaken + $STLEtaken?></td>
                           <td>T - <?=$TLtaken + $TLEtaken?></td>
-                          <td>T - <?=$HLtaken + $HLEtaken?></td>                    
+                          <td>T - <?=$HLtaken + $HLEtaken?></td>
                         </tr>
                         <tr>
-                          <td>B - <?=$ALbalance?></td>                       
-                          <td>B - <?=$SLbalance?></td>                       
+                          <td>B - <?=$ALbalance?></td>
+                          <td>B - <?=$SLbalance?></td>
                           <td>B - <?=$ELbalance?></td>
-                          <td></td>                       
-                          <td></td>                       
+                          <td></td>
+                          <td></td>
                           <td>B - <?=$FSbalance?></td>
-                          <td>B - <?=$MLbalance?></td>                       
-                          <td>B - <?=$PLbalance?></td>                       
+                          <td>B - <?=$MLbalance?></td>
+                          <td>B - <?=$PLbalance?></td>
                           <td>B - <?=$MRLbalance?></td>
-                          <td>B - <?=$ULbalance?></td>                       
-                          <td>B - <?=$STLbalance?></td>                       
+                          <td>B - <?=$ULbalance?></td>
+                          <td>B - <?=$STLbalance?></td>
                           <td>B - <?=$TLbalance?></td>
-                          <td>B - <?=$HLbalance?></td>                    
-                        </tr>    
-                    </table>  
-                    
+                          <td>B - <?=$HLbalance?></td>
+                        </tr>
+                    </table>
+
                     </td>
 
                   </tr>
@@ -311,18 +317,18 @@
 <?php if ($num % 4 == 0) { ?>
               </table>
             </div>
-            <!-- /.table-responsive --> 
+            <!-- /.table-responsive -->
           </div>
-          <!-- /.panel-body --> 
+          <!-- /.panel-body -->
         </div>
         <!-- /.panel -->
-        
+
         <div class="StartNewPage" id="breakpage"><span id="pagebreak"></span></div>
         <?php } ?>
         <?php $num++ ?>
         <?php endforeach; ?>
       </div>
-      <!-- /.col-lg-6 --> 
-      
+      <!-- /.col-lg-6 -->
+
     </div>
-    <!-- /.row --> 
+    <!-- /.row -->

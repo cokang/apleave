@@ -3,11 +3,11 @@
 		<div class="col-lg-12">
 			<h1 class="page-header">Leave Calender</h1>
 		</div>
-		<!-- /.col-lg-12 --> 
+		<!-- /.col-lg-12 -->
 	</div>
-	
+
 	<!-- /.row -->
-	<div class="row"> 
+	<div class="row">
 
 		<!-- /.col-lg-6 -->
 		<div class="col-lg-12">
@@ -39,7 +39,7 @@
 								</tr>
 							</thead>
 							<?php foreach ($datecalendar as $row): ?>
-							<?php 
+							<?php
 
 								$fromdate = $row->leave_from;
 								$todate = ($row->leave_to) ? $row->leave_to : $row->leave_from;
@@ -62,6 +62,9 @@
 								elseif($row->v_hospitalcode == 'PHG'){
 									$holiday_array = $PHG_hol;
 								}
+								elseif($row->v_hospitalcode == 'KL'){
+									$holiday_array = $KL_hol;
+								}
 
 
 								$no_days  = 0;
@@ -80,7 +83,7 @@
 											$weekends++;
 										}
 									}
-									elseif($row->v_hospitalcode == NULL ){					   	
+									elseif($row->v_hospitalcode == NULL ){
 										if ($what_day > 5 ) { // 6 and 7 are weekend days
 											$weekends++;
 										}
@@ -117,15 +120,15 @@
 						<?php } ?>
 						</ul>
 					</div>
-					<!-- /.table-responsive --> 
+					<!-- /.table-responsive -->
 				</div>
-				<!-- /.panel-body --> 
+				<!-- /.panel-body -->
 			</div>
-			<!-- /.panel --> 
+			<!-- /.panel -->
 		</div>
-		<!-- /.col-lg-6 --> 
+		<!-- /.col-lg-6 -->
 
 	</div>
-	<!-- /.row --> 
+	<!-- /.row -->
 </div>
-<!-- /#page-wrapper --> 
+<!-- /#page-wrapper -->

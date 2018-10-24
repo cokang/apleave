@@ -32,9 +32,9 @@ class Controllers extends CI_Controller {
 				$data['applied_date'] = $this->display_model->applied_date($this->session->userdata('v_UserName'));
 		///$url = $this->input->post('continue') ? $this->input->post('continue') : site_url('contentcontroller/select');
 		//$config['upload_path'] = 'C:\inetpub\wwwroot\FEMSHospital_v3\uploadfile';
-		//$config['upload_path'] = 'C:\xampp\htdocs\leave\sick_leave_img';
+		$config['upload_path'] = 'C:\inetpub\wwwroot\apleave3\sick_leave_img';
 		//$config['upload_path'] = "sick_leave_img/";
-                $config['upload_path'] = '/var/www/vhosts/file.advancepact.com/httpdocs/sick_leave_img';
+                //$config['upload_path'] = '/var/www/vhosts/file.advancepact.com/httpdocs/sick_leave_img';
 		$config['allowed_types'] = 'gif|jpg|png';
 		$config['max_size']	= '5000';
 		$config['max_width']  = 'auto';
@@ -45,6 +45,8 @@ class Controllers extends CI_Controller {
 		if ( ! $this->upload->do_upload('userfile'))
 
 		{
+			//echo "masuka";
+			//exit();
 			$data['error'] = array($this->upload->display_errors());
 			$this->load->view('Head',$data);
 			$this->load->view('top');
@@ -54,7 +56,7 @@ class Controllers extends CI_Controller {
 		}
 		else
 		{
-			//echo $this->input->get('file_name');
+			//echo " klklkl".$this->input->get('file_name');
 			//exit();
 			$this->load->library('form_validation');
 			$this->form_validation->set_rules('leave_type','Leave Type','trim');
@@ -69,7 +71,8 @@ class Controllers extends CI_Controller {
 				{
 				$data['upload_data'] = $this->upload->data();
 				$data['image'] = $data['upload_data']['file_name'];
-
+				//echo " klklkl".$data['upload_data']['file_name'];
+				//exit();
 				//$this->load->model('insert_model');
 				//$this->insert_model->sickleave_img($data['upload_data']);
 
@@ -210,6 +213,15 @@ class Controllers extends CI_Controller {
 			$data['PHG_hol'][] = NULL;
 		}
 
+		$data['holidayKL'] = $this->display_model->holidayKL($data['fyear']);
+		if($data['holidayKL']){
+			foreach ($data['holidayKL'] as $key => $value) {
+			    $data['KL_hol'][] = strtotime(date($value->date_holiday));
+			}
+		}else{
+			$data['KL_hol'][] = NULL;
+		}
+
 		if ($data['check'] == 'Own'){
 			//$data['leaveacc'] = $this->display_model->leaveacc($this->session->userdata('v_UserName'),$data['fyear']);
 			//$data['tleavetaken'] = $this->display_model->tleavetaken($this->session->userdata('v_UserName'),$data['fyear']);
@@ -347,7 +359,7 @@ class Controllers extends CI_Controller {
 			}
 
 		}
-
+print_r($data);
 		$this->load->view('Head');
 		$this->load->view('top');
 		$this->load->view('left',$data);
@@ -405,6 +417,24 @@ class Controllers extends CI_Controller {
 		}
 		else{
 			$data['SEL_hol'][] = NULL;
+		}
+		$data['holidayPHG'] = $this->display_model->holidayPHG($data['fyear']);
+		if($data['holidayPHG']){
+			foreach ($data['holidayPHG'] as $key => $value) {
+			    $data['PHG_hol'][] = strtotime(date($value->date_holiday));
+			}
+		}
+		else{
+			$data['PHG_hol'][] = NULL;
+		}
+		$data['holidayKL'] = $this->display_model->holidayKL($data['fyear']);
+		if($data['holidayKL']){
+			foreach ($data['holidayKL'] as $key => $value) {
+			    $data['KL_hol'][] = strtotime(date($value->date_holiday));
+			}
+		}
+		else{
+			$data['KL_hol'][] = NULL;
 		}
 
 		if ($data['check'] == 'Own'){
@@ -867,6 +897,15 @@ class Controllers extends CI_Controller {
 		else{
 			$data['PHG_hol'][] = NULL;
 		}
+		$data['holidayKL'] = $this->display_model->holidayKL(date('Y',strtotime($data['datecal'])));
+		if($data['holidayKL']){
+			foreach ($data['holidayKL'] as $key => $value) {
+			    $data['KL_hol'][] = strtotime(date($value->date_holiday));
+			}
+		}
+		else{
+			$data['KL_hol'][] = NULL;
+		}
 
 
 		$data['limit'] = 5;
@@ -965,6 +1004,24 @@ class Controllers extends CI_Controller {
 		}
 		else{
 			$data['SEL_hol'][] = NULL;
+		}
+		$data['holidayPHG'] = $this->display_model->holidayPHG(date('Y',strtotime($data['record'][0]->leave_from)));
+		if($data['holidayPHG']){
+			foreach ($data['holidayPHG'] as $key => $value) {
+			    $data['PHG_hol'][] = strtotime(date($value->date_holiday));
+			}
+		}
+		else{
+			$data['PHG_hol'][] = NULL;
+		}
+		$data['holidayKL'] = $this->display_model->holidayKL(date('Y',strtotime($data['record'][0]->leave_from)));
+		if($data['holidayKL']){
+			foreach ($data['holidayKL'] as $key => $value) {
+			    $data['KL_hol'][] = strtotime(date($value->date_holiday));
+			}
+		}
+		else{
+			$data['KL_hol'][] = NULL;
 		}
 
 		//$data['userleave'] = $this->display_model->userleave($data['record'][0]->leave_type);
@@ -1261,8 +1318,48 @@ class Controllers extends CI_Controller {
 		$this->load->view('footer');
 	}
 
-	function cancel_applied($id){
 
+
+	public function administrative(){
+		$this->load->model('display_model');
+		$data['headrow']= $this->display_model->getheadrow($this->session->userdata('v_UserName'));
+		$data['hrrow']	= $this->display_model->gethrrow($this->session->userdata('v_UserName'));
+		$data['aarow']	= $this->display_model->getaarow($this->session->userdata('v_UserName'));
+
+
+		$this->load->view('Head',$data);
+		$this->load->view('top');
+		$this->load->view('left');
+		$this->load->view('main_administrative');
+		$this->load->view('footer');
+	}
+
+	public function unprocess_listing(){
+		$this->load->model('display_model');
+		$data['headrow']= $this->display_model->getheadrow($this->session->userdata('v_UserName'));
+		$data['hrrow']	= $this->display_model->gethrrow($this->session->userdata('v_UserName'));
+		$data['aarow']	= $this->display_model->getaarow($this->session->userdata('v_UserName'));
+
+		$data['limit']	= 8;
+		isset($_GET['p']) ? $data['page'] = $_GET['p'] : $data['page'] = 1;
+		$data['start']	= ($data['page'] * $data['limit']) - $data['limit'];
+
+		$data['unprocess_listing']	= $this->display_model->unprocess_listing($this->input->get('sc'),$data['start'], $data['limit']);
+		$data['jumlah']				= $this->display_model->unprocess_listing_c()[0]->jumlah;
+		if($data['jumlah'] > ($data['page'] * $data['limit']) ){
+			$data['next'] = ++$data['page'];
+		}
+
+		$this->load->view('Head',$data);
+		$this->load->view('top');
+		$this->load->view('left');
+		$this->load->view('process_listing');
+		$this->load->view('footer');
+	}
+
+	public function process_listing(){
+		$this->load->model('insert_model');
+		$this->insert_model->update_process_leave_status();
 	}
 
 }

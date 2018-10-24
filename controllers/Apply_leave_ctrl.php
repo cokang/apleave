@@ -19,6 +19,7 @@ class apply_leave_ctrl extends CI_Controller{
 	}
 
 	function index(){
+
 		$this->load->model('insert_model');
 		$insert_data = array(
 							'leave_type' => $this->input->post('leave_type'),
@@ -33,9 +34,14 @@ class apply_leave_ctrl extends CI_Controller{
 							'user_id' => $this->session->userdata('v_UserName'),
 							'application_date' => date('Y-m-d'),
 						);
+						//echo "masuk cni";
+						//echo print_r($insert_data);
+						//exit();
 		$this->insert_model->leavereq($insert_data);
 
-		if ($this->input->post('leave_type') == '2' OR $this->input->post('leave_type') == '3'){
+		//if ($this->input->post('leave_type') == '2' OR $this->input->post('leave_type') == '3'){
+	 	$whatimg = array('2','3','5','6','7','8','9','11','13');
+		if ((in_array($this->input->post('leave_type'), $whatimg))){
 			$this->load->model('display_model');
 			//$data['regid'] = $this->display_model->get_reqid($this->input->post('from_leavedate'),$this->session->userdata('v_UserName'));
 			//$i=0;
@@ -65,6 +71,8 @@ class apply_leave_ctrl extends CI_Controller{
 								'user_id' => $data['regid'][0]->user_id,
 								'leavereq_id' => $data['regid'][0]->id,
 							);
+							//print_r($insertimg_data);
+							//exit();
 			$this->insert_model->sickleave_img($insertimg_data);
 		}
 

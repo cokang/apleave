@@ -53,7 +53,8 @@ class LoginController extends CI_Controller {
 //		exit();
 		if($query && $queryu)
 		//if($queryu)
-{
+{ //echo "jkhkjkh : " . $this->loginModel->userdata()[0]['v_hospitalcode'];
+	//exit();
 				$data = array
 					(
 
@@ -64,7 +65,8 @@ class LoginController extends CI_Controller {
 					'passvalidity' =>$passisvalid,
 					 //'username'=>$session_data['i.file_name'],
 						'apsb_no'		=>$this->loginModel->userdata()[0]['apsb_no'],
-					'hosp_code'=>'IIUM',
+					//'hosp_code'=>'IIUM',
+				'hosp_code'=>$this->loginModel->userdata()[0]['v_hospitalcode'],
 					'is_logged_in'=>TRUE,);
 				$this->session->set_userdata($data);
 			//print_r($data);

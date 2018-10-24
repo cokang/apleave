@@ -20,7 +20,7 @@
           <ul class="dropdown-menu dropdown-user">
             <li><a href="#"><i class="fa fa-user fa-fw"></i> Hi, <?php echo ucwords($this->session->userdata('v_UserName'))?> </a> </li>
             <li class="divider"></li>
-            <li><a href="<?php echo site_url(); ?>/logincontroller/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a> </li>
+            <li><a href="<?php echo site_url(); ?>/Logincontroller/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a> </li>
           </ul>
           <!-- /.dropdown-user --> 
         </li>
@@ -32,6 +32,11 @@
     <!-- /.navbar-header -->
     <?php if ( $this->uri->slash_segment(1) .$this->uri->slash_segment(2) == 'Controllers/print_out/'){?>
     <div style="float:right; margin:7px;"><input type="button" name="Print" value="Print" class="btn btn-default" onClick="window.print()"/></div>
+    <div style="float:right; margin:7px;">
+      <a href="<?=base_url()?>index.php/Controllers/unprocess_listing?tab=<?=$this->input->get('tab')?>&parent=<?=$this->input->get('parent')?>">
+        <button type="button" name="Back" class="btn btn-default">< Back</button>
+      </a>
+    </div>
     <?php }else{ ?>
     <div style="float:right; margin:7px;"><img src="<?php echo base_url();?>images/logo.png" class="img-heading-top"/></div>
     <?php } ?>

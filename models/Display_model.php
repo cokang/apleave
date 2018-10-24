@@ -76,10 +76,11 @@ parent::__construct();
 		$this->db->where("(U.v_GroupID = '".$group. "' OR G.report_to = '".$this->session->userdata('v_UserName')."')");
 		$this->db->where('U.v_UserID <>',$this->session->userdata('v_UserName'));
 		//$this->db->order_by('R.leave_from','Desc');
+		$this->db->order_by('R.leave_status IS NULL','desc',false);
 		$this->db->order_by('R.application_date','desc');
 		$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		echo $this->db->last_query();
+		//echo $this->db->last_query();
 		//exit();
 		$query_result = $query->result();
 		return $query_result;
@@ -171,7 +172,8 @@ parent::__construct();
 		return $query_result;
 	}
 	function leaveacc($userid,$year){
-		$this->db->select('L.*,U.v_UserName,U.v_UserName,ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		//$this->db->select('L.*,U.v_UserName,U.v_UserName,ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		$this->db->select('L.*,U.v_UserName,U.v_UserName,FLOOR(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		$this->db->where('L.user_id',$userid);
@@ -196,14 +198,15 @@ parent::__construct();
 	}
 	function leaveacclim($userid,$year,$limit,$start){
 		//$this->db->select('L.*,U.v_UserName');
-		$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		//$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		$this->db->select('L.*,U.v_UserName,FLOOR(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		$this->db->where('L.user_id',$userid);
 		$this->db->where('L.year',$year);
 		$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
+		echo $this->db->last_query();
 		//exit();
 		$query_result = $query->result();
 		return $query_result;
@@ -346,7 +349,8 @@ parent::__construct();
 	}
 	function leaveaccall($year,$limit,$start){ //d4
 		//$this->db->select('L.*,U.v_UserName');
-		$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		//$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		$this->db->select('L.*,U.v_UserName,FLOOR(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		//$this->db->where('user_id',$userid);
@@ -373,7 +377,8 @@ parent::__construct();
 	}
 	function leaveaccalld($dept,$year,$limit,$start){ //d2
 		//$this->db->select('L.*,U.v_UserName');
-		$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		//$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		$this->db->select('L.*,U.v_UserName,FLOOR(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		$this->db->where('U.v_GroupID',$dept);
@@ -400,7 +405,8 @@ parent::__construct();
 	}
 	function leaveaccallds($dept,$staff,$year,$limit,$start){ //d1
 		//$this->db->select('L.*,U.v_UserName');
-		$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		//$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		$this->db->select('L.*,U.v_UserName,FLOOR(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		$this->db->where('U.v_GroupID',$dept);
@@ -429,7 +435,8 @@ parent::__construct();
 	}
 	function leaveaccalls($staff,$year,$limit,$start){ //d3
 		//$this->db->select('L.*,U.v_UserName');
-		$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		//$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		$this->db->select('L.*,U.v_UserName,FLOOR(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		//$this->db->where('U.v_GroupID',$dept);
@@ -458,7 +465,8 @@ parent::__construct();
 	}
 	function leaveaccallda($dept,$apsbno,$year,$limit,$start){ //d5
 		//$this->db->select('L.*,U.v_UserName');
-		$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		//$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		$this->db->select('L.*,U.v_UserName,FLOOR(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		$this->db->where('U.v_GroupID',$dept);
@@ -487,7 +495,8 @@ parent::__construct();
 	}
 	function leaveaccalldsa($dept,$staff,$apsbno,$year,$limit,$start){ //d6
 		//$this->db->select('L.*,U.v_UserName');
-		$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		//$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		$this->db->select('L.*,U.v_UserName,FLOOR(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		$this->db->where('U.v_GroupID',$dept);
@@ -518,7 +527,8 @@ parent::__construct();
 	}
 	function leaveaccalla($apsbno,$year,$limit,$start){ //d7
 		//$this->db->select('L.*,U.v_UserName');
-		$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		//$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		$this->db->select('L.*,U.v_UserName,FLOOR(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		//$this->db->where('U.v_GroupID',$dept);
@@ -547,7 +557,8 @@ parent::__construct();
 	}
 	function leaveaccallsa($staff,$apsbno,$year,$limit,$start){ //d8
 		//$this->db->select('L.*,U.v_UserName');
-		$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		//$this->db->select('L.*,U.v_UserName,ROUND(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		$this->db->select('L.*,U.v_UserName,FLOOR(IFNULL(`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		//$this->db->where('U.v_GroupID',$dept);
@@ -767,13 +778,15 @@ parent::__construct();
 		return $query_result;
 	}
 	function alternate($userid,$group){
-		$this->db->select('v_UserID,v_UserName,v_GroupID');
-		$this->db->from('pmis2_sa_user');
-		$this->db->where('v_GroupID',$group);
-		$this->db->where('v_UserID <>',$userid);
+		$this->db->select('a.v_UserID,a.v_UserName,a.v_GroupID');
+		$this->db->from('pmis2_sa_user a');
+		$this->db->join('group b','a.v_UserID = b.group_sup_id','left outer');
+		$this->db->where('a.v_GroupID',$group);
+		$this->db->where('a.v_UserID <>',$userid);
+		$this->db->or_where('b.report_to =',$userid);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		/* echo $this->db->last_query();
+		exit(); */
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -847,6 +860,18 @@ parent::__construct();
 		$this->db->select('date_holiday');
 		$this->db->from('holiday_list');
 		$this->db->where('state','PHG');
+		$this->db->where('YEAR(date_holiday)',$year);
+		$query = $this->db->get();
+		//echo $this->db->last_query();
+		/* echo "pahang";
+		exit(); */
+		$query_result = $query->result();
+		return $query_result;
+	}
+	function holidayKL($year){
+		$this->db->select('date_holiday');
+		$this->db->from('holiday_list');
+		$this->db->where('state','KL');
 		$this->db->where('YEAR(date_holiday)',$year);
 		$query = $this->db->get();
 		//echo $this->db->last_query();
@@ -1078,6 +1103,53 @@ parent::__construct();
 			// $query_result = $query->result();
 			// echo $query; // pakai utk return value js
 			// return $query_result;
+		}
+
+
+
+		function getaarow($userid){
+		$this->db->select('*');
+		$this->db->from('pmis2_sa_user');
+		$this->db->where('v_UserID',$userid);
+		//$this->db->where('v_GroupID','HR');
+		$this->db->where('v_Remarks','AA');
+		$query = $this->db->get();
+		//echo $this->db->last_query();
+		//exit();
+		$query_result = $query->num_rows();
+		return $query_result;
+		}
+
+		function unprocess_listing($staff, $start, $limit){
+			$this->db->select("lr.id as leave_id, u.v_UserName, lr.leave_from, u.v_GroupID");
+			$this->db->from("employee_leave_req lr");
+			$this->db->join("pmis2_sa_user u", "lr.user_id=u.v_UserID", "inner");
+			$this->db->join("processed_leave pl", "pl.leavereq_id=lr.id", "left");
+			$this->db->where("lr.leave_type", "4");//unrecoded_leave
+			$this->db->where("lr.leave_status", "Approved");
+			$this->db->where("(pl.leavereq_id IS Null OR pl.v_actionflag='D')");
+			// $this->db->or_where("pl.status", "C");
+			if( $staff!="" ){
+				$this->db->where("(u.apsb_no LIKE '%$staff%' ESCAPE '!' OR u.v_UserName LIKE '%$staff%' ESCAPE '!')");
+				// $this->db->or_like("u.v_UserName", $staff);
+			}
+			$this->db->limit($limit,$start);
+			$result = $this->db->get();
+			// echo "<pre>".$this->db->last_query();die;
+			return $result->result();
+		}
+
+		function unprocess_listing_c(){
+			$this->db->select("count(*) as jumlah");
+			$this->db->from("employee_leave_req lr");
+			$this->db->join("pmis2_sa_user u", "lr.user_id=u.v_UserID", "inner");
+			$this->db->join("processed_leave pl", "pl.leavereq_id=lr.id", "left");
+			$this->db->where("lr.leave_type", "4");//unrecoded_leave
+			$this->db->where("lr.leave_status", "Approved");
+			$this->db->where("(pl.leavereq_id IS Null OR pl.v_actionflag='D')");
+			$result = $this->db->get();
+
+			return $result->result();
 		}
 
 

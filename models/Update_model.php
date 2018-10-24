@@ -18,9 +18,25 @@ function u_addemployee($insert_data,$userid,$apsbno){
 	$this->db->where('apsb_no',$apsbno);
 	$this->db->update('pmis2_sa_user', $insert_data);
 }
+/*
 function u_addheademployee($head_data,$userid){
 	$this->db->where('group_sup_id',$userid);
 	$this->db->update('group', $head_data);
+}
+*/
+function u_addheademployee($head_data,$userid){
+
+	$query = $this->db->get_where('group', array(//making selection
+            'group_sup_id' => $userid,
+        ));
+
+ if ($query->num_rows() === 0) {
+    $masukbaru = array('group_name'=>$head_data['group_name'],'group_sup_id'=>$userid,'report_to'=>$head_data['report_to']);
+	$this->db->insert('group', $masukbaru);
+     }else {
+	$this->db->where('group_sup_id',$userid);
+	$this->db->update('group', $head_data);
+		   }
 }
 function u_addprobation($probation_stat,$userid){
 	$this->db->where('userid',$userid);

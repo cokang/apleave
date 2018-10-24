@@ -18,9 +18,9 @@
 	<style type="text/css" media="print">
 		html {  border:0px solid red; margin:0; }
 		body {
-			border:0px solid red; 
-			font-size:normal; 
-			margin:0px; 
+			border:0px solid red;
+			font-size:normal;
+			margin:0px;
 		}
 		@page { margin:0.5cm 0.5cm 0.5cm 0.5cm; }
 		div.page {  position:absolute;
@@ -90,7 +90,7 @@
 			padding:10px 15px;
 		}
 	</style>
-	<?php 
+	<?php
 	$i=0;
 	$leave_from = array();
 	$leave_to   = array();
@@ -106,10 +106,10 @@
 	?>
 	<!-- Page-Level Demo Scripts - Forms - Use for reference -->
 	<link href="<?php echo base_url(); ?>/css/jquery-ui.css" rel="stylesheet" type="text/css" />
-	<script type="text/javascript" src="<?php echo base_url(); ?>/js/jquery9.js"></script> 
-	<script type="text/javascript" src="<?php echo base_url(); ?>/js/jquery-ui.js"></script> 
+	<script type="text/javascript" src="<?php echo base_url(); ?>/js/jquery9.js"></script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>/js/jquery-ui.js"></script>
 	<script type="text/javascript">
-		$(document).ready(function() { 
+		$(document).ready(function() {
 			/*var unavailableDates = ["23-9-2015", "14-12-2015", "15-12-2015"];
 
 			function unavailable(date) {
@@ -128,12 +128,12 @@
 				});
 			});*/
 
-			//$( "#from" ).datepicker({ dateFormat: 'yy-mm-dd' }); 
+			//$( "#from" ).datepicker({ dateFormat: 'yy-mm-dd' });
 
 			// $( "#from" ).datepicker({ dateFormat: 'yy-mm-dd' });
 			// $( "#to" ).datepicker({ dateFormat: 'dd-mm-yy' });
 			$("#from").datepicker({
-				dateFormat: 'yy-mm-dd',
+				dateFormat: 'dd-mm-yy',
 				minDate: 0,
 				beforeShow: function() {
 					$(this).datepicker('option', 'maxDate', $('#to').val());
@@ -177,7 +177,7 @@
 			var err_msg="";
 
 			/*if($('#mobile').val().length>10){
-				err_msg="Mobile number should not be more than 10 digits<br>";    
+				err_msg="Mobile number should not be more than 10 digits<br>";
 				error=1;
 			}*/
 			if($("#leave_type").val()=="2" ){
@@ -205,7 +205,7 @@
 				}
 			}
 
-			if($("#leave_type").val()=="0" ){ 
+			if($("#leave_type").val()=="0" ){
 				$("#leave_type").css("border-color","red");
 				error=1;
 			}
@@ -216,7 +216,7 @@
 					return false;
 			}else{
 				var com_flag=0;
-				if($("#duration").val()=="Full Day"){           
+				if($("#duration").val()=="Full Day"){
 					var startdate = $("#from").datepicker('getDate').getTime();
 					var enddate = $("#to").datepicker('getDate').getTime();
 					if(enddate<startdate)
@@ -237,14 +237,14 @@
 					$.ajax({
 						type: "POST",
 						url: "http://serverfordemo.com/green_leave/ajax.php",
-						data: "action=insertLeaveDetails&from="+$("#from").val()+"&to="+$("#to").val()+"&reason="+$("#reason").val()+"&lv_type="+$("#leave_type").val()+"&duration="+$("#duration").val(),    
+						data: "action=insertLeaveDetails&from="+$("#from").val()+"&to="+$("#to").val()+"&reason="+$("#reason").val()+"&lv_type="+$("#leave_type").val()+"&duration="+$("#duration").val(),
 						dataType: "json",
 						success: function(result) {
 							alert("Request sent successfully.");
 							location.reload();
 						}
 					});
-					return true; 
+					return true;
 				}
 				//return true;
 			}
@@ -271,11 +271,11 @@
 			$(function() {
 				$( "#from" ).datepicker("destroy");
 				if($("#leave_type").val() == "1" && probation != 1){
-					$( "#from" ).datepicker({ 
-						dateFormat: 'dd-mm-yy', 
+					$( "#from" ).datepicker({
+						dateFormat: 'dd-mm-yy',
 						minDate: '+'+getNext3WorkingDays()+'D' });
 				}else{
-					$( "#from" ).datepicker({ dateFormat: 'dd-mm-yy' }); 
+					$( "#from" ).datepicker({ dateFormat: 'dd-mm-yy' });
 				}
 			});
 
@@ -287,7 +287,7 @@
 			if( imgneeded.includes(duration)==true ){
 				$("#sick_leave_img").slideDown();
 			}else {
-				$("#sick_leave_img").slideUp();  
+				$("#sick_leave_img").slideUp();
 			}
 			if($("#leave_type").val()!="0"){
 
@@ -295,7 +295,8 @@
 
 					var json = JSON.parse(data);
 					// console.log(json);
-					var annualB = (json['entitled']!=undefined ? Number(json['entitled']) : 0) + (json['carry_fwd_leave']!=undefined ? Number(json['carry_fwd_leave']) : 0) - json['ALtaken'] - json['ELtaken'] - json['FSEtaken'] - json['MLEtaken'] - json['PLEtaken'] - json['MRLEtaken'] - json['ULEtaken'] - json['STLEtaken'] - json['TLEtaken'] - json['HLEtaken'] - (json['SLEtaken']!=undefined ? json['SLEtaken'] : 0);
+					//var annualB = (json['entitled']!=undefined ? Number(json['entitled']) : 0) + (json['carry_fwd_leave']!=undefined ? Number(json['carry_fwd_leave']) : 0) - json['ALtaken'] - json['ELtaken'] - json['FSEtaken'] - json['MLEtaken'] - json['PLEtaken'] - json['MRLEtaken'] - json['ULEtaken'] - json['STLEtaken'] - json['TLEtaken'] - json['HLEtaken'] - (json['SLEtaken']!=undefined ? json['SLEtaken'] : 0);
+					var annualB = (json['entitled']!=undefined ? Number(json['entitled']) : 0) + (json['carry_fwd_leave']!=undefined ? Number(json['carry_fwd_leave']) : 0) - json['ALtaken'];
 
 					// alert("("+json['entitled']+"!=undefined ? "+json['entitled']+" : 0) + ("+json['carry_fwd_leave']+"!=undefined ? "+json['carry_fwd_leave']+" : 0) - "+json['ALtaken']+" - "+json['ELtaken']+" - "+json['FSEtaken']+" - "+json['MLEtaken']+" - "+json['PLEtaken']+" - "+json['MRLEtaken']+" - "+json['ULEtaken']+" - "+json['STLEtaken']+" - "+json['TLEtaken']+" - "+json['HLEtaken']+" - ("+json['SLEtaken']+"!=undefined ? "+json['SLEtaken']+" : 0)");
 
@@ -308,17 +309,17 @@
 					if (duration=="1") {
 						if (json['probation'] <= 0){
 							if(json['ALbalance']>0){
-								$("#message_sp").removeClass();  
+								$("#message_sp").removeClass();
 								$("#message_sp").addClass("success_message");
 								// $("#message_sp").text("You have "+json['ALbalance']+" Annual Leave(s) remaining.");
 								$("#message_sp").text("You have "+ALbalance+" Annual Leave(s) remaining.");
 								$("#message_sp").slideDown("slow");
 
-								// $("#from").prop("disabled", false);  
+								// $("#from").prop("disabled", false);
 							}else if(json['ALbalance']<=0){
 								$("#message_sp").removeClass();
 								$("#message_sp").addClass("error_message");
-								$("#message_sp").text("You have no Annual Leave(s) remaining.");
+								$("#message_sp").text("You have no Annual Leave(s) remaining. You have to apply Unpaid Leave.");
 								$("#message_sp").slideDown("slow");
 
 
@@ -329,7 +330,7 @@
 								$("#to").prop("disabled", true);
 							}
 						}else{
-							$("#message_sp").removeClass();  
+							$("#message_sp").removeClass();
 							$("#message_sp").addClass("info_message");
 							$("#message_sp").html("Annual Leave is not eligible for probational staff.");
 							$("#message_sp").slideDown("slow");
@@ -341,16 +342,16 @@
 					}
 					if (duration=="2"){
 						if(json['SLbalance']>0){
-							$("#message_sp").removeClass();  
+							$("#message_sp").removeClass();
 							$("#message_sp").addClass("success_message");
 							$("#message_sp").text("You have "+json['SLbalance']+" Sick Leave(s) remaining.");
 							$("#message_sp").slideDown("slow");
 
-							// $("#from").prop("disabled", false);  
+							// $("#from").prop("disabled", false);
 						}else if(json['SLbalance']<=0){
-							$("#message_sp").removeClass();  
+							$("#message_sp").removeClass();
 							$("#message_sp").addClass("error_message");
-							$("#message_sp").text("You have no Sick Leave(s) remaining.");
+							$("#message_sp").text("You have no Sick Leave(s) remaining. You have to apply Unpaid Leave.");
 							$("#message_sp").slideDown("slow");
 
 
@@ -363,14 +364,14 @@
 					}
 					if (duration=="3"){
 						if(json['ELbalance']>0){
-							$("#message_sp").removeClass();  
+							$("#message_sp").removeClass();
 							$("#message_sp").addClass("success_message");
 							$("#message_sp").text("You have "+json['ELbalance']+" Emergency Leave(s) remaining.");
 							$("#message_sp").slideDown("slow");
 
-							// $("#from").prop("disabled", false);  
+							// $("#from").prop("disabled", false);
 						}else if(json['ELbalance']<=0){
-							$("#message_sp").removeClass();  
+							$("#message_sp").removeClass();
 							$("#message_sp").addClass("error_message");
 							$("#message_sp").text("You have no Emergency Leave(s) remaining.");
 							$("#message_sp").slideDown("slow");
@@ -385,17 +386,17 @@
 					}
 					if (duration=="4"){
 						/*if(json['ALbalance']<=0){
-						$("#message_sp").removeClass();  
+						$("#message_sp").removeClass();
 						$("#message_sp").addClass("success_message");
 						$("#message_sp").text("You have "+json['ELbalance']+" Emergency Leave(s) remaining.");
 						$("#message_sp").slideDown("slow");
 
-						// $("#from").prop("disabled", false);  
+						// $("#from").prop("disabled", false);
 						}*/
 						if(json['ALbalance']>0){
-							$("#message_sp").removeClass();  
+							$("#message_sp").removeClass();
 							$("#message_sp").addClass("error_message");
-							$("#message_sp").text("You need to finish your Annual Leave before you can apply Unpaid Leave.");
+							$("#message_sp").text("Please inform your superior & get approval before you apply unpaid leave");
 							$("#message_sp").slideDown("slow");
 
 
@@ -407,7 +408,7 @@
 						}
 					}
 					if (duration=="5") {
-						$("#message_sp").removeClass();  
+						$("#message_sp").removeClass();
 						$("#message_sp").addClass("info_message");
 						$("#message_sp").html("90 consecutive days will be paid a full salary. <br> Next 180 consecutive days will be paid half salary. <br> Next 180 consecutive days without pay.");
 						$("#message_sp").slideDown("slow");
@@ -415,16 +416,16 @@
 
 					if (duration=="6"){
 						if(json['FSbalance']>0){
-							$("#message_sp").removeClass();  
+							$("#message_sp").removeClass();
 							$("#message_sp").addClass("success_message");
-							$("#message_sp").html("You have "+json['FSbalance']+" Family Sick Leave(s) remaining. <br> Limit per application is 2 days for each disaster, the rest will be deducted from Annual Leave.");
+							$("#message_sp").html("You have "+json['FSbalance']+" Compassionate Leave(s) remaining. <br> Limit per application is 2 days for each disaster or event, the rest will be deducted from Annual Leave or Unpaid Leave.");
 							$("#message_sp").slideDown("slow");
 
-							// $("#from").prop("disabled", false);  
+							// $("#from").prop("disabled", false);
 						}else if(json['FSbalance']<=0){
-							$("#message_sp").removeClass();  
+							$("#message_sp").removeClass();
 							$("#message_sp").addClass("error_message");
-							$("#message_sp").text("You have no Family Sick Leave(s) remaining.");
+							$("#message_sp").text("You have no Compassionate Leave(s) remaining.");
 							$("#message_sp").slideDown("slow");
 
 
@@ -437,16 +438,16 @@
 					}
 					if (duration=="7"){
 						if(json['MLbalance']>0){
-							$("#message_sp").removeClass();  
+							$("#message_sp").removeClass();
 							$("#message_sp").addClass("success_message");
 							$("#message_sp").text("You have "+json['MLbalance']+" Maternity Leave(s) remaining.");
 							$("#message_sp").slideDown("slow");
 
-							// $("#from").prop("disabled", false);  
+							// $("#from").prop("disabled", false);
 						}else if(json['MLbalance']<=0){
 							$("#message_sp").removeClass();
 							$("#message_sp").addClass("error_message");
-							$("#message_sp").html("You have no Maternity Leave(s) remaining. <br> You can apply 30 days Unpaid Leave and letter of approval is required.");
+							$("#message_sp").html("You have no Maternity Leave(s) remaining.");
 							$("#message_sp").slideDown("slow");
 
 
@@ -459,14 +460,14 @@
 					}
 					if (duration=="8"){
 						if(json['PLbalance']>0){
-							$("#message_sp").removeClass();  
+							$("#message_sp").removeClass();
 							$("#message_sp").addClass("success_message");
 							$("#message_sp").text("You have "+json['PLbalance']+" Paternity Leave(s) remaining.");
 							$("#message_sp").slideDown("slow");
 
-							// $("#from").prop("disabled", false);  
+							// $("#from").prop("disabled", false);
 						}else if(json['PLbalance']<=0){
-							$("#message_sp").removeClass();  
+							$("#message_sp").removeClass();
 							$("#message_sp").addClass("error_message");
 							$("#message_sp").text("You have no Paternity Leave(s) remaining.");
 							$("#message_sp").slideDown("slow");
@@ -481,14 +482,14 @@
 					}
 					if (duration=="9"){
 						if(json['MRLbalance']>0){
-							$("#message_sp").removeClass();  
+							$("#message_sp").removeClass();
 							$("#message_sp").addClass("success_message");
 							$("#message_sp").text("You have "+json['MRLbalance']+" Marriage Leave(s) remaining.");
 							$("#message_sp").slideDown("slow");
 
-							// $("#from").prop("disabled", false);  
+							// $("#from").prop("disabled", false);
 						}else if(json['MRLbalance']<=0){
-							$("#message_sp").removeClass();  
+							$("#message_sp").removeClass();
 							$("#message_sp").addClass("error_message");
 							$("#message_sp").text("You have no Marriage Leave(s) remaining.");
 							$("#message_sp").slideDown("slow");
@@ -503,15 +504,15 @@
 					}
 					if (duration=="10"){
 						if(json['ULbalance']>0){
-							$("#message_sp").removeClass();  
+							$("#message_sp").removeClass();
 							$("#message_sp").addClass("success_message");
 							$("#message_sp").text("You have "+json['ULbalance']+" Unrecorded Leave(s) remaining.");
 							$("#message_sp").slideDown("slow");
 
-							// $("#from").prop("disabled", false);  
+							// $("#from").prop("disabled", false);
 						}
 						else if(json['ULbalance']<=0){
-							$("#message_sp").removeClass();  
+							$("#message_sp").removeClass();
 							$("#message_sp").addClass("error_message");
 							$("#message_sp").text("You have no Unrecorded Leave(s) remaining.");
 							$("#message_sp").slideDown("slow");
@@ -526,12 +527,12 @@
 					}
 					if (duration=="11"){
 						if(json['STLbalance']>0){
-							$("#message_sp").removeClass();  
+							$("#message_sp").removeClass();
 							$("#message_sp").addClass("success_message");
 							$("#message_sp").text("You have "+json['STLbalance']+" Study Leave(s) remaining.");
 							$("#message_sp").slideDown("slow");
 
-							// $("#from").prop("disabled", false);  
+							// $("#from").prop("disabled", false);
 						}
 						else if(json['STLbalance']<=0){
 							$("#message_sp").removeClass();
@@ -549,12 +550,12 @@
 					}
 					if (duration=="12"){
 						if(json['TLbalance']>0){
-							$("#message_sp").removeClass();  
+							$("#message_sp").removeClass();
 							$("#message_sp").addClass("success_message");
-							$("#message_sp").text("You have "+json['TLbalance']+" Study Leave(s) remaining.");
+							$("#message_sp").text("By event, as approved by the Company.");
 							$("#message_sp").slideDown("slow");
 
-							// $("#from").prop("disabled", false);  
+							// $("#from").prop("disabled", false);
 						}
 						else if(json['TLbalance']<=0){
 							$("#message_sp").removeClass();
@@ -572,12 +573,12 @@
 					}
 					if (duration=="13"){
 						if(json['hajjdata']<=0){
-							$("#message_sp").removeClass();  
+							$("#message_sp").removeClass();
 							$("#message_sp").addClass("success_message");
 							$("#message_sp").text("You have "+json['HLbalance']+" Hajj Leave(s) remaining.");
 							$("#message_sp").slideDown("slow");
 
-							// $("#from").prop("disabled", false);  
+							// $("#from").prop("disabled", false);
 						}
 						else if(json['hajjdata']>0){
 							$("#message_sp").removeClass();
@@ -602,14 +603,14 @@
 			$.ajax({
 				type: "POST",
 				url: "http://serverfordemo.com/green_leave/ajax.php",
-				data: "action=checkLeaveAvailability&lv_type="+$("#leave_type").val(),    
+				data: "action=checkLeaveAvailability&lv_type="+$("#leave_type").val(),
 				dataType: "json",
 				success: function(result){
 					var no_days=no_of_days();
 					no_days++;
 					var avail=result['remaining']-no_days;
 					if(avail<0){
-						$("#message_sp").removeClass();  
+						$("#message_sp").removeClass();
 						$("#message_sp").addClass("error_message");
 						$("#message_sp").text(no_days+ " days is not available");
 						$("#message_sp").slideDown("slow");
@@ -628,11 +629,11 @@
 			c = 24*60*60*1000,
 			diffDays = Math.round(Math.abs((b - a)/(c)));
 
-			console.log(diffDays); //show difference  
+			console.log(diffDays); //show difference
 			return diffDays;
 		}
 
-		function fromChange(from){  
+		function fromChange(from){
 			if(from!=""){
 				$("#to").prop("disabled", false);
 
@@ -643,7 +644,7 @@
 			}
 			else{
 				$("#leave_type").val("0")
-				$("#to").prop("disabled", false); 
+				$("#to").prop("disabled", false);
 			}
 
 			check_dateAvailabality();
@@ -677,7 +678,7 @@
 				var res = 0;
 				if( result>0 ){
 					res = 0;
-					$("#message_sp").removeClass();  
+					$("#message_sp").removeClass();
 					$("#message_sp").addClass("error_message");
 					$("#message_sp").text("You have applied leave on this date. Please check your leave requests.");
 					$("#message_sp").slideDown("slow");
@@ -691,15 +692,15 @@
 			});
 		}
 
-		/*function check_duration(duration){ 
+		/*function check_duration(duration){
 			if(duration=="Half Day"){
-				$("#from").prop("disabled", false);     
-				$("#to").prop("disabled", true);  
-				$("#to_date").slideUp();  
+				$("#from").prop("disabled", false);
+				$("#to").prop("disabled", true);
+				$("#to_date").slideUp();
 			}else {
-				$("#from").prop("disabled", false);     
-				$("#to").prop("disabled", false); 
-				$("#to_date").slideDown();  
+				$("#from").prop("disabled", false);
+				$("#to").prop("disabled", false);
+				$("#to_date").slideDown();
 			}
 		}*/
 
@@ -714,7 +715,7 @@
 			//alert(fileName[fileName.length-1]);
 			document.getElementById("yourBtn").innerHTML = fileName[fileName.length-1];
 			//document.getElementById("myForm").action = "form_action.asp";
-			document.myForm.action = "<?php echo base_url(); ?>index.php/Controllers/do_upload"   
+			document.myForm.action = "<?php echo base_url(); ?>index.php/Controllers/do_upload"
 			document.myForm.submit();
 			//alert(document.myForm.action.submit());
 			event.preventDefault();
@@ -722,7 +723,7 @@
 
 		function checkDateTo(){
 			if( $("#to").val()!="" ){
-				if( $("#to").val()<$("#from").val() ){ 
+				if( $("#to").val()<$("#from").val() ){
 					$("#to").val("");
 				}
 			}
@@ -793,7 +794,7 @@
 				$.ajax({
 					type: "POST",
 					url: "http://serverfordemo.com/green_leave/ajax.php",
-					data: "action=delete_entry&id="+id,   
+					data: "action=delete_entry&id="+id,
 					dataType: "json",
 					success: function(result) {
 						alert("Entry Deleted");
@@ -810,7 +811,7 @@
 				$.ajax({
 					type: "POST",
 					url: "http://serverfordemo.com/green_leave/ajax.php",
-					data: "action=approve&id="+id,    
+					data: "action=approve&id="+id,
 					dataType: "json",
 					success: function(result) {
 						alert("Leave Approved");
@@ -828,7 +829,7 @@
 				$.ajax({
 					type: "POST",
 					url: "http://serverfordemo.com/green_leave/ajax.php",
-					data: "action=reject&id="+id,   
+					data: "action=reject&id="+id,
 					dataType: "json",
 					success: function(result) {
 						alert("Rejected");
@@ -940,19 +941,19 @@
 			}
 		}
 
-		function check_sort(sort){  
+		function check_sort(sort){
 			if(sort=="All"){
 				//alert(sort);
-				//$("#from").prop("disabled", false);     
-				//$("#reportto").prop("disabled", false);  
+				//$("#from").prop("disabled", false);
+				//$("#reportto").prop("disabled", false);
 				$("#sel_dept").slideDown();
 				$("#staff_name").slideDown();
 				$("#staff_no").slideDown();
 			}else {
-				//$("#from").prop("disabled", false);     
-				//$("#to").prop("disabled", false); 
-				$("#sel_dept").slideUp(); 
-				$("#staff_name").slideUp(); 
+				//$("#from").prop("disabled", false);
+				//$("#to").prop("disabled", false);
+				$("#sel_dept").slideUp();
+				$("#staff_name").slideUp();
 				$("#staff_no").slideUp();
 			}
 
@@ -970,7 +971,7 @@
 			$.ajax({
 				type: "POST",
 				url: "http://serverfordemo.com/green_leave/ajax.php",
-				data: "action=popup_details&id="+id,    
+				data: "action=popup_details&id="+id,
 				dataType: "json",
 				success: function(result) {
 					$("#reason").html(result['reason']);
@@ -980,7 +981,7 @@
 			{
 				width: 400,
 				height: 300,
-				open: function(event, ui){  
+				open: function(event, ui){
 				}
 			});
 			return false;
@@ -991,7 +992,7 @@
 				$.ajax({
 					type: "POST",
 					url: "http://serverfordemo.com/green_leave/ajax.php",
-					data: "action=delete_entry&id="+id,   
+					data: "action=delete_entry&id="+id,
 					dataType: "json",
 					success: function(result) {
 						alert("Entry Deleted");
@@ -1007,13 +1008,13 @@
 				$.ajax({
 					type: "POST",
 					url: "http://serverfordemo.com/green_leave/ajax.php",
-					data: "action=approve&id="+id,    
+					data: "action=approve&id="+id,
 					dataType: "json",
 					success: function(result) {
 						alert("Leave Approved");
 						location.reload();
 					}
-				});  
+				});
 			}
 			return false;
 		}
@@ -1034,7 +1035,7 @@
 		}
 	</style>
 
-	<?php } elseif ( 'Controllers/change_password/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)){?> 
+	<?php } elseif ( 'Controllers/change_password/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)){?>
 	<style>
 		.error_message {
 			border:1px solid #F35C4B;
@@ -1080,7 +1081,7 @@
 			var err_msg="";
 
 			/*if($('#mobile').val().length>10){
-				err_msg="Mobile number should not be more than 10 digits<br>";    
+				err_msg="Mobile number should not be more than 10 digits<br>";
 				error=1;
 			}*/
 
@@ -1110,7 +1111,7 @@
 				$.ajax({
 					type: "POST",
 					url: "http://serverfordemo.com/green_leave/ajax.php",
-					data: "action=changePassword&pass="+$("#pass").val(),   
+					data: "action=changePassword&pass="+$("#pass").val(),
 					dataType: "json",
 					success: function(result) {
 						alert("Password Changed successfully.");
@@ -1131,7 +1132,7 @@
 	</style>
 
 	<?php } elseif ('Controllers/add_employee/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)) {?>
-	<style>    
+	<style>
 		.error_message {
 			border:1px solid #F35C4B;
 			border-left:3px solid #F35C4B;
@@ -1167,15 +1168,15 @@
 	</style>
 	<script type="text/javascript">
 
-		function check_emptype(emptype){  
+		function check_emptype(emptype){
 			if(emptype=="Employee"){
-				//$("#from").prop("disabled", false);     
-				$("#reportto").prop("disabled", false);  
-				$("#report_to").slideUp();  
+				//$("#from").prop("disabled", false);
+				$("#reportto").prop("disabled", false);
+				$("#report_to").slideUp();
 			}else {
-				//$("#from").prop("disabled", false);     
-				//$("#to").prop("disabled", false); 
-				$("#report_to").slideDown();  
+				//$("#from").prop("disabled", false);
+				//$("#to").prop("disabled", false);
+				$("#report_to").slideDown();
 			}
 		}
 
@@ -1200,7 +1201,7 @@
 			var err_msg="";
 
 			/*if($('#mobile').val().length>10){
-			err_msg="Mobile number should not be more than 10 digits<br>";    
+			err_msg="Mobile number should not be more than 10 digits<br>";
 			error=1;
 			}*/
 
@@ -1290,7 +1291,7 @@
 				$.ajax({
 					type: "POST",
 					url: "http://serverfordemo.com/green_leave/ajax.php",
-					data: "action=add_employee&name="+$("#emp_name").val()+"&email="+$("#emp_email").val()+"&type="+$("#emp_type").val()+"&uname="+$("#emp_uname").val()+"&code="+$("#emp_code").val()+"&pass="+$("#emp_pass").val()+"&report_to="+$("#report_to").val(),   
+					data: "action=add_employee&name="+$("#emp_name").val()+"&email="+$("#emp_email").val()+"&type="+$("#emp_type").val()+"&uname="+$("#emp_uname").val()+"&code="+$("#emp_code").val()+"&pass="+$("#emp_pass").val()+"&report_to="+$("#report_to").val(),
 					dataType: "json",
 					success: function(result) {
 						alert("Employee Added successfully");
@@ -1298,7 +1299,7 @@
 					}
 				});
 				return true;
-			} 
+			}
 		}
 	</script>
 	<style>
@@ -1342,7 +1343,7 @@
 			width: 900px;
 			padding:10px 15px;
 		}
-	</style> 
+	</style>
 
 	<script type="text/javascript">
 
@@ -1356,7 +1357,7 @@
 			var err_msg="";
 
 			/*if($('#mobile').val().length>10){
-				err_msg="Mobile number should not be more than 10 digits<br>";    
+				err_msg="Mobile number should not be more than 10 digits<br>";
 				error=1;
 			}*/
 
@@ -1415,7 +1416,7 @@
 			$.ajax({
 				type: "POST",
 				url: "http://serverfordemo.com/green_leave/ajax.php",
-				data: "action=popup_details&id="+id,    
+				data: "action=popup_details&id="+id,
 				dataType: "json",
 				success: function(result) {
 					$("#reason").html(result['reason']);
@@ -1424,7 +1425,7 @@
 			$("#dialog").dialog({
 				width: 400,
 				height: 300,
-				open: function(event, ui){  
+				open: function(event, ui){
 				}
 			});
 			return false;
@@ -1435,7 +1436,7 @@
 				$.ajax({
 					type: "POST",
 					url: "http://serverfordemo.com/green_leave/ajax.php",
-					data: "action=delete_entry&id="+id,   
+					data: "action=delete_entry&id="+id,
 					dataType: "json",
 					success: function(result) {
 						alert("Entry Deleted");
@@ -1451,7 +1452,7 @@
 				$.ajax({
 					type: "POST",
 					url: "http://serverfordemo.com/green_leave/ajax.php",
-					data: "action=approve&id="+id,    
+					data: "action=approve&id="+id,
 					dataType: "json",
 					success: function(result) {
 						alert("Leave Approved");
@@ -1512,7 +1513,7 @@
 			width: 900px;
 			padding:10px 15px;
 		}
-	</style> 
+	</style>
 
 	<script type="text/javascript">
 
@@ -1530,7 +1531,7 @@
 			var err_msg="";
 
 			/*if($('#mobile').val().length>10){
-				err_msg="Mobile number should not be more than 10 digits<br>";    
+				err_msg="Mobile number should not be more than 10 digits<br>";
 				error=1;
 			}*/
 
@@ -1583,7 +1584,7 @@
 				$.ajax({
 					type: "POST",
 					url: "http://serverfordemo.com/green_leave/ajax.php",
-					data: "action=add_leaves&name="+$("#employee_name").val()+"&l_casual="+$("#n_casual").val()+"&l_sick="+$("#n_sick").val()+"&l_earned="+$("#n_earned").val(),   
+					data: "action=add_leaves&name="+$("#employee_name").val()+"&l_casual="+$("#n_casual").val()+"&l_sick="+$("#n_sick").val()+"&l_earned="+$("#n_earned").val(),
 					dataType: "json",
 					success: function(result) {
 						alert("Leave Added successfully");
@@ -1928,11 +1929,40 @@
 			});
 
 		}).call(this);
-
 	</script>
+	<?php } elseif ('Controllers/unprocess_listing/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)) {?>
+	<style type="text/css">
+		.inline-block{
+			display: inline-block;
+		}
+		.left{
+			float: left;
+		}
+	</style>
+	<script type="text/javascript">
+		function process_leave(leave_id,e){
+			var status = 0;
+			if( $(e).is(":checked") ){
+				var status = 1;
+			}
+			$.post("<?php echo base_url ('index.php/Controllers/process_listing') ?>", {leave_id: leave_id, status: status}, function(result){});
+		}
+	</script>
+	<?php } elseif ('Controllers/administrative/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)) {?>
+	<style type="text/css">
+		.inline-block{
+			display: inline-block;
+		}
+		.left{
+			float: left;
+		}
+		.box{
+			padding: 19px;
+		}
+	</style>
 	<?php } ?>
 
-</head>
+	</head>
 
 <?php if ('Controllers/autoprint/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)) {?>
 <body onload="window.print()">

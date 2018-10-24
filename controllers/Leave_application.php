@@ -73,7 +73,24 @@ class leave_application extends CI_Controller{
 		else{
 			$data['SEL_hol'][] = NULL;
 		}
-
+		$data['holidayPHG'] = $this->display_model->holidayPHG(date('Y',strtotime($data['leavedet'][0]->leave_from)));
+		if($data['holidayPHG']){
+			foreach ($data['holidayPHG'] as $key => $value) {
+			    $data['PHG_hol'][] = strtotime(date($value->date_holiday));
+			}
+		}
+		else{
+			$data['PHG_hol'][] = NULL;
+		}
+		$data['holidayKL'] = $this->display_model->holidayKL(date('Y',strtotime($data['leavedet'][0]->leave_from)));
+		if($data['holidayKL']){
+			foreach ($data['holidayKL'] as $key => $value) {
+			    $data['KL_hol'][] = strtotime(date($value->date_holiday));
+			}
+		}
+		else{
+			$data['KL_hol'][] = NULL;
+		}
 		$data['userleave'] = $this->display_model->userleave($data['leavedet'][0]->leave_type);
 		$data['leave_type'] = $this->display_model->leave_type();
 
@@ -319,7 +336,7 @@ class leave_application extends CI_Controller{
 		}
 		//leavebalance
 
-
+//print_r($data);
 
 		$this->load->view('Head');
 		$this->load->view('top');

@@ -72,7 +72,12 @@ class check_availability extends CI_Controller {
 			$weekends = 0;
 
 			while ($begin <= $end) {
-			    $no_days++; // no of days in the given interval
+			    //$no_days++; // no of days in the given interval
+					if( $row->leave_duration=="Full Day" ){
+										$no_days++;
+									}elseif( $row->leave_duration=="Half Day" ){
+										$no_days = $no_days + 0.5;
+									}
 			    $what_day = date("N", $begin);
 							//echo "$what_day".$what_day;
 			    if($row->v_hospitalcode == 'JB'){
@@ -176,7 +181,7 @@ class check_availability extends CI_Controller {
 		}
 
 		$data['STLtaken'] = $data['STLtaken'] - $halfday;
-		
+
 		$data['sickB'] = (isset($data['leaveacc'][0]->sick_leave) ? $data['leaveacc'][0]->sick_leave : 0) - $data['SLtaken'];
 		if ($data['sickB'] < 0){
 			$data['SLEtaken'] = abs($data['sickB']);
@@ -187,8 +192,9 @@ class check_availability extends CI_Controller {
 		}
 		$data['carry_fwd_leave'] = (isset($data['leaveacc'][0]->carry_fwd_leave) ? $data['leaveacc'][0]->carry_fwd_leave : 0);
 
-		$data['annualB'] = (isset($data['leaveacc'][0]->annual_leave) ? $data['leaveacc'][0]->annual_leave : 0) + (isset($data['leaveacc'][0]->carry_fwd_leave) ? $data['leaveacc'][0]->carry_fwd_leave : 0) - $data['ALtaken'] - $data['ELtaken'] - $data['FSEtaken'] - $data['PLEtaken'] - $data['MLEtaken']  - $data['MRLEtaken']  - $data['ULEtaken']  - $data['STLEtaken']  - $data['TLEtaken'] - $data['HLEtaken'] - (isset($data['SLEtaken']) ? $data['SLEtaken'] : 0);
-
+		//$data['annualB'] = (isset($data['leaveacc'][0]->annual_leave) ? $data['leaveacc'][0]->annual_leave : 0) + (isset($data['leaveacc'][0]->carry_fwd_leave) ? $data['leaveacc'][0]->carry_fwd_leave : 0) - $data['ALtaken'] - $data['ELtaken'] - $data['FSEtaken'] - $data['PLEtaken'] - $data['MLEtaken']  - $data['MRLEtaken']  - $data['ULEtaken']  - $data['STLEtaken']  - $data['TLEtaken'] - $data['HLEtaken'] - (isset($data['SLEtaken']) ? $data['SLEtaken'] : 0);
+		//$data['annualB'] = (isset($data['leaveacc'][0]->annual_leave) ? $data['leaveacc'][0]->annual_leave : 0) + (isset($data['leaveacc'][0]->carry_fwd_leave) ? $data['leaveacc'][0]->carry_fwd_leave : 0) - $data['ALtaken'];
+		$data['annualB'] = (isset($data['leaveacc'][0]->annual_leave) ? $data['leaveacc'][0]->entitled : 0) + (isset($data['leaveacc'][0]->carry_fwd_leave) ? $data['leaveacc'][0]->carry_fwd_leave : 0) - $data['ALtaken'];
 
 		// echo "isset(".$data['leaveacc'][0]->annual_leave.") ? ".$data['leaveacc'][0]->annual_leave." : 0) + (isset(".$data['leaveacc'][0]->carry_fwd_leave.") ? ".$data['leaveacc'][0]->carry_fwd_leave." : 0) - ".$data['ALtaken']." - ".$data['ELtaken']." - ".$data['FSEtaken']." - ".$data['PLEtaken']." - ".$data['MLEtaken']." - ".$data['MRLEtaken']." - ".$data['ULEtaken']." - ".$data['STLEtaken']." - ".$data['TLEtaken']." - ".$data['HLEtaken']." - ".(isset($data['SLEtaken']) ? $data['SLEtaken'] : 0);
 
@@ -209,7 +215,7 @@ class check_availability extends CI_Controller {
 		$data['STLbalance'] = (isset($data['leave_type'][10]->entitle_days) ? $data['leave_type'][10]->entitle_days : 0) - $data['STLtaken'];
 		$data['TLbalance'] = (isset($data['leave_type'][11]->entitle_days) ? $data['leave_type'][11]->entitle_days : 0) - $data['TLtaken'];
 		$data['HLbalance'] = (isset($data['leave_type'][12]->entitle_days) ? $data['leave_type'][12]->entitle_days : 0) - $data['HLtaken'];
-		
+
 
 
 		/*$data['SLbalance'] = (isset($data['leaveacc'][0]->sick_leave) ? $data['leaveacc'][0]->sick_leave : 0) - $data['SLtaken'];
@@ -218,7 +224,7 @@ class check_availability extends CI_Controller {
 				//$data['balanceleave'] = 0;
 			}
 		if ($this->input->get('type') == '1'){
-			$data['balanceleave'] = (isset($data['leaveacc'][0]->annual_leave) ? $data['leaveacc'][0]->annual_leave : 0) + (isset($data['leaveacc'][0]->carry_fwd_leave) ? $data['leaveacc'][0]->carry_fwd_leave : 0) 
+			$data['balanceleave'] = (isset($data['leaveacc'][0]->annual_leave) ? $data['leaveacc'][0]->annual_leave : 0) + (isset($data['leaveacc'][0]->carry_fwd_leave) ? $data['leaveacc'][0]->carry_fwd_leave : 0)
 		 	- $data['ALtaken'] - $data['ELtaken'] - $data['FSEtaken'] - $data['PLEtaken'] - $data['MLEtaken']  - $data['MRLEtaken']  - $data['ULEtaken']  - $data['STLEtaken']  - $data['TLEtaken']
 		 	- $data['HLEtaken'] - (isset($data['SLEtaken']) ? $data['SLEtaken'] : 0);
 		}
