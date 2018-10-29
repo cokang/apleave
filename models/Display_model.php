@@ -16,10 +16,11 @@ parent::__construct();
 		return $query_result;
 	}
 	function leavelist($userid,$limit,$start){
-		$this->db->select('r.*,u.v_UserName');
+		$this->db->select('r.*,u.v_UserName, l.leave_name');
 		$this->db->where('user_id',$userid);
 		$this->db->from('employee_leave_req r');
 		$this->db->join('pmis2_sa_user u','r.user_id = u.v_UserID','left');
+		$this->db->join('leave_type l','l.id = r.leave_type','left');
 		$this->db->order_by('leave_from','Desc');
 		$this->db->limit($limit,$start);
 		$query = $this->db->get();
@@ -766,16 +767,17 @@ parent::__construct();
 		return $query_result;
 	}
 	function gethrrow($userid){
-		$this->db->select('*');
+		$this->db->select('v_Remarks');
 		$this->db->from('pmis2_sa_user');
 		$this->db->where('v_UserID',$userid);
 		//$this->db->where('v_GroupID','HR');
-		$this->db->where('v_Remarks','HR');
+		//$this->db->where('v_Remarks','HR');
 		$query = $this->db->get();
 		//echo $this->db->last_query();
 		//exit();
-		$query_result = $query->num_rows();
-		return $query_result;
+		//$query_result = $query->num_rows();
+		return $query->row()->v_Remarks;
+		//return $query_result;
 	}
 	function alternate($userid,$group){
 		$this->db->select('a.v_UserID,a.v_UserName,a.v_GroupID');

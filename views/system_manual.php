@@ -2,12 +2,12 @@
 <link rel="stylesheet" type="text/css" href="<?=base_url();?>js/pdfjs/css/style.css">
 <script src="<?=base_url();?>js/pdfjs/build/pdf.js"></script>
 <script src="<?=base_url();?>js/pdfjs/viewer.js"></script>
-<?php 
+<?php
 echo "nilai hrow : ".$headrow."nilai hr:".$hrrow;
 $system_manual = "staff";
-if( $headrow>0 && $hrrow==1 ){
+if( $headrow>0 && $hrrow=="HR"){
 	$system_manual = "hr";
-}elseif( $headrow>0 && $hrrow==0 ){
+}elseif( $headrow>0 && $hrrow!="HR" ){
 	$system_manual = "head";
 }
 $system_manual = "system_manual/$system_manual";
@@ -37,4 +37,3 @@ $system_manual = "system_manual/$system_manual";
 		</div>
 	</div>
 </div>
-

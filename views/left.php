@@ -8,11 +8,11 @@
 			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/leave_listing?tab=<?=$num++?>" class="ahref"><i class="fa fa-pencil fa-fw"></i>Leave Requests</a></li>
 			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/leave_account_view?tab=<?=$num++?>" class="ahref"><i class="fa fa-paperclip fa-fw"></i>Leave Balance</a></li>
 
-			<?php if (($hrrow == 1) OR ($headrow > 0) OR ($aarow > 0)){ ?>
+			<?php if ( ($hrrow == "HR") OR ($headrow > 0) OR ($hrrow == "AA") ){ ?>
 			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/date_calender?tab=<?=$num++?>" class="ahref"><i class="fa fa-calendar fa-fw"></i>Date Calendar</a></li>
 			<?php } ?>
 
-			<?php if ($hrrow == 1) { ?>
+			<?php if ($hrrow== "HR") { ?>
 			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/add_employee?tab=<?=$num++?>" class="ahref"><i class="fa fa-user-md fa-fw"></i>Add Employees</a></li>
 			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/add_leaves?tab=<?=$num++?>" class="ahref"><i class="fa fa-edit fa-fw"></i>Add Leaves</a></li>
 			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/leave_Limit?tab=<?=$num++?>" class="ahref"><i class="fa fa-exchange fa-fw"></i>Leave Limit</a></li>
@@ -32,7 +32,7 @@
 		<?php } else { ?>
 			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/change_password?tab=<?=$num++?>" class="ahref"><i class="fa fa-lock fa-fw"></i>Change Password</a></li>
 		<?php } ?>
-		<?php if($hrrow==1){?>
+		<?php if($hrrow=="HR"){?>
 			<!-- bazli add on 22/10/2018 -->
 			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/administrative?tab=<?=$num++?>" class="ahref"><i class="fa fa-users fa-fw"></i>Administrative</a></li>
 		<?php }?>

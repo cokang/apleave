@@ -41,7 +41,7 @@
 								<tr class="">
 									<td><?=($start+1)?></td>
 									<td>
-										<a href="<?=base_url('index.php/Controllers/print_out?id='.$row->leave_id)?>&parent=<?=$this->input->get('parent')?>" >
+										<a href="<?=base_url('index.php/Controllers/print_out?id='.$row->leave_id.'&tab='.$this->input->get('tab').'&parent='.$this->input->get('parent'))?>" >
 											<?=isset($row->v_UserName) ? $row->v_UserName : '' ?>
 										</a>
 									</td>
