@@ -1,7 +1,7 @@
 <div id="page-wrapper">
   <div class="row">
     <div class="col-lg-12">
-      <h1 class="page-header">Leave Application for User</h1>
+      <h1 class="page-header">Leave Application for <?=isset($leavedet[0]->v_UserName) ? ucwords($leavedet[0]->v_UserName) : ''  ?> (<?=isset($leavedet[0]->apsb_no) ? strtoupper($leavedet[0]->apsb_no) : ''  ?>)</h1>
     </div>
     <!-- /.col-lg-12 -->
   </div>

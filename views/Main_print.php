@@ -134,7 +134,7 @@
 								</tr>
 								<tr>
 								<td class="" ><b>Cuti yang dibawa dari tahun lepas</b><br/><i>Carry forward from previous year</i></td>
-								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && $record[0]->leave_type == 1 ? $record[0]->carry_fwd_leave : ''?></span></td>
+								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && ($record[0]->leave_type == 1 || $record[0]->leave_type == 3) ? $record[0]->carry_fwd_leave : ''?></span></td>
 								<td class=""></td>
 								<td class=""></td>
 								<td class=""></td>
@@ -142,7 +142,7 @@
 							</tr>
 							<tr>
 								<td class="" ><b>Kelayakan cuti tahun semasa</b><br/><i>Current leave entitlement</i></td>
-								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && $record[0]->leave_type == 1 ? $record[0]->annual_leave : ''?></td>
+								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && ($record[0]->leave_type == 1 || $record[0]->leave_type == 3) ? $record[0]->annual_leave : ''?></td>
 								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && $record[0]->leave_type == 2 ? $record[0]->sick_leave : ''?></td>
 								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && $record[0]->leave_type == 6 ? $userleave[0]->entitle_days : ''?></td>
 								<td class=""></td>
@@ -150,23 +150,41 @@
 							</tr>
 							<tr>
 								<td class="" ><b>Bilangan cuti yang telah diambil</b><br/><i>Leave taken</i></td>
-								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && $record[0]->leave_type == 1 ? $totaltaken - (isset($record[0]->leave_status) && $record[0]->leave_status == 'Accepted' ? $noleave : 0) : ''?></span></td>
+								<td class="">
+									<span class="text-pr1">
+										<!-- <?php $AL_leave_taken = isset($record[0]->leave_type) && ($record[0]->leave_type == 1 || $record[0]->leave_type == 3) ? $totaltaken - (isset($record[0]->leave_status) && $record[0]->leave_status == 'Accepted' ? $noleave : 0) : ''?>
+										<?php $EL_leave_taken = isset($record[0]->leave_type) && ($record[0]->leave_type != 1 && $record[0]->leave_type != 2 && $record[0]->leave_type != 4 && $record[0]->leave_type != 6) ? $totaltaken - (isset($record[0]->leave_status) && $record[0]->leave_status == 'Accepted' ? ($record[0]->leave_type == 3 ? $noleave : ($noleave > $userleave[0]->per_case_basis ? $userleave[0]->per_case_basis : $noleave) ) : 0) : '';?>
+										<?php $leave_taken = $AL_leave_taken; //($record[0]->leave_type == 3) ? $AL_leave_taken + $EL_leave_taken : $AL_leave_taken; ?>
+										<?=$leave_taken;?> -->
+										<?=isset($record[0]->leave_type) && ($record[0]->leave_type == 1 || $record[0]->leave_type == 3) ? $totaltaken - (isset($record[0]->leave_status) && $record[0]->leave_status == 'Accepted' ? $noleave : 0) : ''?>
+									</span>
+								</td>
 								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && $record[0]->leave_type == 2 ? $totaltaken - (isset($record[0]->leave_status) && $record[0]->leave_status == 'Accepted' ? $noleave : 0) : ''?></span></td>
 								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && $record[0]->leave_type == 6 ? $totaltaken - (isset($record[0]->leave_status) && $record[0]->leave_status == 'Accepted' ? ($noleave > $userleave[0]->per_case_basis ? $userleave[0]->per_case_basis : $noleave) : 0) : ''?></span></td>
 								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && $record[0]->leave_type == 4 ? $totaltaken - (isset($record[0]->leave_status) && $record[0]->leave_status == 'Accepted' ? $noleave : 0) : ''?></td>
-								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && ($record[0]->leave_type != 1 && $record[0]->leave_type != 2 && $record[0]->leave_type != 4 && $record[0]->leave_type != 6) ? $totaltaken - (isset($record[0]->leave_status) && $record[0]->leave_status == 'Accepted' ? ($record[0]->leave_type == 3 ? $noleave : ($noleave > $userleave[0]->per_case_basis ? $userleave[0]->per_case_basis : $noleave) ) : 0) : ''?></span></td>
+								<td class="">
+									<span class="text-pr1">
+										<?=isset($record[0]->leave_type) && ($record[0]->leave_type != 1 && $record[0]->leave_type != 2 && $record[0]->leave_type != 4 && $record[0]->leave_type != 6) ? ($record[0]->leave_type==3 ? $totalELtaken : $totaltaken) - (isset($record[0]->leave_status) && $record[0]->leave_status == 'Accepted' ? ($record[0]->leave_type == 3 ? $noleave : ($noleave > $userleave[0]->per_case_basis ? $userleave[0]->per_case_basis : $noleave) ) : 0) : ''?>
+									</span>
+								</td>
 							</tr>
 							<tr>
 								<td class="" ><b>Bilangan cuti terakhir</b><br/><i>leave balance to-date</i></td>
-								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && $record[0]->leave_type == 1 ? (isset($record[0]->leave_status) && $record[0]->leave_status == 'Accepted' ? $balanceleave + $noleave : $balanceleave) : '' ?></span></td>
+								<td class="">
+									<span class="text-pr1">
+										<?=isset($record[0]->leave_type) && ($record[0]->leave_type == 1 || $record[0]->leave_type == 3) ? (isset($record[0]->leave_status) && $record[0]->leave_status == 'Accepted' ? $balanceleave + $noleave : $balanceleave) : '' ?>
+									</span>
+								</td>
 								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && $record[0]->leave_type == 2 ? (isset($record[0]->leave_status) && $record[0]->leave_status == 'Accepted' ? $balanceleave + $noleave : $balanceleave) : '' ?></span></td>
 								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && $record[0]->leave_type == 6 ? (isset($record[0]->leave_status) && $record[0]->leave_status == 'Accepted' ? $balanceleave + ($noleave > $userleave[0]->per_case_basis ? $userleave[0]->per_case_basis : $noleave) : $balanceleave) : '' ?></span></td>
 								<td class=""></td>
-								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && ($record[0]->leave_type != 1 && $record[0]->leave_type != 2 && $record[0]->leave_type != 4 && $record[0]->leave_type != 6) ? (isset($record[0]->leave_status) && $record[0]->leave_status == 'Accepted' ? $balanceleave + ($record[0]->leave_type == 3 ? $noleave : ($noleave > $userleave[0]->per_case_basis ? $userleave[0]->per_case_basis : $noleave) ) : $balanceleave) : ''?></span></td>
+								<td class=""><span class="text-pr1">
+									<?=isset($record[0]->leave_type) && ($record[0]->leave_type != 1 && $record[0]->leave_type != 2 && $record[0]->leave_type != 4 && $record[0]->leave_type != 6) ? (isset($record[0]->leave_status) && $record[0]->leave_status == 'Accepted' ? ($record[0]->leave_type==3 ? $balanceEleave : $balanceleave ) + ($record[0]->leave_type == 3 ? $noleave : ($noleave > $userleave[0]->per_case_basis ? $userleave[0]->per_case_basis : $noleave) ) : ($record[0]->leave_type==3 ? $balanceEleave : $balanceleave) ) : ''?></span></td>
 							</tr>
 							<tr>
 								<td class="" ><b>Jumlah cuti yang dipohon</b><br/><i>Total of days apply</i></td>
-								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && $record[0]->leave_type == 1 ? $noleave : ''?></span></td>
+								<td class=""><span class="text-pr1">
+									<?=isset($record[0]->leave_type) && ($record[0]->leave_type == 1 || $record[0]->leave_type == 3) ? $noleave : ''?></span></td>
 								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && $record[0]->leave_type == 2 ? $noleave : ''?></span></td>
 								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && $record[0]->leave_type == 6 ? $noleave : ''?></span></td>
 								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && $record[0]->leave_type == 4 ? $noleave : ''?></span></td>
@@ -174,11 +192,11 @@
 							</tr>
 							<tr>
 								<td class="" ><b>Baki cuti terkini</b><br/><i>Current leave balance</i></td>
-								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && $record[0]->leave_type == 1 ? $balanceleave : ''?></span></td>
+								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && ($record[0]->leave_type == 1 || $record[0]->leave_type == 3) ? $balanceleave : ''?></span></td>
 								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && $record[0]->leave_type == 2 ? $balanceleave : ''?></span></td>
 								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && $record[0]->leave_type == 6 ? $balanceleave : ''?></span></td>
 								<td class=""></td>
-								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && ($record[0]->leave_type != 1 && $record[0]->leave_type != 2  && $record[0]->leave_type != 4 && $record[0]->leave_type != 6) ? $balanceleave : ''?></span></td>
+								<td class=""><span class="text-pr1"><?=isset($record[0]->leave_type) && ($record[0]->leave_type != 1 && $record[0]->leave_type != 2  && $record[0]->leave_type != 4 && $record[0]->leave_type != 6) ? ($record[0]->leave_type==3 ? $balanceEleave : $balanceleave ) : ''?></span></td>
 							</tr>
 						</tbody>
 					</table>

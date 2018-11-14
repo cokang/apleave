@@ -32,7 +32,7 @@
 		<?php } else { ?>
 			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/change_password?tab=<?=$num++?>" class="ahref"><i class="fa fa-lock fa-fw"></i>Change Password</a></li>
 		<?php } ?>
-		<?php if($hrrow=="HR"){?>
+		<?php if(($hrrow=="HR") || ($hrrow=="AA")){?>
 			<!-- bazli add on 22/10/2018 -->
 			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/administrative?tab=<?=$num++?>" class="ahref"><i class="fa fa-users fa-fw"></i>Administrative</a></li>
 		<?php }?>

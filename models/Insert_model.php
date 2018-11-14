@@ -262,5 +262,37 @@ function leave_limit_exist(){
 			}
 
 }
+
+	function update_process_leave_status(){
+		$data = array(
+					"v_UserName" => $this->session->v_UserName,
+					"leavereq_id" => $this->input->post("leave_id"),
+				);
+		if( $this->input->post("status")==1 ){
+
+			$this->db->select("COUNT(*) AS jumlah");
+			$this->db->from("processed_leave");
+			$this->db->where("leavereq_id", $this->input->post("leave_id"));
+			$query = $this->db->get();
+			$check_old_data = $query->row()->jumlah;
+
+			if( $check_old_data > 0 ){
+				$this->db->where("leavereq_id", $this->input->post("leave_id"));
+				$this->db->set('date_processed', 'NOW()', FALSE);
+				$this->db->set('v_actionflag', 'U');
+				$res = $this->db->update("processed_leave", $data);
+			}else{
+				$this->db->set('date_processed', 'NOW()', FALSE);
+				$this->db->set('v_actionflag', 'I');
+				$res = $this->db->insert("processed_leave", $data);
+			}
+		}else{
+			$this->db->where("leavereq_id", $this->input->post("leave_id"));
+			$this->db->set('date_processed', 'NOW()', FALSE);
+			$this->db->set('v_actionflag', 'D');
+			$res = $this->db->update("processed_leave", $data);
+			// $res = $this->db->where("leavereq_id", $this->input->post("leave_id"))->update("processed_leave", array("v_actionflag"=>"D"));
+		}
+	}
 }
 ?>

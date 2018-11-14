@@ -67,11 +67,12 @@ parent::__construct();
 		return $query_result;
 	}
 	function leaveapp($group,$limit,$start){
-		$this->db->select('R.*,U.v_GroupID,U.v_UserName');
+		$this->db->select('R.*,U.v_GroupID,U.v_UserName,L.leave_name');
 		//$this->db->select('R.*,U.v_GroupID');
 		$this->db->from('employee_leave_req R');
 		$this->db->join('pmis2_sa_user U','R.user_id = U.v_UserID');
 		$this->db->join('group G','G.group_sup_id = U.v_UserID','left');
+		$this->db->join('leave_type L','L.id = R.leave_type','left');
 		//$this->db->where('U.v_GroupID',$group);
 		//$this->db->or_where('G.report_to',$this->session->userdata('v_UserName'));
 		$this->db->where("(U.v_GroupID = '".$group. "' OR G.report_to = '".$this->session->userdata('v_UserName')."')");
@@ -89,7 +90,7 @@ parent::__construct();
 
 	function leavedet($userid,$regid){
 	//echo "klklklkll:";
-		$this->db->select('R.*,U.v_hospitalcode,im.file_name,UR.v_UserName as employee_replaced');
+		$this->db->select('R.*,U.v_hospitalcode,im.file_name,UR.v_UserName as employee_replaced,U.v_UserName, U.apsb_no');
 		$this->db->from('employee_leave_req R');
 		$this->db->join('sick_leave_img im','R.user_id = im.user_id AND R.id = im.leavereq_id','left');
 		$this->db->join('pmis2_sa_user U','R.user_id = U.v_UserID');
@@ -939,6 +940,7 @@ parent::__construct();
 		$query_result = $query->result();
 		return $query_result;
 	}
+	/*
 	function datecalendar($fromdate,$limit,$start,$todate,$group=''){
 		$this->db->select('R.*,U.v_UserName,U.v_hospitalcode,T.leave_name');
 		//$this->db->where('user_id <>',$userid);
@@ -952,8 +954,8 @@ parent::__construct();
 		$this->db->or_where("R.leave_from BETWEEN '".$fromdate."' AND '".$todate."'", NULL, FALSE);
 		$this->db->or_where("R.leave_to BETWEEN '".$fromdate."' AND '".$todate."'", NULL, FALSE);
 		$this->db->group_end();
-		/*$this->db->where('R.leave_from >=',$fromdate);
-		$this->db->where('R.leave_to <=',$todate);*/
+		//$this->db->where('R.leave_from >=',$fromdate);
+		//$this->db->where('R.leave_to <=',$todate);
 		$this->db->limit($limit,$start);
 		// $this->db->limit($limit);
 		$query = $this->db->get();
@@ -962,6 +964,60 @@ parent::__construct();
 		$query_result = $query->result();
 		return $query_result;
 	}
+	*/
+
+		function datecalendar($fromdate,$limit,$start,$todate,$group=''){
+			$login_as	= $this->gethrrow($this->session->userdata('v_UserName'));
+			$site_state	= $this->get_site($this->session->userdata('v_UserName'));
+			$head		= $this->getheadrow($this->session->userdata('v_UserName'));
+			$report_to	= $this->getreporttorow($this->session->userdata('v_UserName'));
+
+			$this->db->select('R.*,U.v_UserName,U.v_hospitalcode,T.leave_name');
+			//$this->db->where('user_id <>',$userid);
+			$this->db->from('employee_leave_req R');
+			$this->db->join('pmis2_sa_user U','U.v_UserID = R.user_id');
+			$this->db->join('leave_type T','T.id = R.leave_type');
+			// $this->db->join('group G','G.group_sup_id = U.v_UserID','left');/*noted:kenape yg ori ni join pakai group_sup_id=user_id?*/
+			$this->db->join('group G','G.group_name = U.v_GroupID','left');
+
+			$this->db->group_start();
+			$this->db->where("'".$fromdate."' BETWEEN R.leave_from AND R.leave_to", NULL, FALSE);
+			$this->db->or_where("R.leave_from BETWEEN '".$fromdate."' AND '".$todate."'", NULL, FALSE);
+			$this->db->or_where("R.leave_to BETWEEN '".$fromdate."' AND '".$todate."'", NULL, FALSE);
+			$this->db->group_end();
+
+			if( !in_array($login_as, array("AA","HR")) ){
+				if( $head || $report_to ){
+					if( $report_to ){
+						$this->db->group_start();
+						$this->db->where("G.report_to", $this->session->userdata("v_UserName"));
+						$this->db->or_where("U.v_GroupID", $group);
+						$this->db->group_end();
+					}else{
+						$this->db->where("U.v_GroupID", $group);
+					}
+				}/*else{
+					// $this->db->where("(U.v_GroupID = '".$group. "' OR G.report_to = '".$this->session->userdata('v_UserName')."')");
+					$this->db->where("U.v_GroupID", $group);
+					$this->db->or_where("G.report_to", $this->session->userdata('v_UserName'));
+				}*/
+			}
+			if( $login_as=="AA" ){
+				$this->db->where("U.site_state", $site_state);
+				// $this->db->or_where("U.v_GroupID", $group);
+			}
+
+			/*$this->db->where('R.leave_from >=',$fromdate);
+			$this->db->where('R.leave_to <=',$todate);*/
+			$this->db->limit($limit,$start);
+			// $this->db->limit($limit);
+			$query = $this->db->get();
+			// echo "<pre>".$this->db->last_query();
+			// exit();
+			$query_result = $query->result();
+			return $query_result;
+		}
+
 	function printrec($id){
 		$this->db->select('l.*,u.v_UserName,u.apsb_no,u.v_GroupID,u.v_hospitalcode,u.design_emp,u.grade,s.state,e.annual_leave,e.carry_fwd_leave,e.sick_leave,e.earned_leave,h.v_HospitalName');
 		$this->db->from('employee_leave_req l');
@@ -1152,6 +1208,27 @@ parent::__construct();
 			$result = $this->db->get();
 
 			return $result->result();
+		}
+
+
+		function get_site($v_UserName){
+			$this->db->select('site_state');
+			$this->db->from('pmis2_sa_user');
+			$this->db->where('v_UserID',$v_UserName);
+			$query = $this->db->get();
+			return $query->row()->site_state;
+		}
+
+
+		function getreporttorow($userid){
+			$this->db->select('*');
+			$this->db->from('group');
+			$this->db->where('report_to',$userid);
+			$query = $this->db->get();
+			//echo $this->db->last_query();
+			//exit();
+			$query_result = $query->num_rows();
+			return $query_result;
 		}
 
 

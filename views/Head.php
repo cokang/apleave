@@ -393,6 +393,7 @@
 
 						// $("#from").prop("disabled", false);
 						}*/
+						// alert(json['ALbalance']);
 						if(json['ALbalance']>0){
 							$("#message_sp").removeClass();
 							$("#message_sp").addClass("error_message");
@@ -783,6 +784,20 @@
 					}
 				});
 			}
+		}
+
+		function tabs_navigation(evt, cityName) {
+			var i, tabcontent, tablinks;
+			tabcontent = document.getElementsByClassName("tabcontent");
+			for (i = 0; i < tabcontent.length; i++) {
+				tabcontent[i].style.display = "none";
+			}
+			tablinks = document.getElementsByClassName("tablinks");
+			for (i = 0; i < tablinks.length; i++) {
+				tablinks[i].className = tablinks[i].className.replace(" active", "");
+			}
+			document.getElementById(cityName).style.display = "block";
+			evt.currentTarget.className += " active";
 		}
 	</script>
 
@@ -1945,7 +1960,7 @@
 			if( $(e).is(":checked") ){
 				var status = 1;
 			}
-			$.post("<?php echo base_url ('index.php/Controllers/process_listing') ?>", {leave_id: leave_id, status: status}, function(result){});
+			$.post("<?php echo base_url ('index.php/Controllers/process_listing') ?>", {leave_id: leave_id, status: status}, function(result){console.log(result);});
 		}
 	</script>
 	<?php } elseif ('Controllers/administrative/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)) {?>

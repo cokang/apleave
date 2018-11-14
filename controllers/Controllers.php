@@ -930,7 +930,7 @@ print_r($data);
 		$this->load->view('Main_date_calender');
 		$this->load->view('footer');
 	}
-		public function print_out()
+	public function print_out()
 	{
 		$this->load->model('display_model');
 		$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
@@ -940,6 +940,10 @@ print_r($data);
 		$data['userleave'] = $this->display_model->userleave($data['record'][0]->leave_type);
 		$data['replacement'] = $this->display_model->staffreplacement($data['record'][0]->employee_replaced);
 
+		$data['EL_user'] = array();
+		if( $data['record'][0]->leave_type==1){
+			$data['EL_user'] = $this->display_model->userleave(3);
+		}
 		//print_r($data['record']);
 		//echo '<br><br>';
 		//print_r($data['userleave']);
@@ -972,7 +976,7 @@ print_r($data);
 		$data['holidayJB'] = $this->display_model->holidayJB(date('Y',strtotime($data['record'][0]->leave_from)));
 		if($data['holidayJB']){
 			foreach ($data['holidayJB'] as $key => $value) {
-			    $data['JB_hol'][] = strtotime(date($value->date_holiday));
+				$data['JB_hol'][] = strtotime(date($value->date_holiday));
 			}
 		}
 		else{
@@ -990,7 +994,7 @@ print_r($data);
 		$data['holidayNS'] = $this->display_model->holidayNS(date('Y',strtotime($data['record'][0]->leave_from)));
 		if($data['holidayNS']){
 			foreach ($data['holidayNS'] as $key => $value) {
-			    $data['NS_hol'][] = strtotime(date($value->date_holiday));
+				$data['NS_hol'][] = strtotime(date($value->date_holiday));
 			}
 		}
 		else{
@@ -999,7 +1003,7 @@ print_r($data);
 		$data['holidaySEL'] = $this->display_model->holidaySEL(date('Y',strtotime($data['record'][0]->leave_from)));
 		if($data['holidaySEL']){
 			foreach ($data['holidaySEL'] as $key => $value) {
-			    $data['SEL_hol'][] = strtotime(date($value->date_holiday));
+				$data['SEL_hol'][] = strtotime(date($value->date_holiday));
 			}
 		}
 		else{
@@ -1008,7 +1012,7 @@ print_r($data);
 		$data['holidayPHG'] = $this->display_model->holidayPHG(date('Y',strtotime($data['record'][0]->leave_from)));
 		if($data['holidayPHG']){
 			foreach ($data['holidayPHG'] as $key => $value) {
-			    $data['PHG_hol'][] = strtotime(date($value->date_holiday));
+				$data['PHG_hol'][] = strtotime(date($value->date_holiday));
 			}
 		}
 		else{
@@ -1017,7 +1021,7 @@ print_r($data);
 		$data['holidayKL'] = $this->display_model->holidayKL(date('Y',strtotime($data['record'][0]->leave_from)));
 		if($data['holidayKL']){
 			foreach ($data['holidayKL'] as $key => $value) {
-			    $data['KL_hol'][] = strtotime(date($value->date_holiday));
+				$data['KL_hol'][] = strtotime(date($value->date_holiday));
 			}
 		}
 		else{
@@ -1032,27 +1036,27 @@ print_r($data);
 
 		//totalleavetaken
 		$begin = strtotime($data['fromdate']);
-	    $end   = strtotime($data['todate']);
+		$end   = strtotime($data['todate']);
 
-	    $no_days  = 0;
-        $weekends = 0;
-        while ($begin <= $end) {
-            $no_days++; // no of days in the given interval
-            $what_day = date("N", $begin);
-            if($data['record'][0]->v_hospitalcode == 'JB'){
-            	if (($what_day == 5) || ($what_day == 6) || (in_array($begin, $data['holidayarray']))) { // 5 and 6 are weekend days
-                $weekends++;
-            	}
-            }
-            else{
-            	if ($what_day > 5 || (in_array($begin, $data['holidayarray']))) { // 6 and 7 are weekend days
-                $weekends++;
-            	}
-            }
+		$no_days  = 0;
+		$weekends = 0;
+		while ($begin <= $end) {
+			$no_days++; // no of days in the given interval
+			$what_day = date("N", $begin);
+			if($data['record'][0]->v_hospitalcode == 'JB'){
+				if (($what_day == 5) || ($what_day == 6) || (in_array($begin, $data['holidayarray']))) { // 5 and 6 are weekend days
+					$weekends++;
+				}
+			}
+			else{
+				if ($what_day > 5 || (in_array($begin, $data['holidayarray']))) { // 6 and 7 are weekend days
+					$weekends++;
+				}
+			}
 
-            $begin += 86400; // +1 day
-        }
-        $data['noleave'] = $no_days - $weekends;
+			$begin += 86400; // +1 day
+		}
+		$data['noleave'] = $no_days - $weekends;
 		//totalleavetaken
 
 		//leavebalance
@@ -1066,7 +1070,6 @@ print_r($data);
 			$data['leaveacc'] = $this->display_model->leaveacc($this->input->get('userid'),$yearapplied);
 			$data['tleavetaken'] = $this->display_model->tleavetakenprint($this->input->get('userid'),$data['fromdate'],$yearapplied);
 		}
-
 		//print_r($data['leaveacc']);
 		//echo '<br><br>';
 		//print_r($data['tleavetaken']);
@@ -1104,17 +1107,22 @@ print_r($data);
 		    $no_days  = 0;
 	        $weekends = 0;
 	        while ($begin <= $end) {
-	            $no_days++; // no of days in the given interval
+	            // $no_days++; // no of days in the given interval
+				if( $row->leave_duration=="Full Day" ){
+					$no_days++;
+				}elseif( $row->leave_duration=="Half Day" ){
+					$no_days = $no_days + 0.5;
+				}
 	            $what_day = date("N", $begin);
 							//echo "$what_day".$what_day;
 	            if($data['record'][0]->v_hospitalcode == 'JB'){
 	            	if (($what_day == 5) || ($what_day == 6) || (in_array($begin, $data['holidayarray']))) { // 5 and 6 are weekend days
-	                $weekends++;
+						$weekends++;
 	            	}
 	            }
 	            else{
 	            	if ($what_day > 5 || (in_array($begin, $data['holidayarray']))) { // 6 and 7 are weekend days
-	                $weekends++;
+						$weekends++;
 	            	}
 	            }
 	            $begin += 86400; // +1 day
@@ -1137,88 +1145,90 @@ print_r($data);
 	        }
 	        elseif($row->leave_type == '6'){  //family sick leave
 	        	if ($data['noleavetaken'] <= $data['leave_type'][5]->per_case_basis){
-				$data['FStaken'] += $data['noleavetaken'];
+					$data['FStaken'] += $data['noleavetaken'];
 				}
 				else{
-				$data['FStaken'] += $data['leave_type'][5]->per_case_basis;
-				$data['FSEtaken'] += ($data['noleavetaken'] - $data['leave_type'][5]->per_case_basis);
+					$data['FStaken'] += $data['leave_type'][5]->per_case_basis;
+					$data['FSEtaken'] += ($data['noleavetaken'] - $data['leave_type'][5]->per_case_basis);
 				}
 	        }
 	        elseif($row->leave_type == '7'){  //maternity leave
 	        	if ($data['noleavetaken'] <= $data['leave_type'][6]->per_case_basis){
-				$data['MLtaken'] += $data['noleavetaken'];
+					$data['MLtaken'] += $data['noleavetaken'];
 				}
 				else{
-				$data['MLtaken'] += $data['leave_type'][6]->per_case_basis;
-				$data['MLEtaken'] += ($data['noleavetaken'] - $data['leave_type'][6]->per_case_basis);
+					$data['MLtaken'] += $data['leave_type'][6]->per_case_basis;
+					$data['MLEtaken'] += ($data['noleavetaken'] - $data['leave_type'][6]->per_case_basis);
 				}
 	        }
 	        elseif($row->leave_type == '8'){  //paternity leave
 	        	if ($data['noleavetaken'] <= $data['leave_type'][7]->per_case_basis){
-				$data['PLtaken'] += $data['noleavetaken'];
+					$data['PLtaken'] += $data['noleavetaken'];
 				}
 				else{
-				$data['PLtaken'] += $data['leave_type'][7]->per_case_basis;
-				$data['PLEtaken'] += ($data['noleavetaken'] - $data['leave_type'][7]->per_case_basis);
+					$data['PLtaken'] += $data['leave_type'][7]->per_case_basis;
+					$data['PLEtaken'] += ($data['noleavetaken'] - $data['leave_type'][7]->per_case_basis);
 				}
 	        }
 	        elseif($row->leave_type == '9'){  //marriage leave
 	        	if ($data['noleavetaken'] <= $data['leave_type'][8]->per_case_basis){
-				$data['MRLtaken'] += $data['noleavetaken'];
+					$data['MRLtaken'] += $data['noleavetaken'];
 				}
 				else{
-				$data['MRLtaken'] += $data['leave_type'][8]->per_case_basis;
-				$data['MRLEtaken'] += ($data['noleavetaken'] - $data['leave_type'][8]->per_case_basis);
+					$data['MRLtaken'] += $data['leave_type'][8]->per_case_basis;
+					$data['MRLEtaken'] += ($data['noleavetaken'] - $data['leave_type'][8]->per_case_basis);
 				}
 	        }
 	        elseif($row->leave_type == '10'){  //unrecorded leave
 	        	if ($data['noleavetaken'] <= $data['leave_type'][9]->per_case_basis){
-				$data['ULtaken'] += $data['noleavetaken'];
+					$data['ULtaken'] += $data['noleavetaken'];
 				}
 				else{
-				$data['ULtaken'] += $data['leave_type'][9]->per_case_basis;
-				$data['ULEtaken'] += ($data['noleavetaken'] - $data['leave_type'][9]->per_case_basis);
+					$data['ULtaken'] += $data['leave_type'][9]->per_case_basis;
+					$data['ULEtaken'] += ($data['noleavetaken'] - $data['leave_type'][9]->per_case_basis);
 				}
 	        }
 	        elseif($row->leave_type == '11'){  //study leave
 	        	if ($data['noleavetaken'] <= $data['leave_type'][10]->per_case_basis){
-				$data['STLtaken'] += $data['noleavetaken'];
+					$data['STLtaken'] += $data['noleavetaken'];
 				}
 				else{
-				$data['STLtaken'] += $data['leave_type'][10]->per_case_basis;
-				$data['STLEtaken'] += ($data['noleavetaken'] - $data['leave_type'][10]->per_case_basis);
+					$data['STLtaken'] += $data['leave_type'][10]->per_case_basis;
+					$data['STLEtaken'] += ($data['noleavetaken'] - $data['leave_type'][10]->per_case_basis);
 				}
 	        }
 	        elseif($row->leave_type == '12'){  //transfer leave
 	        	if ($data['noleavetaken'] <= $data['leave_type'][11]->per_case_basis){
-				$data['TLtaken'] += $data['noleavetaken'];
+					$data['TLtaken'] += $data['noleavetaken'];
 				}
 				else{
-				$data['TLtaken'] += $data['leave_type'][11]->per_case_basis;
-				$data['TLEtaken'] += ($data['noleavetaken'] - $data['leave_type'][11]->per_case_basis);
+					$data['TLtaken'] += $data['leave_type'][11]->per_case_basis;
+					$data['TLEtaken'] += ($data['noleavetaken'] - $data['leave_type'][11]->per_case_basis);
 				}
 	        }
 	        elseif($row->leave_type == '13'){  //hajj leave
 	        	if ($data['noleavetaken'] <= $data['leave_type'][12]->per_case_basis){
-				$data['HLtaken'] += $data['noleavetaken'];
+					$data['HLtaken'] += $data['noleavetaken'];
 				}
 				else{
-				$data['HLtaken'] += $data['leave_type'][12]->per_case_basis;
-				$data['HLEtaken'] += ($data['noleavetaken'] - $data['leave_type'][12]->per_case_basis);
+					$data['HLtaken'] += $data['leave_type'][12]->per_case_basis;
+					$data['HLEtaken'] += ($data['noleavetaken'] - $data['leave_type'][12]->per_case_basis);
 				}
 	        }
 		}
 		//echo 'PL :'.$data['PLtaken'].'<br> PLE :'.$data['PLEtaken'];
 		//exit();
 		$data['SLbalance'] = (isset($data['leaveacc'][0]->sick_leave) ? $data['leaveacc'][0]->sick_leave : 0) - $data['SLtaken'];
-			if ($data['SLbalance'] < 0){
-				$data['SLEtaken'] = abs($data['SLbalance']);
-				//$data['balanceleave'] = 0;
-			}
-		if ($data['record'][0]->leave_type == '1'){
-		$data['annualB'] = (isset($data['leaveacc'][0]->annual_leave) ? $data['leaveacc'][0]->annual_leave : 0) + (isset($data['leaveacc'][0]->carry_fwd_leave) ? $data['leaveacc'][0]->carry_fwd_leave : 0)
-		 						- $data['ALtaken'] - $data['ELtaken'] - $data['FSEtaken'] - $data['PLEtaken'] - $data['MLEtaken']  - $data['MRLEtaken']  - $data['ULEtaken']  - $data['STLEtaken']  - $data['TLEtaken']
-		 						- $data['HLEtaken'] - (isset($data['SLEtaken']) ? $data['SLEtaken'] : 0);
+		if ($data['SLbalance'] < 0){
+			$data['SLEtaken'] = abs($data['SLbalance']);
+			//$data['balanceleave'] = 0;
+		}
+
+		if ($data['record'][0]->leave_type == '1' || $data['record'][0]->leave_type == '3'){
+			$data['annualB'] = (isset($data['leaveacc'][0]->annual_leave) ? $data['leaveacc'][0]->annual_leave : 0)
+								+ (isset($data['leaveacc'][0]->carry_fwd_leave) ? $data['leaveacc'][0]->carry_fwd_leave : 0)
+								- $data['ALtaken'] - $data['ELtaken'] - $data['FSEtaken'] - $data['PLEtaken'] - $data['MLEtaken']  - $data['MRLEtaken']  - $data['ULEtaken']  - $data['STLEtaken']  - $data['TLEtaken']
+								- $data['HLEtaken'] - (isset($data['SLEtaken']) ? $data['SLEtaken'] : 0);
 
 			if ($data['annualB'] < 0){
         	  $data['ALEtaken'] = abs($data['annualB']);
@@ -1230,60 +1240,66 @@ print_r($data);
 
         	$data['totaltaken'] = $data['ALtaken'] + $data['ELtaken'] + $data['FSEtaken'] + $data['PLEtaken'] + $data['MLEtaken']  + $data['MRLEtaken']  + $data['ULEtaken']  + $data['STLEtaken']  + $data['TLEtaken']
         						  + $data['HLEtaken'] + (isset($data['SLEtaken']) ? $data['SLEtaken'] : 0);
+
+        	if( $data['record'][0]->leave_type==3 ){
+        		$data['balanceEleave'] = (isset($data['userleave'][0]->limit_days) ? $data['userleave'][0]->limit_days : 0) - $data['ELtaken'];
+				$data['totalELtaken'] = $data['ELtaken'];
+        	}
 		}
 		elseif($data['record'][0]->leave_type == '2'){
-		$data['balanceleave'] = $data['SLbalance'];
+			$data['balanceleave'] = $data['SLbalance'];
 			if ($data['balanceleave'] < 0){
 				//$data['SLEtaken'] = abs($data['SLbalance']);
 				$data['balanceleave'] = 0;
 			}
-		$data['totaltaken'] = $data['SLtaken'] - (isset($data['SLEtaken']) ? $data['SLEtaken'] : 0);
+			$data['totaltaken'] = $data['SLtaken'] - (isset($data['SLEtaken']) ? $data['SLEtaken'] : 0);
 		}
 		elseif($data['record'][0]->leave_type == '3'){
-		$data['balanceleave'] = (isset($data['userleave'][0]->limit_days) ? $data['userleave'][0]->limit_days : 0) - $data['ELtaken'];
-		$data['totaltaken'] = $data['ELtaken'];
+			$data['balanceleave'] = (isset($data['userleave'][0]->limit_days) ? $data['userleave'][0]->limit_days : 0) - $data['ELtaken'];
+			$data['totaltaken'] = $data['ELtaken'];
 		}
 		elseif($data['record'][0]->leave_type == '4'){
-		$data['balanceleave'] = 0;
-		$data['totaltaken'] = $data['UPLtaken'];
+			$data['balanceleave'] = 0;
+			$data['totaltaken'] = $data['UPLtaken'];
 		}
 		elseif($data['record'][0]->leave_type == '5'){
-		$data['balanceleave'] = 0;
-		$data['totaltaken'] = $data['ESLtaken'];
+			$data['balanceleave'] = 0;
+			$data['totaltaken'] = $data['ESLtaken'];
 		}
 		elseif($data['record'][0]->leave_type == '6'){
-		$data['balanceleave'] = (isset($data['userleave'][0]->entitle_days) ? $data['userleave'][0]->entitle_days : 0) - $data['FStaken'];
-		$data['totaltaken'] = $data['FStaken'];
+			$data['balanceleave'] = (isset($data['userleave'][0]->entitle_days) ? $data['userleave'][0]->entitle_days : 0) - $data['FStaken'];
+			$data['totaltaken'] = $data['FStaken'];
 		}
 		elseif($data['record'][0]->leave_type == '7'){
-		$data['balanceleave'] = (isset($data['userleave'][0]->entitle_days) ? $data['userleave'][0]->entitle_days : 0) - $data['MLtaken'];
-		$data['totaltaken'] = $data['MLtaken'];
+			$data['balanceleave'] = (isset($data['userleave'][0]->entitle_days) ? $data['userleave'][0]->entitle_days : 0) - $data['MLtaken'];
+			$data['totaltaken'] = $data['MLtaken'];
 		}
 		elseif($data['record'][0]->leave_type == '8'){
-		$data['balanceleave'] = (isset($data['userleave'][0]->entitle_days) ? $data['userleave'][0]->entitle_days : 0) - $data['PLtaken'];
-		$data['totaltaken'] = $data['PLtaken'];
+			$data['balanceleave'] = (isset($data['userleave'][0]->entitle_days) ? $data['userleave'][0]->entitle_days : 0) - $data['PLtaken'];
+			$data['totaltaken'] = $data['PLtaken'];
 		}
 		elseif($data['record'][0]->leave_type == '9'){
-		$data['balanceleave'] = (isset($data['userleave'][0]->entitle_days) ? $data['userleave'][0]->entitle_days : 0) - $data['MRLtaken'];
-		$data['totaltaken'] = $data['MRLtaken'];
+			$data['balanceleave'] = (isset($data['userleave'][0]->entitle_days) ? $data['userleave'][0]->entitle_days : 0) - $data['MRLtaken'];
+			$data['totaltaken'] = $data['MRLtaken'];
 		}
 		elseif($data['record'][0]->leave_type == '10'){
-		$data['balanceleave'] = (isset($data['userleave'][0]->entitle_days) ? $data['userleave'][0]->entitle_days : 0) - $data['ULtaken'];
-		$data['totaltaken'] = $data['ULtaken'];
+			$data['balanceleave'] = (isset($data['userleave'][0]->entitle_days) ? $data['userleave'][0]->entitle_days : 0) - $data['ULtaken'];
+			$data['totaltaken'] = $data['ULtaken'];
 		}
 		elseif($data['record'][0]->leave_type == '11'){
-		$data['balanceleave'] = (isset($data['userleave'][0]->entitle_days) ? $data['userleave'][0]->entitle_days : 0) - $data['STLtaken'];
-		$data['totaltaken'] = $data['STLtaken'];
+			$data['balanceleave'] = (isset($data['userleave'][0]->entitle_days) ? $data['userleave'][0]->entitle_days : 0) - $data['STLtaken'];
+			$data['totaltaken'] = $data['STLtaken'];
 		}
 		elseif($data['record'][0]->leave_type == '12'){
-		$data['balanceleave'] = (isset($data['userleave'][0]->entitle_days) ? $data['userleave'][0]->entitle_days : 0) - $data['TLtaken'];
-		$data['totaltaken'] = $data['TLtaken'];
+			$data['balanceleave'] = (isset($data['userleave'][0]->entitle_days) ? $data['userleave'][0]->entitle_days : 0) - $data['TLtaken'];
+			$data['totaltaken'] = $data['TLtaken'];
 		}
 		elseif($data['record'][0]->leave_type == '13'){
-		$data['balanceleave'] = (isset($data['userleave'][0]->entitle_days) ? $data['userleave'][0]->entitle_days : 0) - $data['HLtaken'];
-		$data['totaltaken'] = $data['HLtaken'];
+			$data['balanceleave'] = (isset($data['userleave'][0]->entitle_days) ? $data['userleave'][0]->entitle_days : 0) - $data['HLtaken'];
+			$data['totaltaken'] = $data['HLtaken'];
 		}
 		//leavebalance
+		// echo "noleave=".$data['noleave']." totaltaken=".$data['totaltaken'];die;
 
 		$this->load->view('Head');
 		$this->load->view('top');
