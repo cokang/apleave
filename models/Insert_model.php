@@ -65,6 +65,10 @@ function addprobation($probation_stat){
 function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 			$this->db->select("$value1, $value2");
 			$this->db->where($value1,$variable1);
+			$this->db->group_start();
+			$this->db->where('v_Actionflag');
+			$this->db->or_where('v_Actionflag !=','D');
+			$this->db->group_end();
 			// $this->db->where($value2,$variable2);
 			$query = $this->db->get('pmis2_sa_user');
 
@@ -144,6 +148,7 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 									 'site_state' => $this->input->post('hosp_code'),
 									 'v_email' => $this->input->post('emp_email'),
 									 'phone_no' => $this->input->post('phone_no'),
+									 'v_Actionflag' => 'I',
 									 'v_password' => md5($this->input->post('emp_pass'))
 									);
 				$this->insert_model->addemployee($insert_data);

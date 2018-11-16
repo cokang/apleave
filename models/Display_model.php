@@ -4,6 +4,7 @@ class display_model extends CI_Model
 function __construct() {
 parent::__construct();
 }
+
 	function leavelist_c($userid){
 		$this->db->select('COUNT(*) AS jumlah');
 		$this->db->where('user_id',$userid);
@@ -18,14 +19,18 @@ parent::__construct();
 	function leavelist($userid,$limit,$start){
 		$this->db->select('r.*,u.v_UserName, l.leave_name');
 		$this->db->where('user_id',$userid);
+		$this->db->group_start();
+		$this->db->where('u.v_Actionflag');
+		$this->db->or_where('u.v_Actionflag !=','D');
+		$this->db->group_end();
 		$this->db->from('employee_leave_req r');
 		$this->db->join('pmis2_sa_user u','r.user_id = u.v_UserID','left');
 		$this->db->join('leave_type l','l.id = r.leave_type','left');
 		$this->db->order_by('leave_from','Desc');
 		$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -45,9 +50,13 @@ parent::__construct();
 		$this->db->select('v_UserID,v_GroupID');
 		$this->db->from('pmis2_sa_user');
 		$this->db->where('v_UserID',$userid);
+		$this->db->group_start();
+		$this->db->where('v_Actionflag');
+		$this->db->or_where('v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -59,13 +68,18 @@ parent::__construct();
 		$this->db->where('U.v_UserID <>',$this->session->userdata('v_UserName'));
 		//$this->db->where('U.v_GroupID',$group);
 		$this->db->or_where('G.report_to',$this->session->userdata('v_UserName'));
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$this->db->order_by('R.leave_from','Desc');
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
+
 	function leaveapp($group,$limit,$start){
 		$this->db->select('R.*,U.v_GroupID,U.v_UserName,L.leave_name');
 		//$this->db->select('R.*,U.v_GroupID');
@@ -77,19 +91,23 @@ parent::__construct();
 		//$this->db->or_where('G.report_to',$this->session->userdata('v_UserName'));
 		$this->db->where("(U.v_GroupID = '".$group. "' OR G.report_to = '".$this->session->userdata('v_UserName')."')");
 		$this->db->where('U.v_UserID <>',$this->session->userdata('v_UserName'));
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		//$this->db->order_by('R.leave_from','Desc');
 		$this->db->order_by('R.leave_status IS NULL','desc',false);
 		$this->db->order_by('R.application_date','desc');
 		$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
 
 	function leavedet($userid,$regid){
-	//echo "klklklkll:";
+		//echo "klklklkll:";
 		$this->db->select('R.*,U.v_hospitalcode,im.file_name,UR.v_UserName as employee_replaced,U.v_UserName, U.apsb_no');
 		$this->db->from('employee_leave_req R');
 		$this->db->join('sick_leave_img im','R.user_id = im.user_id AND R.id = im.leavereq_id','left');
@@ -97,24 +115,35 @@ parent::__construct();
 		$this->db->join('pmis2_sa_user UR','R.employee_replaced = UR.v_UserID','left');
 		$this->db->where('R.user_id',$userid);
 		$this->db->where('R.id',$regid);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
+		// echo $this->db->last_query();
 		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
 
 	function samedateleave_c($fromdate,$todate,$userid){
+		$fromdate	= date("Y-m-d", $fromdate);
+		$todate		= date("Y-m-d", $todate);
+
 		$this->db->select('COUNT(*) AS jumlah');
 		//$this->db->where('leave_from',$fromdate);
 		$this->db->where("'".$fromdate."' BETWEEN leave_from AND leave_to", NULL, FALSE);
 		$this->db->or_where("'".$todate."' BETWEEN leave_from AND leave_to", NULL, FALSE);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$this->db->where('user_id <>',$userid);
 		$this->db->from('employee_leave_req R');
 		$this->db->join('pmis2_sa_user U','U.v_UserID = R.user_id');
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -126,22 +155,30 @@ parent::__construct();
 		$this->db->where("'".$fromdate."' BETWEEN R.leave_from AND R.leave_to", NULL, FALSE);
 		$this->db->or_where("'".$todate."' BETWEEN R.leave_from AND R.leave_to", NULL, FALSE);
 		$this->db->group_end();
-		$this->db->where('user_id <>',$userid);
 		$this->db->from('employee_leave_req R');
 		$this->db->join('pmis2_sa_user U','U.v_UserID = R.user_id');
 		$this->db->join('leave_type LT', 'R.leave_type = LT.id');
 		$this->db->join('group G','G.group_sup_id = U.v_UserID','left');
 		$this->db->where("(U.v_GroupID = '".$group. "' OR G.report_to = '".$this->session->userdata('v_UserName')."')");
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
+		$this->db->where('user_id <>',$userid);
 		$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
 	function stafflist_c(){
 		$this->db->select('COUNT(*) AS jumlah');
 		$this->db->from('pmis2_sa_user');
+		$this->db->group_start();
+		$this->db->where('v_Actionflag');
+		$this->db->or_where('v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
 		//echo $this->db->last_query();
 		//exit();
@@ -152,24 +189,40 @@ parent::__construct();
 		$this->db->select('v_UserID,v_UserName,v_GroupID');
 		$this->db->from('pmis2_sa_user');
 
-		$searcharray = array(
-                'apsb_no' => $staff,
-                'v_UserName' => $staff,
-            );
-            $this->db->or_like($searcharray);
+		//$searcharray = array(
+    //            'apsb_no' => $staff,
+    //            'v_UserName' => $staff,
+    //        );
+    //    $this->db->or_like($searcharray);
+
+		if($staff!=""){
+			$this->db->group_start();
+			$this->db->like("apsb_no", $staff);
+			$this->db->or_like("v_UserName", $staff);
+			$this->db->group_end();
+		}
+
+		$this->db->group_start();
+		$this->db->where('v_Actionflag');
+		$this->db->or_where('v_Actionflag !=','D');
+		$this->db->group_end();
 		$this->db->limit($limit,$start);
 		$query = $this->db->get();
-	/* 	echo $this->db->last_query();
-	    exit(); */
+		 //echo $this->db->last_query();
+	    // exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
 	function stafflist(){
 		$this->db->select('v_UserID,v_UserName,v_GroupID');
 		$this->db->from('pmis2_sa_user');
+		$this->db->group_start();
+		$this->db->where('v_Actionflag');
+		$this->db->or_where('v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -180,9 +233,13 @@ parent::__construct();
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		$this->db->where('L.user_id',$userid);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -192,9 +249,13 @@ parent::__construct();
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		$this->db->where('L.user_id',$userid);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -206,10 +267,14 @@ parent::__construct();
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		$this->db->where('L.user_id',$userid);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -224,10 +289,13 @@ parent::__construct();
 							ELSE YEAR(leave_to) = '2018' AND leave_duration = 'Half Day'
 						END");
 		$this->db->where('leave_status','Approved');
-		//$this->db->where('leave_status','Accepted');
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -250,10 +318,14 @@ parent::__construct();
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		//$this->db->where('user_id',$userid);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$this->db->where('L.year',$year);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -263,9 +335,13 @@ parent::__construct();
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		$this->db->where('U.v_GroupID',$dept);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -276,9 +352,13 @@ parent::__construct();
 		$this->db->where('U.v_GroupID',$dept);
 		$this->db->like('U.v_UserName',$staff);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -289,9 +369,13 @@ parent::__construct();
 		//$this->db->where('U.v_GroupID',$dept);
 		$this->db->like('U.v_UserName',$staff);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -302,9 +386,13 @@ parent::__construct();
 		$this->db->where('U.v_GroupID',$dept);
 		$this->db->like('U.apsb_no',$apsbno);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -316,9 +404,13 @@ parent::__construct();
 		$this->db->like('U.v_UserName',$staff);
 		$this->db->like('U.apsb_no',$apsbno);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -329,9 +421,13 @@ parent::__construct();
 		//$this->db->where('U.v_GroupID',$dept);
 		$this->db->like('U.apsb_no',$apsbno);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -343,9 +439,13 @@ parent::__construct();
 		$this->db->like('U.v_UserName',$staff);
 		$this->db->like('U.apsb_no',$apsbno);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -357,10 +457,14 @@ parent::__construct();
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		//$this->db->where('user_id',$userid);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -370,10 +474,14 @@ parent::__construct();
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		//$this->db->where('user_id',$userid);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		//$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -385,10 +493,14 @@ parent::__construct();
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		$this->db->where('U.v_GroupID',$dept);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -399,9 +511,13 @@ parent::__construct();
 		$this->db->where('U.v_GroupID',$dept);
 		$this->db->where('L.year',$year);
 		//$this->db->limit($limit,$start);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -414,10 +530,14 @@ parent::__construct();
 		$this->db->where('U.v_GroupID',$dept);
 		$this->db->like('U.v_UserName',$staff);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -428,10 +548,14 @@ parent::__construct();
 		$this->db->where('U.v_GroupID',$dept);
 		$this->db->like('U.v_UserName',$staff);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		//$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -444,10 +568,14 @@ parent::__construct();
 		//$this->db->where('U.v_GroupID',$dept);
 		$this->db->like('U.v_UserName',$staff);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -458,10 +586,14 @@ parent::__construct();
 		//$this->db->where('U.v_GroupID',$dept);
 		$this->db->like('U.v_UserName',$staff);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		//$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -474,10 +606,14 @@ parent::__construct();
 		$this->db->where('U.v_GroupID',$dept);
 		$this->db->like('U.apsb_no',$apsbno);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -488,10 +624,14 @@ parent::__construct();
 		$this->db->where('U.v_GroupID',$dept);
 		$this->db->like('U.apsb_no',$apsbno);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		//$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -505,10 +645,14 @@ parent::__construct();
 		$this->db->like('U.v_UserName',$staff);
 		$this->db->like('U.apsb_no',$apsbno);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -520,10 +664,14 @@ parent::__construct();
 		$this->db->like('U.v_UserName',$staff);
 		$this->db->like('U.apsb_no',$apsbno);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		//$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -536,10 +684,14 @@ parent::__construct();
 		//$this->db->where('U.v_GroupID',$dept);
 		$this->db->like('U.apsb_no',$apsbno);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -550,10 +702,14 @@ parent::__construct();
 		//$this->db->where('U.v_GroupID',$dept);
 		$this->db->like('U.apsb_no',$apsbno);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		//$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -567,10 +723,14 @@ parent::__construct();
 		$this->db->like('U.apsb_no',$apsbno);
 		$this->db->like('U.v_UserName',$staff);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -582,10 +742,14 @@ parent::__construct();
 		$this->db->like('U.apsb_no',$apsbno);
 		$this->db->like('U.v_UserName',$staff);
 		$this->db->where('L.year',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		//$this->db->limit($limit,$start);
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -596,9 +760,13 @@ parent::__construct();
 		$this->db->where('YEAR(leave_from)',$year);
 		//$this->db->where('leave_status','Accepted');
 		$this->db->where('leave_status','Approved');
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -610,9 +778,13 @@ parent::__construct();
 		$this->db->where('YEAR(R.leave_from)',$year);
 		//$this->db->where('R.leave_status','Accepted');
 		$this->db->where('R.leave_status','Approved');
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -625,9 +797,13 @@ parent::__construct();
 		//$this->db->where('R.leave_status','Accepted');
 		$this->db->where('R.leave_status','Approved');
 		$this->db->like('U.v_UserName',$staff);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -640,9 +816,13 @@ parent::__construct();
 		//$this->db->where('R.leave_status','Accepted');
 		$this->db->where('R.leave_status','Approved');
 		$this->db->like('U.v_UserName',$staff);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -655,9 +835,13 @@ parent::__construct();
 		//$this->db->where('R.leave_status','Accepted');
 		$this->db->where('R.leave_status','Approved');
 		$this->db->like('U.apsb_no',$apsbno);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -671,9 +855,13 @@ parent::__construct();
 		$this->db->where('R.leave_status','Approved');
 		$this->db->like('U.v_UserName',$staff);
 		$this->db->like('U.apsb_no',$apsbno);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -686,9 +874,13 @@ parent::__construct();
 		//$this->db->where('R.leave_status','Accepted');
 		$this->db->where('R.leave_status','Approved');
 		$this->db->like('U.apsb_no',$apsbno);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -702,9 +894,13 @@ parent::__construct();
 		$this->db->where('R.leave_status','Approved');
 		$this->db->like('U.apsb_no',$apsbno);
 		$this->db->like('U.v_UserName',$staff);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -712,9 +908,13 @@ parent::__construct();
 		$this->db->select('*');
 		$this->db->from('pmis2_sa_user');
 		$this->db->where('v_UserID',$userid);
+		$this->db->group_start();
+		$this->db->where('v_Actionflag');
+		$this->db->or_where('v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -733,9 +933,13 @@ parent::__construct();
 		$this->db->from('group G');
 		$this->db->join('pmis2_sa_user U','G.group_sup_id = U.v_UserID');
 		$this->db->where('group_sup_id <>',$userid);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -771,11 +975,15 @@ parent::__construct();
 		$this->db->select('v_Remarks');
 		$this->db->from('pmis2_sa_user');
 		$this->db->where('v_UserID',$userid);
+		$this->db->group_start();
+		$this->db->where('v_Actionflag');
+		$this->db->or_where('v_Actionflag !=','D');
+		$this->db->group_end();
 		//$this->db->where('v_GroupID','HR');
 		//$this->db->where('v_Remarks','HR');
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		//$query_result = $query->num_rows();
 		return $query->row()->v_Remarks;
 		//return $query_result;
@@ -784,22 +992,30 @@ parent::__construct();
 		$this->db->select('a.v_UserID,a.v_UserName,a.v_GroupID');
 		$this->db->from('pmis2_sa_user a');
 		$this->db->join('group b','a.v_UserID = b.group_sup_id','left outer');
+		$this->db->group_start();
+		$this->db->where('a.v_Actionflag');
+		$this->db->or_where('a.v_Actionflag !=','D');
+		$this->db->group_end();
 		$this->db->where('a.v_GroupID',$group);
 		$this->db->where('a.v_UserID <>',$userid);
 		$this->db->or_where('b.report_to =',$userid);
 		$query = $this->db->get();
-		/* echo $this->db->last_query();
-		exit(); */
+		//  echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
 	function dept_list(){
 		$this->db->select('v_GroupID');
 		$this->db->from('pmis2_sa_user');
+		$this->db->group_start();
+		$this->db->where('v_Actionflag');
+		$this->db->or_where('v_Actionflag !=','D');
+		$this->db->group_end();
 		$this->db->group_by('v_GroupID');
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -809,9 +1025,13 @@ parent::__construct();
 		$this->db->join('pmis2_sa_user U','U.v_hospitalcode = H.state');
 		$this->db->where('U.v_UserID',$userid);
 		$this->db->where('YEAR(date_holiday)',$year);
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -926,6 +1146,10 @@ parent::__construct();
 	}
 	function datecalendar_c($fromdate,$todate){
 		$this->db->select('COUNT(*) AS jumlah');
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$this->db->where("'".$fromdate."' BETWEEN leave_from AND leave_to", NULL, FALSE);
 		$this->db->or_where("R.leave_from BETWEEN '".$fromdate."' AND '".$todate."'", NULL, FALSE);
 		$this->db->or_where("R.leave_to BETWEEN '".$fromdate."' AND '".$todate."'", NULL, FALSE);
@@ -935,8 +1159,8 @@ parent::__construct();
 		$this->db->from('employee_leave_req R');
 		$this->db->join('pmis2_sa_user U','U.v_UserID = R.user_id');
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -1006,29 +1230,37 @@ parent::__construct();
 				$this->db->where("U.site_state", $site_state);
 				// $this->db->or_where("U.v_GroupID", $group);
 			}
+			$this->db->group_start();
+			$this->db->where('U.v_Actionflag');
+			$this->db->or_where('U.v_Actionflag !=','D');
+			$this->db->group_end();
 
 			/*$this->db->where('R.leave_from >=',$fromdate);
 			$this->db->where('R.leave_to <=',$todate);*/
 			$this->db->limit($limit,$start);
 			// $this->db->limit($limit);
 			$query = $this->db->get();
-			// echo "<pre>".$this->db->last_query();
+			// echo $this->db->last_query();
 			// exit();
 			$query_result = $query->result();
 			return $query_result;
 		}
 
 	function printrec($id){
-		$this->db->select('l.*,u.v_UserName,u.apsb_no,u.v_GroupID,u.v_hospitalcode,u.design_emp,u.grade,s.state,e.annual_leave,e.carry_fwd_leave,e.sick_leave,e.earned_leave,h.v_HospitalName');
+		$this->db->select('l.*, u.v_UserName, u.apsb_no, u.v_GroupID, u.v_hospitalcode ,u.design_emp, u.grade, s.state, e.annual_leave, e.carry_fwd_leave, e.sick_leave, e.earned_leave, h.v_HospitalName');
 		$this->db->from('employee_leave_req l');
 		$this->db->join('pmis2_sa_user u','l.user_id = u.v_UserID');
 		$this->db->join('state_list s','u.v_hospitalcode = s.state_code');
 		$this->db->join('employee_leave e','l.user_id = e.user_id AND e.year = YEAR(leave_from)','left');
 		$this->db->join('pmis2_sa_hospital h','u.site_state = h.v_HospitalCode','left');
 		$this->db->where('l.id',$id);
+		$this->db->group_start();
+		$this->db->where('u.v_Actionflag');
+		$this->db->or_where('u.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -1036,9 +1268,13 @@ parent::__construct();
 		$this->db->select('v_UserID,v_UserName,apsb_no,design_emp,v_email,v_GroupID,v_hospitalcode,phone_no');
 		$this->db->from('pmis2_sa_user');
 		$this->db->where('v_UserID',$repstaff);
+		$this->db->group_start();
+		$this->db->where('v_Actionflag');
+		$this->db->or_where('v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -1052,9 +1288,13 @@ parent::__construct();
 		$this->db->where('YEAR(leave_from)',$year);
 		//$this->db->where('leave_status','Accepted');
 		$this->db->where('leave_status','Approved');
+		$this->db->group_start();
+		$this->db->where('U.v_Actionflag');
+		$this->db->or_where('U.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -1077,9 +1317,13 @@ parent::__construct();
 		$this->db->join('group b','a.v_UserID = b.report_to');
 		//$this->db->where('b.group_sup_id ',$this->session->userdata('v_UserName'));
 		$this->db->where('b.group_sup_id ',$userid);
+		$this->db->group_start();
+		$this->db->where('a.v_Actionflag');
+		$this->db->or_where('a.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
+		// echo $this->db->last_query();
+		// exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -1090,6 +1334,10 @@ parent::__construct();
 		$this->db->join('group b','a.v_UserID = b.group_sup_id ');
 		//$this->db->where('b.group_sup_id ',$this->session->userdata('v_UserName'));
 		$this->db->where('b.group_name ',$userid);
+		$this->db->group_start();
+		$this->db->where('a.v_Actionflag');
+		$this->db->or_where('a.v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
 		//echo $this->db->last_query();
 		//exit();
@@ -1101,6 +1349,10 @@ parent::__construct();
 		$this->db->select('v_GroupID');
 		$this->db->from('pmis2_sa_user');
 		$this->db->where('v_UserID',$userid);
+		$this->db->group_start();
+		$this->db->where('v_Actionflag');
+		$this->db->or_where('v_Actionflag !=','D');
+		$this->db->group_end();
 		$query = $this->db->get();
 		//echo $this->db->last_query();
 		//exit();
@@ -1152,6 +1404,10 @@ parent::__construct();
 
 			$this->db->where('user_id',$userid);
 			$this->db->where("R.leave_status", "Approved");
+			$this->db->group_start();
+			$this->db->where('U.v_Actionflag');
+			$this->db->or_where('U.v_Actionflag !=','D');
+			$this->db->group_end();
 			// $this->db->where("R.leave_status IS NOT NULL", NULL, FALSE);
 			$this->db->from('employee_leave_req R');
 			$this->db->join('pmis2_sa_user U','U.v_UserID = R.user_id');
@@ -1166,16 +1422,20 @@ parent::__construct();
 
 
 		function getaarow($userid){
-		$this->db->select('*');
-		$this->db->from('pmis2_sa_user');
-		$this->db->where('v_UserID',$userid);
-		//$this->db->where('v_GroupID','HR');
-		$this->db->where('v_Remarks','AA');
-		$query = $this->db->get();
-		//echo $this->db->last_query();
-		//exit();
-		$query_result = $query->num_rows();
-		return $query_result;
+			$this->db->select('*');
+			$this->db->from('pmis2_sa_user');
+			$this->db->where('v_UserID',$userid);
+			//$this->db->where('v_GroupID','HR');
+			$this->db->where('v_Remarks','AA');
+			$this->db->group_start();
+			$this->db->where('v_Actionflag');
+			$this->db->or_where('v_Actionflag !=','D');
+			$this->db->group_end();
+			$query = $this->db->get();
+			// echo $this->db->last_query();
+			// exit();
+			$query_result = $query->num_rows();
+			return $query_result;
 		}
 
 		function unprocess_listing($staff, $start, $limit){
@@ -1183,6 +1443,10 @@ parent::__construct();
 			$this->db->from("employee_leave_req lr");
 			$this->db->join("pmis2_sa_user u", "lr.user_id=u.v_UserID", "inner");
 			$this->db->join("processed_leave pl", "pl.leavereq_id=lr.id", "left");
+			$this->db->group_start();
+			$this->db->where('u.v_Actionflag');
+			$this->db->or_where('u.v_Actionflag !=','D');
+			$this->db->group_end();
 			$this->db->where("lr.leave_type", "4");//unrecoded_leave
 			$this->db->where("lr.leave_status", "Approved");
 			$this->db->where("(pl.leavereq_id IS Null OR pl.v_actionflag='D')");
@@ -1193,7 +1457,7 @@ parent::__construct();
 			}
 			$this->db->limit($limit,$start);
 			$result = $this->db->get();
-			// echo "<pre>".$this->db->last_query();die;
+			// echo $this->db->last_query();die;
 			return $result->result();
 		}
 
@@ -1202,11 +1466,15 @@ parent::__construct();
 			$this->db->from("employee_leave_req lr");
 			$this->db->join("pmis2_sa_user u", "lr.user_id=u.v_UserID", "inner");
 			$this->db->join("processed_leave pl", "pl.leavereq_id=lr.id", "left");
+			$this->db->group_start();
+			$this->db->where('u.v_Actionflag');
+			$this->db->or_where('u.v_Actionflag !=','D');
+			$this->db->group_end();
 			$this->db->where("lr.leave_type", "4");//unrecoded_leave
 			$this->db->where("lr.leave_status", "Approved");
 			$this->db->where("(pl.leavereq_id IS Null OR pl.v_actionflag='D')");
 			$result = $this->db->get();
-
+			// echo $this->db->last_query();exit();
 			return $result->result();
 		}
 
@@ -1215,7 +1483,12 @@ parent::__construct();
 			$this->db->select('site_state');
 			$this->db->from('pmis2_sa_user');
 			$this->db->where('v_UserID',$v_UserName);
+			$this->db->group_start();
+			$this->db->where('v_Actionflag');
+			$this->db->or_where('v_Actionflag !=','D');
+			$this->db->group_end();
 			$query = $this->db->get();
+			// echo $this->db->last_query();exit();
 			return $query->row()->site_state;
 		}
 
@@ -1230,6 +1503,18 @@ parent::__construct();
 			$query_result = $query->num_rows();
 			return $query_result;
 		}
+
+		function stateH($year,$state){
+		$this->db->select('date_holiday');
+		$this->db->from('holiday_list');
+		$this->db->where('state',$state);
+		$this->db->where('YEAR(date_holiday)',$year);
+		$query = $this->db->get();
+		//echo $this->db->last_query();
+		//exit();
+		$query_result = $query->result();
+		return $query_result;
+	}
 
 
 }

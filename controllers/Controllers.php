@@ -973,60 +973,24 @@ print_r($data);
 			$data['holidayarray'][] = NULL;
 		}
 
-		$data['holidayJB'] = $this->display_model->holidayJB(date('Y',strtotime($data['record'][0]->leave_from)));
-		if($data['holidayJB']){
-			foreach ($data['holidayJB'] as $key => $value) {
-				$data['JB_hol'][] = strtotime(date($value->date_holiday));
-			}
+		$data['state_list'] = $this->display_model->statelist();
+		foreach($data['state_list'] as $key => $row){
+		$statel = 'holiday'.$row->state_code;
+		$state2 = $row->state_code.'_hol';
+
+		$data[$statel] = $this->display_model->stateH(date('Y',strtotime($data['record'][0]->leave_from)),$row->state_code);
+		if($data[$statel]){
+		foreach ($data[$statel] as $key => $value) {
+
+			 $data[$state2][] = date('Y-m-d',strtotime(date($value->date_holiday)));
 		}
-		else{
-			$data['JB_hol'][] = NULL;
+		 }else {
+			 $data[$state2][] = NULL;
+
 		}
-		$data['holidayMKA'] = $this->display_model->holidayMKA(date('Y',strtotime($data['record'][0]->leave_from)));
-		if($data['holidayMKA']){
-			foreach ($data['holidayMKA'] as $key => $value) {
-			    $data['MKA_hol'][] = strtotime(date($value->date_holiday));
-			}
+
 		}
-		else{
-			$data['MKA_hol'][] = NULL;
-		}
-		$data['holidayNS'] = $this->display_model->holidayNS(date('Y',strtotime($data['record'][0]->leave_from)));
-		if($data['holidayNS']){
-			foreach ($data['holidayNS'] as $key => $value) {
-				$data['NS_hol'][] = strtotime(date($value->date_holiday));
-			}
-		}
-		else{
-			$data['NS_hol'][] = NULL;
-		}
-		$data['holidaySEL'] = $this->display_model->holidaySEL(date('Y',strtotime($data['record'][0]->leave_from)));
-		if($data['holidaySEL']){
-			foreach ($data['holidaySEL'] as $key => $value) {
-				$data['SEL_hol'][] = strtotime(date($value->date_holiday));
-			}
-		}
-		else{
-			$data['SEL_hol'][] = NULL;
-		}
-		$data['holidayPHG'] = $this->display_model->holidayPHG(date('Y',strtotime($data['record'][0]->leave_from)));
-		if($data['holidayPHG']){
-			foreach ($data['holidayPHG'] as $key => $value) {
-				$data['PHG_hol'][] = strtotime(date($value->date_holiday));
-			}
-		}
-		else{
-			$data['PHG_hol'][] = NULL;
-		}
-		$data['holidayKL'] = $this->display_model->holidayKL(date('Y',strtotime($data['record'][0]->leave_from)));
-		if($data['holidayKL']){
-			foreach ($data['holidayKL'] as $key => $value) {
-				$data['KL_hol'][] = strtotime(date($value->date_holiday));
-			}
-		}
-		else{
-			$data['KL_hol'][] = NULL;
-		}
+
 
 		//$data['userleave'] = $this->display_model->userleave($data['record'][0]->leave_type);
 		$data['leave_type'] = $this->display_model->leave_type();
@@ -1128,93 +1092,36 @@ print_r($data);
 	            $begin += 86400; // +1 day
 	        }
 	        $data['noleavetaken'] = $no_days - $weekends;
-	        if ($row->leave_type == '1'){  //annual leave
-	        	$data['ALtaken'] += $data['noleavetaken'];
-	        }
-	        elseif($row->leave_type == '2'){  //sick leave
-	        	$data['SLtaken'] += $data['noleavetaken'];
-	        }
-	        elseif($row->leave_type == '3'){  //emergency leave
-				$data['ELtaken'] += $data['noleavetaken'];
-	        }
-	        elseif($row->leave_type == '4'){  //unpaid leave
-				$data['UPLtaken'] += $data['noleavetaken'];
-	        }
-	        elseif($row->leave_type == '5'){  //extended sick leave
-				$data['ESLtaken'] += $data['noleavetaken'];
-	        }
-	        elseif($row->leave_type == '6'){  //family sick leave
-	        	if ($data['noleavetaken'] <= $data['leave_type'][5]->per_case_basis){
-					$data['FStaken'] += $data['noleavetaken'];
-				}
-				else{
-					$data['FStaken'] += $data['leave_type'][5]->per_case_basis;
-					$data['FSEtaken'] += ($data['noleavetaken'] - $data['leave_type'][5]->per_case_basis);
-				}
-	        }
-	        elseif($row->leave_type == '7'){  //maternity leave
-	        	if ($data['noleavetaken'] <= $data['leave_type'][6]->per_case_basis){
-					$data['MLtaken'] += $data['noleavetaken'];
-				}
-				else{
-					$data['MLtaken'] += $data['leave_type'][6]->per_case_basis;
-					$data['MLEtaken'] += ($data['noleavetaken'] - $data['leave_type'][6]->per_case_basis);
-				}
-	        }
-	        elseif($row->leave_type == '8'){  //paternity leave
-	        	if ($data['noleavetaken'] <= $data['leave_type'][7]->per_case_basis){
-					$data['PLtaken'] += $data['noleavetaken'];
-				}
-				else{
-					$data['PLtaken'] += $data['leave_type'][7]->per_case_basis;
-					$data['PLEtaken'] += ($data['noleavetaken'] - $data['leave_type'][7]->per_case_basis);
-				}
-	        }
-	        elseif($row->leave_type == '9'){  //marriage leave
-	        	if ($data['noleavetaken'] <= $data['leave_type'][8]->per_case_basis){
-					$data['MRLtaken'] += $data['noleavetaken'];
-				}
-				else{
-					$data['MRLtaken'] += $data['leave_type'][8]->per_case_basis;
-					$data['MRLEtaken'] += ($data['noleavetaken'] - $data['leave_type'][8]->per_case_basis);
-				}
-	        }
-	        elseif($row->leave_type == '10'){  //unrecorded leave
-	        	if ($data['noleavetaken'] <= $data['leave_type'][9]->per_case_basis){
-					$data['ULtaken'] += $data['noleavetaken'];
-				}
-				else{
-					$data['ULtaken'] += $data['leave_type'][9]->per_case_basis;
-					$data['ULEtaken'] += ($data['noleavetaken'] - $data['leave_type'][9]->per_case_basis);
-				}
-	        }
-	        elseif($row->leave_type == '11'){  //study leave
-	        	if ($data['noleavetaken'] <= $data['leave_type'][10]->per_case_basis){
-					$data['STLtaken'] += $data['noleavetaken'];
-				}
-				else{
-					$data['STLtaken'] += $data['leave_type'][10]->per_case_basis;
-					$data['STLEtaken'] += ($data['noleavetaken'] - $data['leave_type'][10]->per_case_basis);
-				}
-	        }
-	        elseif($row->leave_type == '12'){  //transfer leave
-	        	if ($data['noleavetaken'] <= $data['leave_type'][11]->per_case_basis){
-					$data['TLtaken'] += $data['noleavetaken'];
-				}
-				else{
-					$data['TLtaken'] += $data['leave_type'][11]->per_case_basis;
-					$data['TLEtaken'] += ($data['noleavetaken'] - $data['leave_type'][11]->per_case_basis);
-				}
-	        }
-	        elseif($row->leave_type == '13'){  //hajj leave
-	        	if ($data['noleavetaken'] <= $data['leave_type'][12]->per_case_basis){
-					$data['HLtaken'] += $data['noleavetaken'];
-				}
-				else{
-					$data['HLtaken'] += $data['leave_type'][12]->per_case_basis;
-					$data['HLEtaken'] += ($data['noleavetaken'] - $data['leave_type'][12]->per_case_basis);
-				}
-	        }
+
+				 //begincode
+				 $cutvar =array('1'=>'ALtaken','2'=>'SLtaken','3'=>'ELtaken','4'=>'UPLtaken','5'=>'ESLtaken','6'=>'FStaken','7'=>'MLtaken','8'=>'PLtaken','9'=>'MRLtaken','10'=>'ULtaken','11'=>'STLtaken','12'=>'TLtaken','13'=>'HLtaken');
+				 //$cutvar mewakili jenis leave name
+				 $cutvar1 = array('6'=>'FSEtaken','7'=>'MLEtaken','8'=>'PLEtaken','9'=>'MRLEtaken','10'=>'ULEtaken','11'=>'STLEtaken','12'=>'TLEtaken','13'=>'HLEtaken');
+				 //$cutvar1 merupakan total jnis leave name tertentu (bukan semua) yg telah ditolak dgn percase basis
+				 foreach ($data['leave_type'] as $row2){
+				 if (($row->leave_type == $row2->id) && ($row2->id < 6 )){
+				  $var = $cutvar[$row2->id];
+				 $data[$var] += $data['noleavetaken'];
+				 //echo $test;
+				 }elseif (($row2->id >= 6 )&& ($row->leave_type == $row2->id))
+				 {
+				 $var = $cutvar[$row2->id];
+				 $var1 = $cutvar1[$row2->id];
+
+				 		if ($data['noleavetaken'] <= $row2->per_case_basis){
+				  $data[$var] += $data['noleavetaken'];
+				 }
+				 else{
+				  $data[$var] += $row2->per_case_basis;
+				  $data[$var1] += ($data['noleavetaken'] - $row2->per_case_basis);
+				 }
+				 }
+
+
+				 }
+
+
+
 		}
 		//echo 'PL :'.$data['PLtaken'].'<br> PLE :'.$data['PLEtaken'];
 		//exit();
