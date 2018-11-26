@@ -580,6 +580,7 @@ print_r($data);
 		$this->load->view('Main_add_employee',$data);
 		$this->load->view('footer');
 	}
+
 	public function add_leaves()
 	{
 		$this->load->model('display_model');
@@ -646,16 +647,19 @@ print_r($data);
 		            $no_days++; // no of days in the given interval
 		            $what_day = date("N", $begin);
 								//echo "$what_day".$what_day;
-		            if($data['employeedet'][0]->v_hospitalcode == 'JB'){
-		            	if (($what_day == 5) || ($what_day == 6) || (in_array($begin, $data['holidayarray']))) { // 5 and 6 are weekend days
-		                $weekends++;
-		            	}
-		            }
-		            else{
-		            	if ($what_day > 5 || (in_array($begin, $data['holidayarray']))) { // 6 and 7 are weekend days
-		                $weekends++;
-		            	}
-		            }
+					$weekend_count = array(5,7,13,14);//leave need calculate weekend
+					if( !in_array($data['record'][0]->leave_type, $weekend_count) ){
+						if($data['employeedet'][0]->v_hospitalcode == 'JB'){
+							if (($what_day == 5) || ($what_day == 6) || (in_array($begin, $data['holidayarray']))) { // 5 and 6 are weekend days
+						    $weekends++;
+							}
+						}
+						else{
+							if ($what_day > 5 || (in_array($begin, $data['holidayarray']))) { // 6 and 7 are weekend days
+						    $weekends++;
+							}
+						}
+					}
 		            $begin += 86400; // +1 day
 		        }
 		        $data['noleavetaken'] = $no_days - $weekends;
@@ -930,6 +934,7 @@ print_r($data);
 		$this->load->view('Main_date_calender');
 		$this->load->view('footer');
 	}
+
 	public function print_out()
 	{
 		$this->load->model('display_model');
@@ -1006,15 +1011,18 @@ print_r($data);
 		$weekends = 0;
 		while ($begin <= $end) {
 			$no_days++; // no of days in the given interval
-			$what_day = date("N", $begin);
-			if($data['record'][0]->v_hospitalcode == 'JB'){
-				if (($what_day == 5) || ($what_day == 6) || (in_array($begin, $data['holidayarray']))) { // 5 and 6 are weekend days
-					$weekends++;
+			$weekend_count = array(5,7,13,14);//leave need calculate weekend
+			if( !in_array($data['record'][0]->leave_type, $weekend_count) ){
+				$what_day = date("N", $begin);
+				if($data['record'][0]->v_hospitalcode == 'JB'){
+					if (($what_day == 5) || ($what_day == 6) || (in_array($begin, $data['holidayarray']))) { // 5 and 6 are weekend days
+						$weekends++;
+					}
 				}
-			}
-			else{
-				if ($what_day > 5 || (in_array($begin, $data['holidayarray']))) { // 6 and 7 are weekend days
-					$weekends++;
+				else{
+					if ($what_day > 5 || (in_array($begin, $data['holidayarray']))) { // 6 and 7 are weekend days
+						$weekends++;
+					}
 				}
 			}
 
@@ -1079,16 +1087,19 @@ print_r($data);
 				}
 	            $what_day = date("N", $begin);
 							//echo "$what_day".$what_day;
-	            if($data['record'][0]->v_hospitalcode == 'JB'){
-	            	if (($what_day == 5) || ($what_day == 6) || (in_array($begin, $data['holidayarray']))) { // 5 and 6 are weekend days
-						$weekends++;
-	            	}
-	            }
-	            else{
-	            	if ($what_day > 5 || (in_array($begin, $data['holidayarray']))) { // 6 and 7 are weekend days
-						$weekends++;
-	            	}
-	            }
+				$weekend_count = array(5,7,13,14);//leave need calculate weekend
+				if( !in_array($data['record'][0]->leave_type, $weekend_count) ){
+					if($data['record'][0]->v_hospitalcode == 'JB'){
+						if (($what_day == 5) || ($what_day == 6) || (in_array($begin, $data['holidayarray']))) { // 5 and 6 are weekend days
+							$weekends++;
+						}
+					}
+					else{
+						if ($what_day > 5 || (in_array($begin, $data['holidayarray']))) { // 6 and 7 are weekend days
+							$weekends++;
+						}
+					}
+				}
 	            $begin += 86400; // +1 day
 	        }
 	        $data['noleavetaken'] = $no_days - $weekends;

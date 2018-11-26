@@ -78,19 +78,22 @@
 									}
 									$what_day = date("N", $begin);
 									//echo "$what_day".$what_day;
-									if($row->v_hospitalcode == 'JB'){
-										if (($what_day == 5) || ($what_day == 6) || (in_array($begin, $holiday_array))) { // 5 and 6 are weekend days
-											$weekends++;
+									$weekend_count = array(5,7,13,14);//leave need calculate weekend
+									if( !in_array($row->leave_type, $weekend_count) ){
+										if($row->v_hospitalcode == 'JB'){
+											if (($what_day == 5) || ($what_day == 6) || (in_array($begin, $holiday_array))) { // 5 and 6 are weekend days
+												$weekends++;
+											}
 										}
-									}
-									elseif($row->v_hospitalcode == NULL ){
-										if ($what_day > 5 ) { // 6 and 7 are weekend days
-											$weekends++;
+										elseif($row->v_hospitalcode == NULL ){
+											if ($what_day > 5 ) { // 6 and 7 are weekend days
+												$weekends++;
+											}
 										}
-									}
-									else{
-										if ($what_day > 5 || (in_array($begin, $holiday_array))) { // 6 and 7 are weekend days
-											$weekends++;
+										else{
+											if ($what_day > 5 || (in_array($begin, $holiday_array))) { // 6 and 7 are weekend days
+												$weekends++;
+											}
 										}
 									}
 									$begin += 86400; // +1 day

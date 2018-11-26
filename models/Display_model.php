@@ -989,6 +989,7 @@ parent::__construct();
 		//return $query_result;
 	}
 	function alternate($userid,$group){
+		$id_rpt=$this->db->get_where('group', array('group_sup_id =' => $userid))->result();
 		$this->db->select('a.v_UserID,a.v_UserName,a.v_GroupID');
 		$this->db->from('pmis2_sa_user a');
 		$this->db->join('group b','a.v_UserID = b.group_sup_id','left outer');
@@ -999,6 +1000,11 @@ parent::__construct();
 		$this->db->where('a.v_GroupID',$group);
 		$this->db->where('a.v_UserID <>',$userid);
 		$this->db->or_where('b.report_to =',$userid);
+		if(isset($id_rpt[0]->report_to)){
+		$this->db->or_where('b.report_to =',$id_rpt[0]->report_to);
+		$this->db->where('a.v_UserID <>',$userid);
+		$this->db->order_by('a.v_GroupID ASC');
+		}
 		$query = $this->db->get();
 		//  echo $this->db->last_query();
 		// exit();
@@ -1366,15 +1372,14 @@ parent::__construct();
 		$this->db->where('user_id',$userid);
 		// $this->db->where_in("leave_status", array("Pending", "Cancelled"));//where leave_status cancel/rejected/null
 		// $this->db->or_where("leave_status", NULL);
-		$this->db->where("(`leave_status` IN('Pending', 'Cancelled') OR `leave_status` IS NULL)");
-		$this->db->where('leave_status','Declined');
+		$this->db->where("(`leave_status` NOT IN ('Cancelled', 'Declined') OR `leave_status` IS NULL)");
+		//$this->db->where('leave_status','Declined');
 		$query = $this->db->get();
 		// echo $this->db->last_query();
 		// exit();
 		$query_result = $query->result_array();
 		return $query_result;
 	}
-
 
 	function check_range($fromdate,$todate,$userid){
 			if($fromdate!=""){
@@ -1403,7 +1408,10 @@ parent::__construct();
 			}
 
 			$this->db->where('user_id',$userid);
+			$this->db->group_start();
 			$this->db->where("R.leave_status", "Approved");
+			$this->db->or_where("R.leave_status IS NULL");
+			$this->db->group_end();
 			$this->db->group_start();
 			$this->db->where('U.v_Actionflag');
 			$this->db->or_where('U.v_Actionflag !=','D');
@@ -1412,10 +1420,10 @@ parent::__construct();
 			$this->db->from('employee_leave_req R');
 			$this->db->join('pmis2_sa_user U','U.v_UserID = R.user_id');
 			$query = $this->db->get()->row()->has_applied;
-			// echo $this->db->last_query();
+			 //echo $this->db->last_query();
 			// exit();
 			// $query_result = $query->result();
-			// echo $query; // pakai utk return value js
+			echo $query; // pakai utk return value js
 			// return $query_result;
 		}
 

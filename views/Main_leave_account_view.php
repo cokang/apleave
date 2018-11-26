@@ -21,7 +21,7 @@
 							<?php } ?>
 						</select>
 					</div>
-					<?php $people = array("APSB592", "APSB1150", "APSB1419", "APSB426", "APSB823", "APSB1256", "APSB1417"); if (($group[0]->v_GroupID == 'HR') || (in_array($group[0]->v_UserID, $people))){ ?>
+					<?php $people = array("APSB592", "APSB1150", "APSB1419", "APSB426", "APSB823", "APSB1256", "APSB1417", "APSB658"); if (($group[0]->v_GroupID == 'HR') || (in_array($group[0]->v_UserID, $people))){ ?>
 					<div class="form-group">
 						<input type="radio" name="ch_bx" value="All"<?php echo set_radio('ch_bx', 'All'); ?><?= $check == 'All' ? 'checked' : '' ?> onchange="return check_sort(this.value)"> All
 						<input type="radio" name="ch_bx" value="Own"<?php echo set_radio('ch_bx', 'Own'); ?><?= $check == 'Own' ? 'checked' : '' ?> onchange="return check_sort(this.value)"> Own
@@ -177,10 +177,10 @@
 										elseif($list->v_hospitalcode == 'SEL'){
 											$holiday_array = $SEL_hol;
 										}
-		                elseif($list->v_hospitalcode == 'PHG'){
+		                				elseif($list->v_hospitalcode == 'PHG'){
 											$holiday_array = $PHG_hol;
 										}
-		                elseif($list->v_hospitalcode == 'KL'){
+		                				elseif($list->v_hospitalcode == 'KL'){
 											$holiday_array = $KL_hol;
 										}
 
@@ -195,30 +195,32 @@
 											}elseif( $list->leave_duration=="Half Day" ){
 												$no_days = $no_days + 0.5;
 											}
-											$what_day = date("N", $begin);
-											//echo "$what_day".$what_day;
-											if($list->v_hospitalcode == 'JB'){
-											//echo "ni jb";
-												if (($what_day == 5) || ($what_day == 6) || (in_array($begin, $holiday_array))) { // 5 and 6 are weekend days
-													$weekends++;
+											$weekend_count = array(5,7,13,14);//leave need calculate weekend and public holiday
+											if( !in_array($list->leave_type, $weekend_count) ){
+												$what_day = date("N", $begin);
+												//echo "$what_day".$what_day;
+												if($list->v_hospitalcode == 'JB'){
+												//echo "ni jb";
+													if (($what_day == 5) || ($what_day == 6) || (in_array($begin, $holiday_array))) { // 5 and 6 are weekend days
+														$weekends++;
+													}
+												}
+												elseif($list->v_hospitalcode == NULL ){
+												//echo"kosong";
+												    if ($what_day > 5 ) { // 6 and 7 are weekend days
+														$weekends++;
+													}
+												}
+												else{
+												//echo"ayam";
+													if ($what_day > 5 || (in_array($begin, $holiday_array))) { // 6 and 7 are weekend days
+														$weekends++;
+													}
 												}
 											}
-											elseif($list->v_hospitalcode == NULL ){
-											//echo"kosong";
-											    if ($what_day > 5 ) { // 6 and 7 are weekend days
-													$weekends++;
-												}
-											}
-											else{
-											//echo"ayam";
-												if ($what_day > 5 || (in_array($begin, $holiday_array))) { // 6 and 7 are weekend days
-													$weekends++;
-												}
-											}
-
 											$begin += 86400; // +1 day
 										};
-// echo "<br>$no_days";
+
 										$noleave = $no_days - $weekends;
 										// echo $weekends."<br>";
 										if($list->user_id == $row->user_id){

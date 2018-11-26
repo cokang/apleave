@@ -80,6 +80,7 @@ class check_availability extends CI_Controller {
 									}
 			    $what_day = date("N", $begin);
 							//echo "$what_day".$what_day;
+					$weekend_count = array(5,7,13,14);
 			    if($row->v_hospitalcode == 'JB'){
 			    	if (($what_day == 5) || ($what_day == 6) || (in_array($begin, $data['holidayarray']))) { // 5 and 6 are weekend days
 			        	$weekends++;

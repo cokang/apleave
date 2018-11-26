@@ -251,6 +251,7 @@
 		}
 
 		function check_leave_availability(duration,year,probation){
+
 			if( duration==11 ){
 				$("#duration").append("<option value='Half Day'>Half Day</option>");
 			}else{
@@ -291,347 +292,218 @@
 			}
 			if($("#leave_type").val()!="0"){
 
-				$.get("<?php echo base_url ('index.php/check_availability') ?>?year="+year+"&type="+duration,"",function(data){
-
-					var json = JSON.parse(data);
-					// console.log(json);
-					//var annualB = (json['entitled']!=undefined ? Number(json['entitled']) : 0) + (json['carry_fwd_leave']!=undefined ? Number(json['carry_fwd_leave']) : 0) - json['ALtaken'] - json['ELtaken'] - json['FSEtaken'] - json['MLEtaken'] - json['PLEtaken'] - json['MRLEtaken'] - json['ULEtaken'] - json['STLEtaken'] - json['TLEtaken'] - json['HLEtaken'] - (json['SLEtaken']!=undefined ? json['SLEtaken'] : 0);
-					var annualB = (json['entitled']!=undefined ? Number(json['entitled']) : 0) + (json['carry_fwd_leave']!=undefined ? Number(json['carry_fwd_leave']) : 0) - json['ALtaken'];
-
-					// alert("("+json['entitled']+"!=undefined ? "+json['entitled']+" : 0) + ("+json['carry_fwd_leave']+"!=undefined ? "+json['carry_fwd_leave']+" : 0) - "+json['ALtaken']+" - "+json['ELtaken']+" - "+json['FSEtaken']+" - "+json['MLEtaken']+" - "+json['PLEtaken']+" - "+json['MRLEtaken']+" - "+json['ULEtaken']+" - "+json['STLEtaken']+" - "+json['TLEtaken']+" - "+json['HLEtaken']+" - ("+json['SLEtaken']+"!=undefined ? "+json['SLEtaken']+" : 0)");
-
-					if (annualB < 0){
-						var ALbalance = 0;
-					}
-					else{
-						var ALbalance = annualB;
-					}
-					if (duration=="1") {
-						if (json['probation'] <= 0){
-							if(json['ALbalance']>0){
-								$("#message_sp").removeClass();
-								$("#message_sp").addClass("success_message");
-								// $("#message_sp").text("You have "+json['ALbalance']+" Annual Leave(s) remaining.");
-								$("#message_sp").text("You have "+ALbalance+" Annual Leave(s) remaining.");
-								$("#message_sp").slideDown("slow");
-
-								// $("#from").prop("disabled", false);
-							}else if(json['ALbalance']<=0){
-								$("#message_sp").removeClass();
-								$("#message_sp").addClass("error_message");
-								$("#message_sp").text("You have no Annual Leave(s) remaining. You have to apply Unpaid Leave.");
-								$("#message_sp").slideDown("slow");
-
-
-								$("#leave_type").val("0");
-								$("#from").val("");
-								$("#to").val("");
-								$("#from").prop("disabled", true);
-								$("#to").prop("disabled", true);
-							}
-						}else{
-							$("#message_sp").removeClass();
-							$("#message_sp").addClass("info_message");
-							$("#message_sp").html("Annual Leave is not eligible for probational staff.");
-							$("#message_sp").slideDown("slow");
-
-							$("#leave_type").val("4");
-							$("#from").val("");
-							$("#to").val("");
-						}
-					}
-					if (duration=="2"){
-						if(json['SLbalance']>0){
-							$("#message_sp").removeClass();
-							$("#message_sp").addClass("success_message");
-							$("#message_sp").text("You have "+json['SLbalance']+" Sick Leave(s) remaining.");
-							$("#message_sp").slideDown("slow");
-
-							// $("#from").prop("disabled", false);
-						}else if(json['SLbalance']<=0){
-							$("#message_sp").removeClass();
-							$("#message_sp").addClass("error_message");
-							$("#message_sp").text("You have no Sick Leave(s) remaining. You have to apply Unpaid Leave.");
-							$("#message_sp").slideDown("slow");
-
-
-							$("#leave_type").val(duration);
-							$("#from").val("");
-							$("#to").val("");
-							$("#from").prop("disabled", true);
-							$("#to").prop("disabled", true);
-						}
-					}
-					if (duration=="3"){
-						if(json['ELbalance']>0){
-							$("#message_sp").removeClass();
-							$("#message_sp").addClass("success_message");
-							$("#message_sp").text("You have "+json['ELbalance']+" Emergency Leave(s) remaining.");
-							$("#message_sp").slideDown("slow");
-
-							// $("#from").prop("disabled", false);
-						}else if(json['ELbalance']<=0){
-							$("#message_sp").removeClass();
-							$("#message_sp").addClass("error_message");
-							$("#message_sp").text("You have no Emergency Leave(s) remaining.");
-							$("#message_sp").slideDown("slow");
-
-
-							$("#leave_type").val("0");
-							$("#from").val("");
-							$("#to").val("");
-							$("#from").prop("disabled", true);
-							$("#to").prop("disabled", true);
-						}
-					}
-					if (duration=="4"){
-						/*if(json['ALbalance']<=0){
+				var json = get_leave_balance(duration);
+				var leave_balance = 1;
+				var leave_type = 0;
+				if ( duration != '4' && duration!='5' ){
+					if( json[leave_balance]>0 ){
 						$("#message_sp").removeClass();
 						$("#message_sp").addClass("success_message");
-						$("#message_sp").text("You have "+json['ELbalance']+" Emergency Leave(s) remaining.");
+						if(duration=="6"){
+							$("#message_sp").html("You have "+json[leave_balance]+" Compassionate Leave(s) remaining. <br> Limit per application is 2 days for each disaster or event, the rest will be deducted from Annual Leave or Unpaid Leave.");
+						}else if( duration=="12" ){
+							$("#message_sp").text("By event, as approved by the Company.");
+						}else{
+							$("#message_sp").text("You have "+json[leave_balance]+" "+json[leave_type]+" Leave(s) remaining.");
+						}
 						$("#message_sp").slideDown("slow");
 
 						// $("#from").prop("disabled", false);
-						}*/
-						// alert(json['ALbalance']);
-						if(json['ALbalance']>0){
+					}else if(json[leave_balance]<=0){
+						$("#message_sp").removeClass();
+						$("#message_sp").addClass("error_message");
+						if( duration=="13" ){
+							$("#message_sp").text("You can only apply once during the service.");
+						}else{
+							$("#message_sp").text("You have no "+json[leave_type]+" Leave(s) remaining. You have to apply Unpaid Leave.");
+						}
+						$("#message_sp").slideDown("slow");
+
+
+						if(duration=="7"){
+							$("#leave_type").val("4");
+						}else if( duration.includes(["8","9","10","11","12","13"]) ){
+							$("#leave_type").val("0");
+						}else{
+							$("#leave_type").val(duration);
+						}
+						$("#from").val("");
+						$("#to").val("");
+						$("#from").prop("disabled", true);
+						$("#to").prop("disabled", true);
+					}
+				}else if (duration=="1") {
+					if (json['probation'] <= 0){
+						if(json[leave_balance]>0){
+							$("#message_sp").removeClass();
+							$("#message_sp").addClass("success_message");
+							// $("#message_sp").text("You have "+json['ALbalance']+" Annual Leave(s) remaining.");
+							$("#message_sp").text("You have "+json[leave_balance]+" Annual Leave(s) remaining.");
+							$("#message_sp").slideDown("slow");
+
+							// $("#from").prop("disabled", false);
+						}else if(json[leave_balance]<=0){
 							$("#message_sp").removeClass();
 							$("#message_sp").addClass("error_message");
-							$("#message_sp").text("Please inform your superior & get approval before you apply unpaid leave");
+							$("#message_sp").text("You have no "+json[leave_type]+" Leave(s) remaining. You have to apply Unpaid Leave.");
 							$("#message_sp").slideDown("slow");
 
 
-							$("#leave_type").val("1");
+							$("#leave_type").val("0");
 							$("#from").val("");
 							$("#to").val("");
 							$("#from").prop("disabled", true);
 							$("#to").prop("disabled", true);
 						}
-					}
-					if (duration=="5") {
+					}else{
 						$("#message_sp").removeClass();
 						$("#message_sp").addClass("info_message");
-						$("#message_sp").html("90 consecutive days will be paid a full salary. <br> Next 180 consecutive days will be paid half salary. <br> Next 180 consecutive days without pay.");
+						$("#message_sp").html("Annual Leave is not eligible for probational staff.");
 						$("#message_sp").slideDown("slow");
+
+						$("#leave_type").val("4");
+						$("#from").val("");
+						$("#to").val("");
 					}
+				}else if (duration=="4"){
+					/*if(json['ALbalance']<=0){
+					$("#message_sp").removeClass();
+					$("#message_sp").addClass("success_message");
+					$("#message_sp").text("You have "+json['ELbalance']+" Emergency Leave(s) remaining.");
+					$("#message_sp").slideDown("slow");
 
-					if (duration=="6"){
-						if(json['FSbalance']>0){
-							$("#message_sp").removeClass();
-							$("#message_sp").addClass("success_message");
-							$("#message_sp").html("You have "+json['FSbalance']+" Compassionate Leave(s) remaining. <br> Limit per application is 2 days for each disaster or event, the rest will be deducted from Annual Leave or Unpaid Leave.");
-							$("#message_sp").slideDown("slow");
-
-							// $("#from").prop("disabled", false);
-						}else if(json['FSbalance']<=0){
-							$("#message_sp").removeClass();
-							$("#message_sp").addClass("error_message");
-							$("#message_sp").text("You have no Compassionate Leave(s) remaining.");
-							$("#message_sp").slideDown("slow");
+					// $("#from").prop("disabled", false);
+					}*/
+					// alert(json['ALbalance']);
+					if(json[leave_balance]>0){
+						$("#message_sp").removeClass();
+						$("#message_sp").addClass("error_message");
+						$("#message_sp").text("Please inform your superior & get approval before you apply unpaid leave");
+						$("#message_sp").slideDown("slow");
 
 
-							$("#leave_type").val("0");
-							$("#from").val("");
-							$("#to").val("");
-							$("#from").prop("disabled", true);
-							$("#to").prop("disabled", true);
-						}
+						$("#leave_type").val("1");
+						$("#from").val("");
+						$("#to").val("");
+						$("#from").prop("disabled", true);
+						$("#to").prop("disabled", true);
 					}
-					if (duration=="7"){
-						if(json['MLbalance']>0){
-							$("#message_sp").removeClass();
-							$("#message_sp").addClass("success_message");
-							$("#message_sp").text("You have "+json['MLbalance']+" Maternity Leave(s) remaining.");
-							$("#message_sp").slideDown("slow");
-
-							// $("#from").prop("disabled", false);
-						}else if(json['MLbalance']<=0){
-							$("#message_sp").removeClass();
-							$("#message_sp").addClass("error_message");
-							$("#message_sp").html("You have no Maternity Leave(s) remaining.");
-							$("#message_sp").slideDown("slow");
-
-
-							$("#leave_type").val("4");
-							$("#from").val("");
-							$("#to").val("");
-							$("#from").prop("disabled", true);
-							$("#to").prop("disabled", true);
-						}
-					}
-					if (duration=="8"){
-						if(json['PLbalance']>0){
-							$("#message_sp").removeClass();
-							$("#message_sp").addClass("success_message");
-							$("#message_sp").text("You have "+json['PLbalance']+" Paternity Leave(s) remaining.");
-							$("#message_sp").slideDown("slow");
-
-							// $("#from").prop("disabled", false);
-						}else if(json['PLbalance']<=0){
-							$("#message_sp").removeClass();
-							$("#message_sp").addClass("error_message");
-							$("#message_sp").text("You have no Paternity Leave(s) remaining.");
-							$("#message_sp").slideDown("slow");
-
-
-							$("#leave_type").val("0");
-							$("#from").val("");
-							$("#to").val("");
-							$("#from").prop("disabled", true);
-							$("#to").prop("disabled", true);
-						}
-					}
-					if (duration=="9"){
-						if(json['MRLbalance']>0){
-							$("#message_sp").removeClass();
-							$("#message_sp").addClass("success_message");
-							$("#message_sp").text("You have "+json['MRLbalance']+" Marriage Leave(s) remaining.");
-							$("#message_sp").slideDown("slow");
-
-							// $("#from").prop("disabled", false);
-						}else if(json['MRLbalance']<=0){
-							$("#message_sp").removeClass();
-							$("#message_sp").addClass("error_message");
-							$("#message_sp").text("You have no Marriage Leave(s) remaining.");
-							$("#message_sp").slideDown("slow");
-
-
-							$("#leave_type").val("0");
-							$("#from").val("");
-							$("#to").val("");
-							$("#from").prop("disabled", true);
-							$("#to").prop("disabled", true);
-						}
-					}
-					if (duration=="10"){
-						if(json['ULbalance']>0){
-							$("#message_sp").removeClass();
-							$("#message_sp").addClass("success_message");
-							$("#message_sp").text("You have "+json['ULbalance']+" Unrecorded Leave(s) remaining.");
-							$("#message_sp").slideDown("slow");
-
-							// $("#from").prop("disabled", false);
-						}
-						else if(json['ULbalance']<=0){
-							$("#message_sp").removeClass();
-							$("#message_sp").addClass("error_message");
-							$("#message_sp").text("You have no Unrecorded Leave(s) remaining.");
-							$("#message_sp").slideDown("slow");
-
-
-							$("#leave_type").val("0");
-							$("#from").val("");
-							$("#to").val("");
-							$("#from").prop("disabled", true);
-							$("#to").prop("disabled", true);
-						}
-					}
-					if (duration=="11"){
-						if(json['STLbalance']>0){
-							$("#message_sp").removeClass();
-							$("#message_sp").addClass("success_message");
-							$("#message_sp").text("You have "+json['STLbalance']+" Study Leave(s) remaining.");
-							$("#message_sp").slideDown("slow");
-
-							// $("#from").prop("disabled", false);
-						}
-						else if(json['STLbalance']<=0){
-							$("#message_sp").removeClass();
-							$("#message_sp").addClass("error_message");
-							$("#message_sp").text("You have no Study Leave(s) remaining.");
-							$("#message_sp").slideDown("slow");
-
-
-							$("#leave_type").val("0");
-							$("#from").val("");
-							$("#to").val("");
-							$("#from").prop("disabled", true);
-							$("#to").prop("disabled", true);
-						}
-					}
-					if (duration=="12"){
-						if(json['TLbalance']>0){
-							$("#message_sp").removeClass();
-							$("#message_sp").addClass("success_message");
-							$("#message_sp").text("By event, as approved by the Company.");
-							$("#message_sp").slideDown("slow");
-
-							// $("#from").prop("disabled", false);
-						}
-						else if(json['TLbalance']<=0){
-							$("#message_sp").removeClass();
-							$("#message_sp").addClass("error_message");
-							$("#message_sp").text("You have no Transfer Leave(s) remaining.");
-							$("#message_sp").slideDown("slow");
-
-
-							$("#leave_type").val("0");
-							$("#from").val("");
-							$("#to").val("");
-							$("#from").prop("disabled", true);
-							$("#to").prop("disabled", true);
-						}
-					}
-					if (duration=="13"){
-						if(json['hajjdata']<=0){
-							$("#message_sp").removeClass();
-							$("#message_sp").addClass("success_message");
-							$("#message_sp").text("You have "+json['HLbalance']+" Hajj Leave(s) remaining.");
-							$("#message_sp").slideDown("slow");
-
-							// $("#from").prop("disabled", false);
-						}
-						else if(json['hajjdata']>0){
-							$("#message_sp").removeClass();
-							$("#message_sp").addClass("error_message");
-							$("#message_sp").text("You can only apply once during the service.");
-							$("#message_sp").slideDown("slow");
-
-
-							$("#leave_type").val("0");
-							$("#from").val("");
-							$("#to").val("");
-							$("#from").prop("disabled", true);
-							$("#to").prop("disabled", true);
-						}
-					}
-				});
+				}else if (duration=="5") {
+					$("#message_sp").removeClass();
+					$("#message_sp").addClass("info_message");
+					$("#message_sp").html("90 consecutive days will be paid a full salary. <br> Next 180 consecutive days will be paid half salary. <br> Next 180 consecutive days without pay.");
+					$("#message_sp").slideDown("slow");
+				}
 			}
 		}
 
 
 		function check_days_available(){
-			$.ajax({
-				type: "POST",
-				url: "http://serverfordemo.com/green_leave/ajax.php",
-				data: "action=checkLeaveAvailability&lv_type="+$("#leave_type").val(),
-				dataType: "json",
-				success: function(result){
-					var no_days=no_of_days();
-					no_days++;
-					var avail=result['remaining']-no_days;
-					if(avail<0){
-						$("#message_sp").removeClass();
-						$("#message_sp").addClass("error_message");
-						$("#message_sp").text(no_days+ " days is not available");
-						$("#message_sp").slideDown("slow");
 
-						$("#to").val("");
+			var duration = $("#leave_type").val();
+			var json = get_leave_balance(duration);console.log(json);
+			var leave_balance = 1;
+			var leave_type = 0;
+			var s = "";
+			if( no_of_days() > 2 ){
+				s = "s";
+			}
+			var excludeLeave = ['4','5'];
+			if( json!=undefined || !excludeLeave.includes(duration) ){
+				if( json[leave_balance] > 0 ){
+					if( duration!=6 ){
+						if( no_of_days() > json[leave_balance] ){
+							$("#message_sp").removeClass();
+							$("#message_sp").addClass("error_message");
+							// $("#message_sp").text("You have "+json['ALbalance']+" Annual Leave(s) remaining.");
+							if( duration!=12 ){
+								$("#message_sp").text("You apply "+no_of_days()+" day"+s+", but you have "+json[leave_balance]+" "+json[leave_type]+" Leave(s) remaining.");
+							}else{
+								//transfer leave
+								$("#message_sp").text("By event, as approved by the Company, you have "+json[leave_balance]+" "+json[leave_type]+" Leave(s) remaining, but you apply "+no_of_days()+" day"+s);
+							}
+							$("#message_sp").slideDown("slow");
+							if( $("#message_sp").attr("is_more")!=undefined ){
+								$("#message_sp").attr("is_more","1");
+							}
+							$("#to").val("");
+						}else{
+							if( $("#message_sp").attr("is_more")!=undefined ){
+								$("#message_sp").removeAttr("is_more");
+							}
+							$("#message_sp").slideUp("slow");
+						}
+					}else{
+						//Compassionate leave
+						if( no_of_days() <= 2 ){
+							if( no_of_days() > json[leave_balance] ){
+								$("#message_sp").removeClass();
+								$("#message_sp").addClass("error_message");
+								$("#message_sp").html("You Apply "+no_of_days()+" day"+s+", but you have "+json[leave_balance]+" "+json[leave_type]+" Leave(s) remaining. <br> Limit per application is 2 days for each disaster or event, the rest will be deducted from Annual Leave or Unpaid Leave.");
+								$("#message_sp").slideDown("slow");
+								if( $("#message_sp").attr("is_more")!=undefined ){
+									$("#message_sp").attr("is_more","1");
+								}
+								$("#to").val("");
+							}else{
+								if( $("#message_sp").attr("is_more")!=undefined ){
+									$("#message_sp").removeAttr("is_more");
+								}
+								$("#message_sp").slideUp("slow");
+							}
+						}else{
+							$("#message_sp").removeClass();
+							$("#message_sp").addClass("error_message");
+							$("#message_sp").html("You Apply "+no_of_days()+" day"+s+", but limit per application is 2 days for each disaster or event, the rest will be deducted from Annual Leave or Unpaid Leave.");
+							$("#message_sp").slideDown("slow");
+							if( $("#message_sp").attr("is_more")!=undefined ){
+								$("#message_sp").attr("is_more","1");
+							}
+							$("#to").val("");
+						}
 					}
 				}
-			});
+			}
 
 			check_dateAvailabality();
 		}
 
-		function no_of_days() {
-			var a = $("#from").datepicker('getDate').getTime(),
-			b = $("#to").datepicker('getDate').getTime(),
-			c = 24*60*60*1000,
-			diffDays = Math.round(Math.abs((b - a)/(c)));
 
-			console.log(diffDays); //show difference
-			return diffDays;
+
+		function no_of_days() {
+			var weekend_count = ['4','5','7','13','14'];//leave need calculate weekend and ph
+
+			if( weekend_count.includes($("#leave_type").val()) ){
+				var a = $("#from").datepicker('getDate').getTime(),
+				b 	= $("#to").datepicker('getDate').getTime(),
+				c = 24*60*60*1000,
+				diffDays = Math.round(Math.abs((b - a)/(c))) + 1;
+
+				// console.log(diffDays); //show difference
+				// alert('kire weekend sekali ade '+diffDays+'hari');
+				return diffDays;
+			}else{
+				var hosp_code = "<?=$this->session->userdata('hosp_code')?>";
+				// tolak weekend sekali -by buzz
+				if( hosp_code=='JB' ){
+					for(var c=0,e=0,d=new Date($("#from").datepicker('getDate')),a=(new Date($("#to").datepicker('getDate'))-d)/864E5;0<=a;a--)	{
+						var b=new Date(d);
+						b.setDate(b.getDate()+a);
+						if( ![5,6].includes(Math.ceil(b.getDay())) ){
+							c++;
+						}
+					}
+				}else{
+					for(var c=0,e=0,d=new Date($("#from").datepicker('getDate')),a=(new Date($("#to").datepicker('getDate'))-d)/864E5;0<=a;a--)	{
+						var b=new Date(d);
+						b.setDate(b.getDate()+a);
+						1==Math.ceil(b.getDay()%6/6)?c++:e++
+					}
+				}
+				// alert('xkire weekend skali ade '+c+'hari');
+				return c;
+				// ./tolak weekend sekali -by buzz
+			}
 		}
 
 		function fromChange(from){
@@ -650,6 +522,35 @@
 
 			check_dateAvailabality();
 		}
+
+
+		function tryler()
+		{
+			//alert("masuk");
+			var annualB;
+
+			$.ajax({
+     async: false,
+     type: 'GET',
+     url: "<?php echo base_url ('index.php/check_availability') ?>?year=2018&type=1",
+     success: function(data) {
+			 var json = JSON.parse(data);
+			 // console.log(json);
+			 //var annualB = (json['entitled']!=undefined ? Number(json['entitled']) : 0) + (json['carry_fwd_leave']!=undefined ? Number(json['carry_fwd_leave']) : 0) - json['ALtaken'] - json['ELtaken'] - json['FSEtaken'] - json['MLEtaken'] - json['PLEtaken'] - json['MRLEtaken'] - json['ULEtaken'] - json['STLEtaken'] - json['TLEtaken'] - json['HLEtaken'] - (json['SLEtaken']!=undefined ? json['SLEtaken'] : 0);
+			 annualB = (json['entitled']!=undefined ? Number(json['entitled']) : 0) + (json['carry_fwd_leave']!=undefined ? Number(json['carry_fwd_leave']) : 0) - json['ALtaken'];
+//alert("x bape kuar : "+annualB);
+			 // alert("("+json['entitled']+"!=undefined ? "+json['entitled']+" : 0) + ("+json['carry_fwd_leave']+"!=undefined ? "+json['carry_fwd_leave']+" : 0) - "+json['ALtaken']+" - "+json['ELtaken']+" - "+json['FSEtaken']+" - "+json['MLEtaken']+" - "+json['PLEtaken']+" - "+json['MRLEtaken']+" - "+json['ULEtaken']+" - "+json['STLEtaken']+" - "+json['TLEtaken']+" - "+json['HLEtaken']+" - ("+json['SLEtaken']+"!=undefined ? "+json['SLEtaken']+" : 0)");
+
+			 if (annualB < 0){
+				 var ALbalance = 0;
+			 }
+			 else{
+				 var ALbalance = annualB;
+			 }
+     }
+	 		});
+			return annualB;
+			}
 
 		function check_dateAvailabality(){
 			var from  = $("#from").val();
@@ -676,6 +577,7 @@
 			}*/
 			$.post("<?php echo site_url();?>/Apply_leave_ctrl/check_dateAvailabality", {appliedFrom:from,appliedTo:to}, function(result){
 				// console.log(result);
+
 				var res = 0;
 				if( result>0 ){
 					res = 0;
@@ -691,6 +593,7 @@
 					$("#message_sp").slideUp("slow");
 				}
 			});
+
 		}
 
 		/*function check_duration(duration){
@@ -729,6 +632,54 @@
 				}
 			}
 		}
+
+				function get_leave_balance(leave_type=''){
+					var url = "<?php echo base_url ('index.php/check_availability') ?>?year=<?=isset($year) ? $year : '';?>&type=<?=isset($probationchk) ? count($probationchk) : '';?>";
+					// var duration = $("#leave_type").val();
+					var res = $.ajax({
+						async: false,
+						url: '<?php echo base_url ('index.php/check_availability') ?>',
+						type: 'GET',
+						data: { year: "<?=isset($year) ? $year : '';?>", type : "<?=isset($probationchk) ? count($probationchk) : '';?>"} ,
+						dataType: 'json',
+						success : function (json){}
+					});
+					var json = res.responseText;
+					json = JSON.parse(json);
+					var leave_balance = [];
+					var annualB = (json['entitled']!=undefined ? Number(json['entitled']) : 0) + (json['carry_fwd_leave']!=undefined ? Number(json['carry_fwd_leave']) : 0) - json['ALtaken'];
+					if (annualB < 0){
+						var ALbalance = 0;
+					}
+					else{
+						var ALbalance = annualB;
+					}
+					json[1]	= ['Annual',ALbalance];
+					json[2]	= ['Sick',json['SLbalance']];
+					json[3]	= ['Emergency',json['ELbalance']];
+					if(leave_type==4){
+						json[4] = ['Annual', ALbalance];
+					}
+					if(leave_type==5){
+						json[5] = [];
+					}
+					json[6]	= ['Compassionate',(json['FSbalance']) ? json['FSbalance'] : 0];
+					json[7]	= ['Maternity',(json['MLbalance']) ? json['MLbalance'] : 0];
+					json[8]	= ['Paternity',(json['PLbalance']) ? json['PLbalance'] :0];
+					json[9]	= ['Marriage',(json['MRLbalance']) ? json['MRLbalance'] : 0];
+					json[10]= ['Unrecorded',(json['ULbalance']) ? json['ULbalance'] : 0];
+					json[11]= ['Study',(json['STLbalance']) ? json['STLbalance'] : 0];
+					json[12]= ['Transfer',(json['TLbalance']) ? json['TLbalance'] : 0];
+					json[13]= ['Hajj',(json['HLbalance']) ? json['HLbalance'] : 0];
+
+					if(leave_type){
+						if(json['probation']!=undefined){
+							json[leave_type]['probation']=json['probation'];
+						}
+						json = json[leave_type];
+					}
+					return json;
+				}
 	</script>
 	<style>
 		div.ui-datepicker {
@@ -1477,6 +1428,8 @@
 			}
 			return false;
 		}
+		}
+
 	</script>
 	<style>
 		.search_div {
