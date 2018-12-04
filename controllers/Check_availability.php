@@ -20,10 +20,13 @@ class check_availability extends CI_Controller {
 
 	public function index(){
 		//$data['test'] = $this->input->get('type');
+		$this->load->library("ap_leave");
 		$this->load->model('display_model');
 		$data['probation'] = $this->display_model->probation($this->session->userdata('v_UserName'));
-		$data['leaveacc'] = $this->display_model->leaveacc($this->session->userdata('v_UserName'),$this->input->get('year'));
-		$data['tleavetaken'] = $this->display_model->tleavetaken($this->session->userdata('v_UserName'),$this->input->get('year'));
+		// $data['leaveacc'] = $this->display_model->leaveacc($this->session->userdata('v_UserName'),$this->input->get('year'));
+		// $data['tleavetaken'] = $this->display_model->tleavetaken($this->session->userdata('v_UserName'),$this->input->get('year'));
+		$data['leaveacc'] = $this->display_model->leaveacc($dept='',$this->session->userdata('v_UserName'),$staffname='',$apsbno='',$this->input->get('year'),$start='',$limit='');
+		$data['tleavetaken'] = $this->display_model->tleavetaken($dept='',$this->session->userdata('v_UserName'),$staffname='',$apsbno='',$this->input->get('year'));
 
 		//$data['userleave'] = $this->display_model->userleave($data['leavedet'][0]->leave_type);
 		$data['leave_type'] = $this->display_model->leave_type();
@@ -39,6 +42,8 @@ class check_availability extends CI_Controller {
 		else{
 			$data['holidayarray'][] = NULL;
 		}
+        $data[] = $this->ap_leave->get_leave_detail($data['leaveacc'], $data['tleavetaken'], $hajj='', date("Y"), $data['leave_type']);
+	/*
 		$data['entitled'] = (!empty($data['leaveacc']) ? $data['leaveacc'][0]->entitled : 0);
 		$data['ALtaken'] = 0;
 		$data['SLtaken'] = 0;
@@ -216,7 +221,7 @@ class check_availability extends CI_Controller {
 		$data['STLbalance'] = (isset($data['leave_type'][10]->entitle_days) ? $data['leave_type'][10]->entitle_days : 0) - $data['STLtaken'];
 		$data['TLbalance'] = (isset($data['leave_type'][11]->entitle_days) ? $data['leave_type'][11]->entitle_days : 0) - $data['TLtaken'];
 		$data['HLbalance'] = (isset($data['leave_type'][12]->entitle_days) ? $data['leave_type'][12]->entitle_days : 0) - $data['HLtaken'];
-
+	*/
 
 
 		/*$data['SLbalance'] = (isset($data['leaveacc'][0]->sick_leave) ? $data['leaveacc'][0]->sick_leave : 0) - $data['SLtaken'];
@@ -268,7 +273,7 @@ class check_availability extends CI_Controller {
 			$data['balanceleave'] = (isset($data['leave_type'][12]->entitle_days) ? $data['leave_type'][12]->entitle_days : 0) - $data['HLtaken'];
 		}*/
 
-		echo json_encode($data);
+		echo json_encode($data['leaveacc'][0]);
 		//exit();
 	}
 }

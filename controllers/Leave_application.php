@@ -19,6 +19,103 @@ class leave_application extends CI_Controller{
 	}
 
 	function index(){
+		$this->load->library('ap_leave');
+
+		$data['userid'] = $this->input->get('name');
+		$data['regid'] = $this->input->get('id');
+
+		$this->load->model('display_model');
+		$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
+		$data['hrrow'] = $this->display_model->gethrrow($this->session->userdata('v_UserName'));
+
+		$data['leavedet'] = $this->display_model->leavedet($data['userid'],$data['regid']);
+// echo "<pre>";var_export($data['leavedet']);die;
+		$data['holiday_list'] = $this->display_model->holiday_list($data['userid'],date('Y',strtotime($data['leavedet'][0]->leave_from)));
+		if ($data['holiday_list']){
+			foreach ($data['holiday_list'] as $key => $value) {
+				$data['holidayarray'][] = strtotime(date($value->date_holiday));
+			}
+		}else{
+			$data['holidayarray'][] = NULL;
+		}
+
+		// echo "<pre>";var_export($data['leavedet']);die;
+
+		$data['state_list'] = $this->display_model->statelist();
+		foreach($data['state_list'] as $key => $row){
+			$statel = 'holiday'.$row->state_code;
+			$state2 = $row->state_code.'_hol';
+
+			$data[$statel] = $this->display_model->stateH(date('Y',strtotime($data['leavedet'][0]->leave_from)),$row->state_code);
+			if($data[$statel]){
+				foreach ($data[$statel] as $key => $value) {
+					 $data[$state2][] = date('Y-m-d',strtotime(date($value->date_holiday)));
+				}
+			}else {
+				$data[$state2][] = NULL;
+			}
+		}
+
+		$data['userleave'] = $this->display_model->userleave($data['leavedet'][0]->leave_type);
+		$data['leave_type'] = $this->display_model->leave_type();
+
+		$data['fromdate'] = $data['leavedet'][0]->leave_from;
+		$data['todate'] = ($data['leavedet'][0]->leave_to) ? $data['leavedet'][0]->leave_to : $data['leavedet'][0]->leave_from;
+
+		//leavebalance
+		$begin = strtotime($data['fromdate']);
+	    $end   = strtotime($data['todate']);
+
+		//same date
+		$data['limit'] = 2;
+		isset($_GET['p']) ? $data['page'] = $_GET['p'] : $data['page'] = 1;
+		$data['start'] = ($data['page'] * $data['limit']) - $data['limit'];
+		//echo "lalalalallala : ".$data['fromdate'];
+		$begin2	= date("Y-m-d",strtotime($data['fromdate']));
+		$end2	= date("Y-m-d",strtotime($data['todate']));
+		//$data['rec'] = $this->display_model->samedateleave_c($data['fromdate'],$data['userid']);
+		$data['rec'] = $this->display_model->samedateleave_c($begin,$end,$data['userid']);
+		// echo "<pre>";var_export($data['rec']);die;
+		if($data['rec'][0]->jumlah > ($data['page'] * $data['limit']) ){
+			$data['next'] = ++$data['page'];
+		}
+
+		//leavebalance
+		$list_leave_type = $this->display_model->leave_type();
+		foreach ($list_leave_type as $col) {
+			if($col->id==$data['leavedet'][0]->leave_type){
+				$leave_type[] = $col;
+			}
+		}
+
+		$data['getgroupdet'] = $this->display_model->getgroupdet($this->session->userdata('v_UserName'));
+		$data['samedateleave'] = $this->display_model->samedateleave($begin2,$end2,$data['userid'],$data['limit'],$data['start'], $data['getgroupdet'][0]->v_GroupID);
+		//same date
+
+		$yearapplied = date('Y',strtotime($data['fromdate']));
+		// $data['leaveacc'] = $this->display_model->leaveacc($data['userid'],$yearapplied);
+		// $data['tleavetaken'] = $this->display_model->tleavetaken($data['userid'],$yearapplied);
+		$data['leaveacc'] = $this->display_model->leaveacc($dept='',$data['userid'],$staffname='',$apsbno='',$yearapplied,$start='',$limit='');
+		$data['tleavetaken'] = $this->display_model->tleavetaken($dept='',$data['userid'],$staffname,$apsbno='',$yearapplied);
+		// echo "<pre>";var_export($data['tleavetaken']);die;
+		$leavedata = $this->ap_leave->get_leave_detail($data['leaveacc'], $data['tleavetaken'], $hajj='', $yearapplied, $leave_type);
+        // echo "<pre>";var_export($leavedata);die;
+        $data = array_merge($data, $leavedata);
+        $data['balanceleave'] = $data[0]->balanceleave;
+
+        // echo "<pre>";var_export($data['leavedet']);die;
+        $data['noleave']		= $noleave = $this->ap_leave->get_no_ofday($data['leavedet'][0]->leave_from, $data['leavedet'][0]->leave_to, $data['leavedet'][0]->leave_type, $data['leavedet'][0]->leave_duration, $data['leavedet'][0]->v_hospitalcode, $yearapplied);
+        // echo "<pre>";var_export($data);die;
+
+		$this->load->view('Head');
+		$this->load->view('top');
+		$this->load->view('left',$data);
+		$this->load->view('Main_leave_application',$data);
+		$this->load->view('footer');
+	}
+
+
+	/*function index(){
 		$data['userid'] = $this->input->get('name');
 		$data['regid'] = $this->input->get('id');
 
@@ -126,7 +223,7 @@ class leave_application extends CI_Controller{
 		$data['limit'] = 2;
 		isset($_GET['p']) ? $data['page'] = $_GET['p'] : $data['page'] = 1;
 		$data['start'] = ($data['page'] * $data['limit']) - $data['limit'];
-//echo "lalalalallala : ".$data['fromdate'];
+		//echo "lalalalallala : ".$data['fromdate'];
 		$begin2 = date("Y-m-d",strtotime($data['fromdate']));
 		$end2 = date("Y-m-d",strtotime($data['todate']));
 		//$data['rec'] = $this->display_model->samedateleave_c($data['fromdate'],$data['userid']);
@@ -336,13 +433,13 @@ class leave_application extends CI_Controller{
 		}
 		//leavebalance
 
-//print_r($data);
+		//print_r($data);
 
 		$this->load->view('Head');
 		$this->load->view('top');
 		$this->load->view('left',$data);
 		$this->load->view('Main_leave_application',$data);
 		$this->load->view('footer');
-	}
+	}*/
 }
 ?>

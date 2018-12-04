@@ -39,75 +39,13 @@
 								</tr>
 							</thead>
 							<?php foreach ($datecalendar as $row): ?>
-							<?php
-
-								$fromdate = $row->leave_from;
-								$todate = ($row->leave_to) ? $row->leave_to : $row->leave_from;
-
-								$begin = strtotime($fromdate);
-								$end   = strtotime($todate);
-
-								if ($row->v_hospitalcode == 'JB'){
-									$holiday_array = $JB_hol;
-								}
-								elseif($row->v_hospitalcode == 'MKA'){
-									$holiday_array = $MKA_hol;
-								}
-								elseif($row->v_hospitalcode == 'NS'){
-									$holiday_array = $NS_hol;
-								}
-								elseif($row->v_hospitalcode == 'SEL'){
-									$holiday_array = $SEL_hol;
-								}
-								elseif($row->v_hospitalcode == 'PHG'){
-									$holiday_array = $PHG_hol;
-								}
-								elseif($row->v_hospitalcode == 'KL'){
-									$holiday_array = $KL_hol;
-								}
-
-
-								$no_days  = 0;
-								$weekends = 0;
-								while ($begin <= $end) {
-									// no of days in the given interval
-									if( $row->leave_duration=="Full Day" ){
-										$no_days++;
-									}elseif( $row->leave_duration=="Half Day" ){
-										$no_days = $no_days + 0.5;
-									}
-									$what_day = date("N", $begin);
-									//echo "$what_day".$what_day;
-									$weekend_count = array(5,7,13,14);//leave need calculate weekend
-									if( !in_array($row->leave_type, $weekend_count) ){
-										if($row->v_hospitalcode == 'JB'){
-											if (($what_day == 5) || ($what_day == 6) || (in_array($begin, $holiday_array))) { // 5 and 6 are weekend days
-												$weekends++;
-											}
-										}
-										elseif($row->v_hospitalcode == NULL ){
-											if ($what_day > 5 ) { // 6 and 7 are weekend days
-												$weekends++;
-											}
-										}
-										else{
-											if ($what_day > 5 || (in_array($begin, $holiday_array))) { // 6 and 7 are weekend days
-												$weekends++;
-											}
-										}
-									}
-									$begin += 86400; // +1 day
-								};
-								$noleave = $no_days - $weekends;
-
-							?>
 							<tbody>
 								<tr>
 									<td data-title="Applicant Name:"><?=isset($row->v_UserName) ? $row->v_UserName : ''?></td>
 									<td data-title="Leave Type:"><?=isset($row->leave_name) ? $row->leave_name : ''?></td>
 									<td data-title="From:"><?=isset($row->leave_from) ? date("d-m-Y", strtotime($row->leave_from)) : ''?></td>
 									<td data-title="To:"><?=isset($row->leave_to) ? date("d-m-Y", strtotime($row->leave_to)) : ''?></td>
-									<td data-title="No of days:"><?=isset($noleave) ? $noleave : '' ?></td>
+									<td data-title="No of days:"><?=isset($row->noleave) ? $row->noleave : '' ?></td>
 									<td data-title="Reason:"><?=isset($row->leave_remarks) ? $row->leave_remarks : ''?></td>
 									<td><?= !(isset($row->leave_status)) ||  $row->leave_status == '' ? '<a href="'.base_url().'index.php/Controllers/print_out?id='.$row->id.'&userid='.$row->user_id.'&tab='.$this->input->get('tab').'" >Print</a>' : '' ?></td>
 								</tr>

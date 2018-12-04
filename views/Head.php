@@ -375,6 +375,7 @@
 					// $("#from").prop("disabled", false);
 					}*/
 					// alert(json['ALbalance']);
+					/*
 					if(json[leave_balance]>0){
 						$("#message_sp").removeClass();
 						$("#message_sp").addClass("error_message");
@@ -388,6 +389,7 @@
 						$("#from").prop("disabled", true);
 						$("#to").prop("disabled", true);
 					}
+					*/
 				}else if (duration=="5") {
 					$("#message_sp").removeClass();
 					$("#message_sp").addClass("info_message");

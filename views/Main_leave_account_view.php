@@ -61,16 +61,6 @@
 					</div>
 					<?php } ?>
 					<label>Select Extra Columns</label>
-					<!--|| in_array('Unpaid',$excolt)
-					|| in_array('Extended_Sick',$excolt)
-					|| in_array('Family_Sick',$excolt)
-					|| in_array('Maternity',$excolt)
-					|| in_array('Paternity',$excolt)
-					|| in_array('Marriage',$excolt)
-					|| in_array('Unrecorded',$excolt)
-					|| in_array('Study',$excolt)
-					|| in_array('Transfer',$excolt)
-					|| in_array('Hajj',$excolt) -->
 					<div class="form-group">
 						<span style="display:inline-block; width:120px;"><input type="checkbox" name="excol_chk[]" id='ch1' value="Unpaid"<?php echo set_checkbox('excol_chk[]', 'Unpaid'); ?><?= in_array('Unpaid',$excol) ? 'checked' : '' ?> onchange="return testchk(this.id)"> Unpaid </span>
 						<span style="display:inline-block; width:120px;"><input type="checkbox" name="excol_chk[]" id='ch2' value="Extended_Sick"<?php echo set_checkbox('excol_chk[]', 'Extended_Sick'); ?><?= in_array('Extended_Sick',$excol) ? 'checked' : '' ?> onchange="return testchk(this.id)"> Extended Sick </span>
@@ -134,282 +124,44 @@
 								</thead>
 								<?php $num=1;foreach($leaveacc as $row): ?>
 								<?php
-									$ALtaken = 0;
-									$SLtaken = 0;
-									$ELtaken = 0;
-									$UPLtaken = 0;
-									$EXLtaken = 0;
-									$FStaken = 0;
-									$FSEtaken = 0;
-									$MLtaken = 0;
-									$MLEtaken = 0;
-									$PLtaken = 0;
-									$PLEtaken = 0;
-									$MRLtaken = 0;
-									$MRLEtaken = 0;
-									$ULtaken = 0;
-									$ULEtaken = 0;
-									$STLtaken = 0;
-									$STLEtaken = 0;
-									$TLtaken = 0;
-									$TLEtaken = 0;
-									$HLtaken = 0;
-									$HLEtaken = 0;
-									$hajjstat = '';
-									$halfday = 0;
-									foreach ($tleavetaken as $list){
-
-										$fromdate	= $list->leave_from;//($list->leave_from) ? $list->leave_from : $list->leave_to;
-										$todate		= ($list->leave_to) ? $list->leave_to : $list->leave_from;
-
-										$begin = strtotime($fromdate);
-										$end   = strtotime($todate);
-
-										if ($list->v_hospitalcode == 'JB'){
-											$holiday_array = $JB_hol;
-										}
-										elseif($list->v_hospitalcode == 'MKA'){
-											$holiday_array = $MKA_hol;
-										}
-										elseif($list->v_hospitalcode == 'NS'){
-											$holiday_array = $NS_hol;
-										}
-										elseif($list->v_hospitalcode == 'SEL'){
-											$holiday_array = $SEL_hol;
-										}
-		                				elseif($list->v_hospitalcode == 'PHG'){
-											$holiday_array = $PHG_hol;
-										}
-		                				elseif($list->v_hospitalcode == 'KL'){
-											$holiday_array = $KL_hol;
-										}
-
-										$no_days  = 0;
-										$weekends = 0;
-										// $halfday += ($list->leave_duration=='Half Day') ? 0.5 : 0;
-
-										while ($begin <= $end) {
-											// $no_days++; // no of days in the given interval
-											if( $list->leave_duration=="Full Day" ){
-												$no_days++;
-											}elseif( $list->leave_duration=="Half Day" ){
-												$no_days = $no_days + 0.5;
-											}
-											$weekend_count = array(5,7,13,14);//leave need calculate weekend and public holiday
-											if( !in_array($list->leave_type, $weekend_count) ){
-												$what_day = date("N", $begin);
-												//echo "$what_day".$what_day;
-												if($list->v_hospitalcode == 'JB'){
-												//echo "ni jb";
-													if (($what_day == 5) || ($what_day == 6) || (in_array($begin, $holiday_array))) { // 5 and 6 are weekend days
-														$weekends++;
-													}
-												}
-												elseif($list->v_hospitalcode == NULL ){
-												//echo"kosong";
-												    if ($what_day > 5 ) { // 6 and 7 are weekend days
-														$weekends++;
-													}
-												}
-												else{
-												//echo"ayam";
-													if ($what_day > 5 || (in_array($begin, $holiday_array))) { // 6 and 7 are weekend days
-														$weekends++;
-													}
-												}
-											}
-											$begin += 86400; // +1 day
-										};
-
-										$noleave = $no_days - $weekends;
-										// echo $weekends."<br>";
-										if($list->user_id == $row->user_id){
-											if ($list->leave_type == '1'){  //annual leave
-												$ALtaken += $noleave;
-											}
-											elseif($list->leave_type == '2'){  //sick leave
-												$SLtaken += $noleave;
-											}
-											elseif($list->leave_type == '3'){  //emergency leave
-												$ELtaken += $noleave;
-											}
-											elseif($list->leave_type == '4'){  //unpaid leave
-												$UPLtaken += $noleave;
-											}
-											elseif($list->leave_type == '5'){  //unpaid leave
-												$EXLtaken += $noleave;
-											}
-											elseif($list->leave_type == '6'){  //family sick leave
-												if ($noleave <= $leave_type[5]->per_case_basis){
-													$FStaken += $noleave;
-												}
-												else{
-													$FStaken += $leave_type[5]->per_case_basis;
-													$FSEtaken += ($noleave - $leave_type[5]->per_case_basis);
-												}
-											}
-											elseif($list->leave_type == '7'){  //maternity leave
-												if ($noleave <= $leave_type[6]->per_case_basis){
-													$MLtaken += $noleave;
-												}
-												else{
-													$MLtaken += $leave_type[6]->per_case_basis;
-													$MLEtaken += ($noleave - $leave_type[6]->per_case_basis);
-												}
-											}
-											elseif($list->leave_type == '8'){  //paternity leave
-												if ($noleave <= $leave_type[7]->per_case_basis){
-													$PLtaken += $noleave;
-												}
-												else{
-													$PLtaken += $leave_type[7]->per_case_basis;
-													$PLEtaken += ($noleave - $leave_type[7]->per_case_basis);
-												}
-											}
-											elseif($list->leave_type == '9'){  //marriage leave
-												if ($noleave <= $leave_type[8]->per_case_basis){
-													$MRLtaken += $noleave;
-												}
-												else{
-													$MRLtaken += $leave_type[8]->per_case_basis;
-													$MRLEtaken += ($noleave - $leave_type[8]->per_case_basis);
-												}
-											}
-											elseif($list->leave_type == '10'){  //unrecorded leave
-												if ($noleave <= $leave_type[9]->per_case_basis){
-													$ULtaken += $noleave;
-												}
-												else{
-													$ULtaken += $leave_type[9]->per_case_basis;
-													$ULEtaken += ($noleave - $leave_type[9]->per_case_basis);
-												}
-											}
-											elseif($list->leave_type == '11'){  //study leave
-												if ($noleave <= $leave_type[10]->per_case_basis){
-													$STLtaken += $noleave;
-													// if( $list->leave_duration=="Half Day" ){
-													// 	// $STLtaken = $STLtaken;// - 0.5;
-													// 	$halfday = $halfday + 0.5;
-													// }
-												}
-												else{
-													$STLtaken += $leave_type[10]->per_case_basis;
-													$STLEtaken += ($noleave - $leave_type[10]->per_case_basis);
-												}
-											}
-											elseif($list->leave_type == '12'){  //transfer leave
-												if ($noleave <= $leave_type[11]->per_case_basis){
-													$TLtaken += $noleave;
-												}
-												else{
-													$TLtaken += $leave_type[11]->per_case_basis;
-													$TLEtaken += ($noleave - $leave_type[11]->per_case_basis);
-												}
-											}
-											elseif($list->leave_type == '13'){  //hajj leave
-												if ($noleave <= $leave_type[12]->per_case_basis){
-													$HLtaken += $noleave;
-												}
-												else{
-													$HLtaken += $leave_type[12]->per_case_basis;
-													$HLEtaken += ($noleave - $leave_type[12]->per_case_basis);
-												}
-											}
-										} //
-									}
-
-									// $halfday = $halfday / 0.5;
-									// if( $halfday % 2 == 1 ){
-									// 	$STLtaken = $STLtaken - 0.5;
-									// }
-									// echo $STLtaken;
-									// echo "$STLtaken - $halfday";
-									// $STLtaken = $STLtaken - $halfday;
-
-									foreach ($hajj as $hajjlist){
-										if ($row->user_id == $hajjlist['user_id']){
-											if ($hajjlist['hajjdet'] == 1){
-												$hajjstat = 'Taken';
-											}
-										}
-									}
-
-									$sickB = (isset($row->sick_leave) ? $row->sick_leave : 0) - $SLtaken;
-									if ($sickB < 0){
-										$SLEtaken = abs($sickB);
-										$SLbalance = 0;
-									}
-									else{
-										$SLbalance = $sickB;
-									}
-									//$annualB = (isset($row->annual_leave) ? $row->entitled : 0) + (isset($row->carry_fwd_leave) ? $row->carry_fwd_leave : 0) - $ALtaken - $ELtaken - $FSEtaken - $MLEtaken - $PLEtaken - $MRLEtaken - $ULEtaken - $STLEtaken - $TLEtaken - $HLEtaken - (isset($SLEtaken) ? $SLEtaken : 0);
-									$annualB = (isset($row->annual_leave) ? $row->entitled : 0) + (isset($row->carry_fwd_leave) ? $row->carry_fwd_leave : 0) - $ALtaken;
-										if ($annualB < 0){
-											$ALEtaken = abs($annualB);
-											$ALbalance = 0;
-										}
-										else{
-											$ALbalance = $annualB;
-										}
-										$UPLbalance = $UPLtaken + (isset($ALEtaken) ? $ALEtaken : 0);
-										$EXLbalance = $EXLtaken;
-										$ELbalance = (isset($leave_type[2]->limit_days) ? $leave_type[2]->limit_days : 0) - $ELtaken;
-										$FSbalance = (isset($leave_type[5]->entitle_days) ? $leave_type[5]->entitle_days : 0) - $FStaken;
-										$MLbalance = (isset($leave_type[6]->entitle_days) ? $leave_type[6]->entitle_days : 0) - $MLtaken;
-										$PLbalance = (isset($leave_type[7]->entitle_days) ? $leave_type[7]->entitle_days : 0) - $PLtaken;
-										$MRLbalance = (isset($leave_type[8]->entitle_days) ? $leave_type[8]->entitle_days : 0) - $MRLtaken;
-										$ULbalance = (isset($leave_type[9]->entitle_days) ? $leave_type[9]->entitle_days : 0) - $ULtaken;
-										$STLbalance = (isset($leave_type[10]->entitle_days) ? $leave_type[10]->entitle_days : 0) - $STLtaken;
-										$TLbalance = (isset($leave_type[11]->entitle_days) ? $leave_type[11]->entitle_days : 0) - $TLtaken;
-										$HLbalance = ($hajjstat != '' ? $hajjstat : (isset($leave_type[12]->entitle_days) ? $leave_type[12]->entitle_days : 0) - $HLtaken);
-
 										if (isset($excol[0])) {
 											if ($excol[0] == 'Unpaid'){
 												//$eligable1 = 0;
-												$taken1 = $UPLbalance;
+												$taken1 = $row->UPLbalance;
 												//$balance1 = 0;
-											}
-											elseif ($excol[0] == 'Extended_Sick'){
+											}elseif ($excol[0] == 'Extended_Sick'){
 												//$eligable1 = 0;
-												$taken1 = $EXLbalance;
+												$taken1 = $row->EXLbalance;
 												//$balance1 = 0;
-											}
-											elseif ($excol[0] == 'Family_Sick'){
+											}elseif ($excol[0] == 'Family_Sick'){
 												$eligable1 = isset($leave_type[5]->entitle_days) ? $leave_type[5]->entitle_days : 0;
-												$taken1 = $FStaken + $FSEtaken;
-												$balance1 = $FSbalance;
-											}
-											elseif ($excol[0] == 'Maternity'){
+												$taken1 = $row->FStaken + $row->FSEtaken;
+												$balance1 = $row->FSbalance;
+											}elseif ($excol[0] == 'Maternity'){
 												$eligable1 = isset($leave_type[6]->entitle_days) ? $leave_type[6]->entitle_days : 0;
-												$taken1 = $MLtaken + $MLEtaken;
-												$balance1 = $MLbalance;
-											}
-											elseif ($excol[0] == 'Paternity'){
+												$taken1 = $row->MLtaken + $row->MLEtaken;
+												$balance1 = $row->MLbalance;
+											}elseif ($excol[0] == 'Paternity'){
 												$eligable1 = isset($leave_type[7]->entitle_days) ? $leave_type[7]->entitle_days : 0;
-												$taken1 = $PLtaken + $PLEtaken;
-												$balance1 = $PLbalance;
-											}
-											elseif ($excol[0] == 'Marriage'){
+												$taken1 = $row->PLtaken + $row->PLEtaken;
+												$balance1 = $row->PLbalance;
+											}elseif ($excol[0] == 'Marriage'){
 												$eligable1 = isset($leave_type[8]->entitle_days) ? $leave_type[8]->entitle_days : 0;
-												$taken1 = $MRLtaken + $MRLEtaken;
-												$balance1 = $MRLbalance;
-											}
-											elseif ($excol[0] == 'Unrecorded'){
+												$taken1 = $row->MRLtaken + $row->MRLEtaken;
+												$balance1 = $row->MRLbalance;
+											}elseif ($excol[0] == 'Unrecorded'){
 												$eligable1 = isset($leave_type[9]->entitle_days) ? $leave_type[9]->entitle_days : 0;
-												$taken1 = $ULtaken + $ULEtaken;
-												$balance1 = $ULbalance;
-											}
-											elseif ($excol[0] == 'Exam_Leave'){
+												$taken1 = $row->ULtaken + $row->ULEtaken;
+												$balance1 = $row->ULbalance;
+											}elseif ($excol[0] == 'Exam_Leave'){
 												$eligable1 = isset($leave_type[10]->entitle_days) ? $leave_type[10]->entitle_days : 0;
-												$taken1 = $STLtaken + $STLEtaken;
-												$balance1 = $STLbalance;
-											}
-											elseif ($excol[0] == 'Transfer'){
+												$taken1 = $row->STLtaken + $row->STLEtaken;
+												$balance1 = $row->STLbalance;
+											}elseif ($excol[0] == 'Transfer'){
 												$eligable1 = isset($leave_type[11]->entitle_days) ? $leave_type[11]->entitle_days : 0;
-												$taken1 = $TLtaken + $TLEtaken;
-												$balance1 = $TLbalance;
-											}
-											elseif ($excol[0] == 'Hajj'){
+												$taken1 = $row->TLtaken + $row->TLEtaken;
+												$balance1 = $row->TLbalance;
+											}elseif ($excol[0] == 'Hajj'){
 												$eligable1 = isset($leave_type[12]->entitle_days) ? $leave_type[12]->entitle_days : 0;
 												$taken1 = $HLtaken + $HLEtaken;
 												$balance1 = $HLbalance;
@@ -420,54 +172,45 @@
 												//$eligable2 = 0;
 												$taken2 = $UPLbalance;
 												//$balance2 = 0;
-											}
-											elseif ($excol[1] == 'Extended_Sick'){
+											}elseif ($excol[1] == 'Extended_Sick'){
 												//$eligable2 = 0;
-												$taken2 = $EXLbalance;
+												$taken2 = $row->EXLbalance;
 												//$balance2 = 0;
-											}
-											elseif ($excol[1] == 'Family_Sick'){
+											}elseif ($excol[1] == 'Family_Sick'){
 												$eligable2 = isset($leave_type[5]->entitle_days) ? $leave_type[5]->entitle_days : 0;
-												$taken2 = $FStaken + $FSEtaken;
-												$balance2 = $FSbalance;
-											}
-											elseif ($excol[1] == 'Maternity'){
+												$taken2 = $row->FStaken + $row->FSEtaken;
+												$balance2 = $row->FSbalance;
+											}elseif ($excol[1] == 'Maternity'){
 												$eligable2 = isset($leave_type[6]->entitle_days) ? $leave_type[6]->entitle_days : 0;
-												$taken2 = $MLtaken + $MLEtaken;
-												$balance2 = $MLbalance;
-											}
-											elseif ($excol[1] == 'Paternity'){
+												$taken2 = $row->MLtaken + $row->MLEtaken;
+												$balance2 = $row->MLbalance;
+											}elseif ($excol[1] == 'Paternity'){
 												$eligable2 = isset($leave_type[7]->entitle_days) ? $leave_type[7]->entitle_days : 0;
-												$taken2 = $PLtaken + $PLEtaken;
-												$balance2 = $PLbalance;
-											}
-											elseif ($excol[1] == 'Marriage'){
+												$taken2 = $row->PLtaken + $row->PLEtaken;
+												$balance2 = $row->PLbalance;
+											}elseif ($excol[1] == 'Marriage'){
 												$eligable2 = isset($leave_type[8]->entitle_days) ? $leave_type[8]->entitle_days : 0;
-												$taken2 = $MRLtaken + $MRLEtaken;
-												$balance2 = $MRLbalance;
-											}
-											elseif ($excol[1] == 'Unrecorded'){
+												$taken2 = $row->MRLtaken + $row->MRLEtaken;
+												$balance2 = $row->MRLbalance;
+											}elseif ($excol[1] == 'Unrecorded'){
 												$eligable2 = isset($leave_type[9]->entitle_days) ? $leave_type[9]->entitle_days : 0;
-												$taken2 = $ULtaken + $ULEtaken;
-												$balance2 = $ULbalance;
-											}
-											elseif ($excol[1] == 'Exam_Leave'){
+												$taken2 = $row->ULtaken + $row->ULEtaken;
+												$balance2 = $row->ULbalance;
+											}elseif ($excol[1] == 'Exam_Leave'){
 												$eligable2 = isset($leave_type[10]->entitle_days) ? $leave_type[10]->entitle_days : 0;
-												$taken2 = $STLtaken + $STLEtaken;
-												$balance2 = $STLbalance;
-											}
-											elseif ($excol[1] == 'Transfer'){
+												$taken2 = $row->STLtaken + $row->STLEtaken;
+												$balance2 = $row->STLbalance;
+											}elseif ($excol[1] == 'Transfer'){
 												$eligable2 = isset($leave_type[11]->entitle_days) ? $leave_type[11]->entitle_days : 0;
-												$taken2 = $TLtaken + $TLEtaken;
-												$balance2 = $TLbalance;
-											}
-											elseif ($excol[1] == 'Hajj'){
+												$taken2 = $row->TLtaken + $row->TLEtaken;
+												$balance2 = $row->TLbalance;
+											}elseif ($excol[1] == 'Hajj'){
 												$eligable2 = isset($leave_type[12]->entitle_days) ? $leave_type[12]->entitle_days : 0;
-												$taken2 = $HLtaken + $HLEtaken;
-												$balance2 = $HLbalance;
+												$taken2 = $row->HLtaken + $row->HLEtaken;
+												$balance2 = $row->HLbalance;
 											}
 										}
-
+// echo "<pre>";var_export($leaveacc);die;
 										?>
 									<tbody>
 										<tr class="warning">
@@ -505,10 +248,10 @@
 														<td class="col-lg-2">T - <?=$taken2?></td>
 																	<?php } ?>
 																	<?php if ($excol[1] == 'Hajj') { ?>
-																		<?php if ($hajjstat == '') { ?>
+																		<?php if ($row->hajjstat == '') { ?>
 														<td class="col-lg-2">E - <?=$eligable2?></td>
 																		<?php } else { ?>
-														<td class="col-lg-2"><?=$hajjstat?></td>
+														<td class="col-lg-2"><?=$row->hajjstat?></td>
 																		<?php } ?>
 																	<?php } ?>
 																<?php } ?>
@@ -529,9 +272,9 @@
 														<?php } ?>
 													</tr>
 													<tr>
-														<td class="col-lg-2">T - <?=$ALtaken?></td>
-														<td class="col-lg-2">T - <?=$SLtaken?></td>
-														<td class="col-lg-2">T - <?=$ELtaken?></td>
+														<td class="col-lg-2">T - <?=$row->ALtaken;?></td>
+														<td class="col-lg-2">T - <?=$row->SLtaken;?></td>
+														<td class="col-lg-2">T - <?=$row->ELtaken;?></td>
 														<?php if ($excol) { ?>
 															<?php if (isset($excol[0])) { ?>
 																<?php if ($excol[0] != 'Unpaid' AND $excol[0] != 'Hajj' AND $excol[0] != 'Extended_Sick') { ?>
@@ -557,7 +300,7 @@
 														<td class="col-lg-2"></td>
 																	<?php } ?>
 																	<?php if ($excol[1] == 'Hajj') { ?>
-																		<?php if ($hajjstat == '') { ?>
+																		<?php if ($row->hajjstat == '') { ?>
 														<td class="col-lg-2">T - <?=$taken1?></td>
 																		<?php } else { ?>
 														<td class="col-lg-2"></td>
@@ -568,9 +311,9 @@
 														<?php } ?>
 													</tr>
 													<tr>
-														<td class="col-lg-2">B - <?=$ALbalance?></td>
-														<td class="col-lg-2">B - <?=$SLbalance?></td>
-														<td class="col-lg-2">B - <?=$ELbalance?></td>
+														<td class="col-lg-2">B - <?=$row->ALbalance?></td>
+														<td class="col-lg-2">B - <?=$row->SLbalance?></td>
+														<td class="col-lg-2">B - <?=$row->ELbalance?></td>
 														<?php if ($excol) { ?>
 															<?php if (isset($excol[0])) { ?>
 																<?php if ($excol[0] != 'Unpaid' AND $excol[0] != 'Hajj' AND $excol[0] != 'Extended_Sick') { ?>
@@ -596,7 +339,7 @@
 														<td class="col-lg-2"></td>
 																	<?php } ?>
 																	<?php if ($excol[1] == 'Hajj') { ?>
-																		<?php if ($hajjstat == '') { ?>
+																		<?php if ($row->hajjstat == '') { ?>
 														<td class="col-lg-2">B - <?=$balance2?></td>
 																		<?php } else { ?>
 														<td class="col-lg-2"></td>
