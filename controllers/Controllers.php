@@ -141,7 +141,7 @@ class Controllers extends CI_Controller {
 	}
 	public function leave_account_view()
 	{
-		$this->load->library('ap_leave');
+		$this->load->library('Ap_leave');
 
 		$year = ($this->input->get('y') <> 0) ? $this->input->get('y') : date('Y');
 		isset($_REQUEST['sel_year']) ? $fyear = $_REQUEST['sel_year'] : $fyear = $year;
@@ -282,7 +282,8 @@ class Controllers extends CI_Controller {
 					// $data['leaveacc'] = $this->display_model->leaveaccall($data['fyear'],$data['limit'],$data['start']);
 					// $data['tleavetaken'] = $this->display_model->tleavetakenall($data['fyear']);
 					$data['leaveacc'] = $this->display_model->leaveacc($dept='',$user_id='',$staffname='',$apsbno='',$data['fyear'],$data['start'],$data['limit']); //updated by buzz
-					$data['tleavetaken'] = $this->display_model->tleavetaken($dept='',$user_id='',$staffname='',$apsbno='',$data['fyear']);//updated by buzz
+					$data['tleavetaken'] = array();
+					//$data['tleavetaken'] = $this->display_model->tleavetaken($dept='',$user_id='',$staffname='',$apsbno='',$data['fyear']);//updated by buzz
 				}
 			}
 		}
@@ -302,7 +303,7 @@ class Controllers extends CI_Controller {
 	}
 	public function autoprint()//######################################################################################### leave detail
 	{
-		$this->load->library('ap_leave');
+		$this->load->library('Ap_leave');
 
 		$this->load->model('display_model');
 		$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
@@ -383,6 +384,7 @@ class Controllers extends CI_Controller {
 			}
 		}
 
+		$data['hajj'][] = array();
 		foreach ($data['leaveacc'] as $hajj){
 			$data['hajjdata'] = $this->display_model->hajjdata($hajj->user_id);
 			$data['hajj'][] = array('user_id' => $hajj->user_id, 'hajjdet' => $data['hajjdata']);
@@ -548,68 +550,18 @@ class Controllers extends CI_Controller {
 	}
 	public function date_calender()
 	{
+		$this->load->library("ap_leave");
 		$this->load->model('display_model');
-		$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
-		$data['hrrow'] = $this->display_model->gethrrow($this->session->userdata('v_UserName'));
-		$data['applied_date'] = $this->display_model->applied_date($this->session->userdata('v_UserName'));
-		isset($_REQUEST['date_calendar']) ? $data['datecal'] = date("d-m-Y",strtotime($_REQUEST['date_calendar'])) : $data['datecal'] = date("d-m-Y");
-		isset($_REQUEST['date_calendar_to']) ? $data['datecalto'] = date("d-m-Y",strtotime($_REQUEST['date_calendar_to'])) : $data['datecalto'] = date("d-m-Y");
 
-		$data['holidayJB'] = $this->display_model->holidayJB(date('Y',strtotime($data['datecal'])));
-		if($data['holidayJB']){
-			foreach ($data['holidayJB'] as $key => $value) {
-			    $data['JB_hol'][] = strtotime(date($value->date_holiday));
-			}
-		}
-		else{
-			$data['JB_hol'][] = NULL;
-		}
-		$data['holidayMKA'] = $this->display_model->holidayMKA(date('Y',strtotime($data['datecal'])));
-		if($data['holidayMKA']){
-			foreach ($data['holidayMKA'] as $key => $value) {
-			    $data['MKA_hol'][] = strtotime(date($value->date_holiday));
-			}
-		}
-		else{
-			$data['MKA_hol'][] = NULL;
-		}
-		$data['holidayNS'] = $this->display_model->holidayNS(date('Y',strtotime($data['datecal'])));
-		if($data['holidayNS']){
-			foreach ($data['holidayNS'] as $key => $value) {
-			    $data['NS_hol'][] = strtotime(date($value->date_holiday));
-			}
-		}
-		else{
-			$data['NS_hol'][] = NULL;
-		}
-		$data['holidaySEL'] = $this->display_model->holidaySEL(date('Y',strtotime($data['datecal'])));
-		if($data['holidaySEL']){
-			foreach ($data['holidaySEL'] as $key => $value) {
-			    $data['SEL_hol'][] = strtotime(date($value->date_holiday));
-			}
-		}
-		else{
-			$data['SEL_hol'][] = NULL;
-		}
-		$data['holidayPHG'] = $this->display_model->holidayPHG(date('Y',strtotime($data['datecal'])));
-		if($data['holidayPHG']){
-			foreach ($data['holidayPHG'] as $key => $value) {
-			    $data['PHG_hol'][] = strtotime(date($value->date_holiday));
-			}
-		}
-		else{
-			$data['PHG_hol'][] = NULL;
-		}
-		$data['holidayKL'] = $this->display_model->holidayKL(date('Y',strtotime($data['datecal'])));
-		if($data['holidayKL']){
-			foreach ($data['holidayKL'] as $key => $value) {
-			    $data['KL_hol'][] = strtotime(date($value->date_holiday));
-			}
-		}
-		else{
-			$data['KL_hol'][] = NULL;
-		}
+		isset($_REQUEST['date_calendar']) ? $datecal = date("d-m-Y",strtotime($_REQUEST['date_calendar'])) : $datecal = date("d-m-Y");
+		isset($_REQUEST['date_calendar_to']) ? $datecalto = date("d-m-Y",strtotime($_REQUEST['date_calendar_to'])) : $datecalto = date("d-m-Y");
 
+		$data['datecal']	= $datecal;
+		$data['datecalto']	= $datecalto;
+
+		$data['headrow']		= $this->display_model->getheadrow($this->session->userdata('v_UserName'));
+		$data['hrrow']			= $this->display_model->gethrrow($this->session->userdata('v_UserName'));
+		$data['applied_date']	= $this->display_model->applied_date($this->session->userdata('v_UserName'));
 
 		$data['limit'] = 5;
 		isset($_GET['p']) ? $data['page'] = $_GET['p'] : $data['page'] = 1;
@@ -622,11 +574,11 @@ class Controllers extends CI_Controller {
 		}
 		$data['getgroupdet'] = $this->display_model->getgroupdet($this->session->userdata('v_UserName'));
 		$data['datecalendar'] = $this->display_model->datecalendar(date("Y-m-d",strtotime($data['datecal'])),$data['limit'],$data['start'],date("Y-m-d",strtotime($data['datecalto'])), $data['getgroupdet'][0]->v_GroupID);
-		//print_r($data['datecalendar']);
-		//exit();
 
-		//echo $data['datecal'];
-		//exit();
+		foreach ($data['datecalendar'] as $row) {
+			$todate = ($row->leave_to) ? $row->leave_to : $row->leave_from;
+			$row->noleave = $this->ap_leave->get_no_ofday($row->leave_from, $todate, $row->leave_type, $row->leave_duration, $row->v_hospitalcode, date('Y',strtotime($datecal)));
+		}
 		$this->load->view('Head',$data);
 		$this->load->view('top');
 		$this->load->view('left');
@@ -636,7 +588,7 @@ class Controllers extends CI_Controller {
 
 	public function print_out()//######################################################################################### leave detail
 	{
-		$this->load->library('ap_leave');
+		$this->load->library('Ap_leave');
 
 		$this->load->model('display_model');
 		$data['headrow']	= $this->display_model->getheadrow($this->session->userdata('v_UserName'));

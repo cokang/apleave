@@ -33,7 +33,7 @@
                   <th style="text-align:right;"><b>Leave Type :</b></th>
                   <td data-title="Leave Type :" align="left"><?=isset($userleave[0]->leave_name) ? $userleave[0]->leave_name : '' ?></td>
                   <th style="text-align:right;"><b>Leave Balance :</b></th>
-                  <td data-title="Leave Balance :" align="left"><?= $balanceleave ?></td>
+                  <td data-title="Leave Balance :" align="left"><?= ($balanceleave) ? $balanceleave : "N/A" ?></td>
                 </tr>
                 <tr class="">
                   <th style="text-align:right;"><b>From :</b></th>

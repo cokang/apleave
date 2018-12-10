@@ -49,7 +49,7 @@
 					<div class="form-group" id="staff_name" style="display:none;">
 					<?php } ?>
 						<label>Name</label>
-						<input type="text" name="staff_name"  value="" class="form-control">
+						<input type="text" name="staff_name"  value="<?=set_value('staff_name')?>" class="form-control">
 					</div>
 					<?php if ($check == 'All'){ ?>
 					<div class="form-group" id="staff_no" style="display:block;">
@@ -57,7 +57,7 @@
 					<div class="form-group" id="staff_no" style="display:none;">
 					<?php } ?>
 						<label>APSB No.</label>
-						<input type="text" name="staff_no"  value="" class="form-control">
+						<input type="text" name="staff_no" value="<?=set_value('staff_no')?>" class="form-control">
 					</div>
 					<?php } ?>
 					<label>Select Extra Columns</label>

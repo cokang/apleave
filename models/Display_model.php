@@ -658,6 +658,9 @@ parent::__construct();
 		$this->db->or_where('U.v_Actionflag !=','D');
 		$this->db->group_end();
 		$this->db->limit($limit,$start);
+		//if($limit!=''){
+		//	$this->db->limit($limit,$start);
+		//}
 		$query = $this->db->get();
 		// echo $this->db->last_query();
 		// exit();

@@ -101,7 +101,11 @@ class leave_application extends CI_Controller{
 		$leavedata = $this->ap_leave->get_leave_detail($data['leaveacc'], $data['tleavetaken'], $hajj='', $yearapplied, $leave_type);
         // echo "<pre>";var_export($leavedata);die;
         $data = array_merge($data, $leavedata);
+				if ($leavedata) {
         $data['balanceleave'] = $data[0]->balanceleave;
+			} else {
+				$data['balanceleave'] = 0;
+			}
 
         // echo "<pre>";var_export($data['leavedet']);die;
         $data['noleave']		= $noleave = $this->ap_leave->get_no_ofday($data['leavedet'][0]->leave_from, $data['leavedet'][0]->leave_to, $data['leavedet'][0]->leave_type, $data['leavedet'][0]->leave_duration, $data['leavedet'][0]->v_hospitalcode, $yearapplied);

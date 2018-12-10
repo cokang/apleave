@@ -43,10 +43,15 @@ class AP_leave {
 			$row->hajjstat=0;
 
 			$leave_type = $this->ci->display_model->leave_type();
+
+      //if( empty($tleavetaken) ){
+			$tleavetaken = $this->ci->display_model->tleavetaken('', $row->user_id, $row->v_UserName, '', $row->year);
+			//}
+
 			foreach ($tleavetaken as $list){
 				$fromdate	= $list->leave_from;//($list->leave_from) ? $list->leave_from : $list->leave_to;
 				$todate		= ($list->leave_to) ? $list->leave_to : $list->leave_from;
-				
+
 				$row->noleave = $this->get_no_ofday($fromdate, $todate, $list->leave_type, $list->leave_duration, $list->v_hospitalcode, $year);
 
 				if($list->user_id == $row->user_id){
@@ -121,12 +126,14 @@ class AP_leave {
 				}
 			}
 
-			$data['hajjstat']=0;
+      $data['hajjstat']=0;
 			if($hajj!=''){
 				foreach ($hajj as $hajjlist){
-					if ($row->user_id == $hajjlist['user_id']){
-						if ($hajjlist['hajjdet'] == 1){
-							$row->hajjstat = 'Taken';
+					if( !empty($hajjlist) ){
+						if ($row->user_id == $hajjlist['user_id']){
+							if ($hajjlist['hajjdet'] == 1){
+								$row->hajjstat = 'Taken';
+							}
 						}
 					}
 				}
@@ -224,6 +231,11 @@ class AP_leave {
 				$row->ESLtaken = $row->EXLtaken;
 			}
 		endforeach;
+    //$leaveacc[0]->ALtaken = $leaveacc[0]->ALtaken + $leaveacc[0]->ELtaken;
+    for ($i = 0; $i < count($leaveacc); $i++) {
+      $leaveacc[$i]->ALtaken = $leaveacc[$i]->ALtaken + $leaveacc[$i]->ELtaken;
+    }
+
 		// echo "<pre>";var_export($leaveacc);
 		return $leaveacc;
 	}
@@ -281,6 +293,7 @@ class AP_leave {
 	}
 
 	public function get_no_ofday($fromdate, $todate, $leave_type, $leave_duration, $v_hospitalcode, $year){
+    $holiday_array = array();
 		$begin = strtotime($fromdate);
 		$end   = strtotime($todate);
 		// echo $fromdate." > ".$todate."<br>";
