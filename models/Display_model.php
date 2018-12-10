@@ -267,7 +267,7 @@ parent::__construct();
 		$this->db->where('U.v_Actionflag');
 		$this->db->or_where('U.v_Actionflag !=','D');
 		$this->db->group_end();
-		if($start!='' && $limit!=''){
+		if( $limit!=''){
 			$this->db->limit($limit,$start);
 		}
 		$query = $this->db->get();
@@ -1290,6 +1290,7 @@ parent::__construct();
 			$head		= $this->getheadrow($this->session->userdata('v_UserName'));
 			$report_to	= $this->getreporttorow($this->session->userdata('v_UserName'));
 
+			$this->db->distinct();
 			$this->db->select('R.*,U.v_UserName,U.v_hospitalcode,T.leave_name');
 			//$this->db->where('user_id <>',$userid);
 			$this->db->from('employee_leave_req R');
@@ -1328,6 +1329,8 @@ parent::__construct();
 			$this->db->where('U.v_Actionflag');
 			$this->db->or_where('U.v_Actionflag !=','D');
 			$this->db->group_end();
+
+			$this->db->where('R.leave_status', 'Approved');
 
 			/*$this->db->where('R.leave_from >=',$fromdate);
 			$this->db->where('R.leave_to <=',$todate);*/
