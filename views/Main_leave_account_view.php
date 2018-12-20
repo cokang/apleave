@@ -1,4 +1,4 @@
-
+ 
 <div id="page-wrapper">
 	<div class="row">
 		<div class="col-lg-12">
@@ -21,7 +21,7 @@
 							<?php } ?>
 						</select>
 					</div>
-					<?php $people = array("APSB592", "APSB1150", "APSB1419", "APSB426", "APSB823", "APSB1256", "APSB1417", "APSB658"); if (($group[0]->v_GroupID == 'HR') || (in_array($group[0]->v_UserID, $people))){ ?>
+					<?php $people = array("APSB592", "APSB1150", "APSB1419", "APSB426", "APSB823", "APSB1256", "APSB1417", "APSB658"); if (($group[0]->v_GroupID == 'HR') || (in_array($group[0]->v_UserID, $people)) || $hrrow=='AA'){ ?>
 					<div class="form-group">
 						<input type="radio" name="ch_bx" value="All"<?php echo set_radio('ch_bx', 'All'); ?><?= $check == 'All' ? 'checked' : '' ?> onchange="return check_sort(this.value)"> All
 						<input type="radio" name="ch_bx" value="Own"<?php echo set_radio('ch_bx', 'Own'); ?><?= $check == 'Own' ? 'checked' : '' ?> onchange="return check_sort(this.value)"> Own
@@ -210,7 +210,7 @@
 												$balance2 = $row->HLbalance;
 											}
 										}
-// echo "<pre>";var_export($leaveacc);die;
+
 										?>
 									<tbody>
 										<tr class="warning">

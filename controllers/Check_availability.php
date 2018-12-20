@@ -42,7 +42,8 @@ class check_availability extends CI_Controller {
 		else{
 			$data['holidayarray'][] = NULL;
 		}
-        $data[] = $this->ap_leave->get_leave_detail($data['leaveacc'], $data['tleavetaken'], $hajj='', date("Y"), $data['leave_type']);
+        //$data[] = $this->ap_leave->get_leave_detail($data['leaveacc'], $data['tleavetaken'], $hajj='', date("Y"), $data['leave_type']);
+				$data['leaveacc'] = $this->ap_leave->get_leave_detail($data['leaveacc'], $data['tleavetaken'], $hajj='', date("Y"), $data['leave_type']);
 	/*
 		$data['entitled'] = (!empty($data['leaveacc']) ? $data['leaveacc'][0]->entitled : 0);
 		$data['ALtaken'] = 0;

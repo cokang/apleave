@@ -24,6 +24,14 @@
 							<label>Date To</label>
 							<input name="date_calendar_to" id="date_calendar_to" type="text" class="form-control" value="<?=isset($datecalto) ? $datecalto : ''?>" onchange="submit()" autocomplete="off" />
 						</div>
+						<div class="form-group col-lg-3" id="to_date">
+							<label>Name</label>
+							<input name="staffname" id="staffname" type="text" class="form-control" value="<?=isset($staffname) ? $staffname : ''?>" onchange="submit()" autocomplete="off" />
+						</div>
+						<div class="form-group col-lg-3" id="to_date">
+							<label>APSB NO</label>
+							<input name="apsbno" id="apsbno" type="text" class="form-control" value="<?=isset($apsbno) ? $apsbno : ''?>" onchange="submit()" autocomplete="off" />
+						</div>
 					</form>
 					<div class="table-responsive">
 						<table class="table" id="no-more-tables">

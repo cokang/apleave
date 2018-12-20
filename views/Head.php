@@ -295,6 +295,12 @@
 				var json = get_leave_balance(duration);
 				var leave_balance = 1;
 				var leave_type = 0;
+				var ALbalance = get_leave_balance(1)[1];
+				if( duration == "3" ){
+					if( ALbalance < json[leave_balance] ){
+						json[leave_balance] = ALbalance;
+					}
+				}
 				if ( duration != '4' && duration!='5' ){
 					if( json[leave_balance]>0 ){
 						$("#message_sp").removeClass();
@@ -366,6 +372,10 @@
 						$("#to").val("");
 					}
 				}else if (duration=="4"){
+					$("#message_sp").removeClass();
+					$("#message_sp").addClass("info_message");
+					$("#message_sp").html("Please inform your superior & get approval before you apply unpaid leave");
+					$("#message_sp").slideDown("slow");
 					/*if(json['ALbalance']<=0){
 					$("#message_sp").removeClass();
 					$("#message_sp").addClass("success_message");
@@ -406,6 +416,12 @@
 			var json = get_leave_balance(duration);console.log(json);
 			var leave_balance = 1;
 			var leave_type = 0;
+			var ALbalance = get_leave_balance(1)[1];
+			if( duration == "3" ){
+				if( ALbalance < json[leave_balance] ){
+					json[leave_balance] = ALbalance;
+				}
+			}
 			var s = "";
 			if( no_of_days() > 2 ){
 				s = "s";
@@ -592,7 +608,9 @@
 					$("#to").val("");
 				}else{
 					res = 1;
-					$("#message_sp").slideUp("slow");
+					if( $("#message_sp").attr("is_more")!=undefined ){
+						$("#message_sp").slideUp("slow");
+					}
 				}
 			});
 

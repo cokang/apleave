@@ -389,7 +389,7 @@ class Controllers extends CI_Controller {
 			$data['hajjdata'] = $this->display_model->hajjdata($hajj->user_id);
 			$data['hajj'][] = array('user_id' => $hajj->user_id, 'hajjdet' => $data['hajjdata']);
 		}
-		$data['leaveacc'] = $this->ap_leave->get_leave_detail($data['leaveacc'], $data['tleavetaken'], $data['hajj'], $data['year'], $data['leave_type']);
+		$data['leaveacc'] = $this->ap_leave->get_leave_detail($data['leaveacc'], $data['tleavetaken'], $data['hajj'], $data['fyear'], $data['leave_type']);
 
 		$this->load->view('Head');
 		$this->load->view('Main_autoprint',$data);
@@ -555,9 +555,13 @@ class Controllers extends CI_Controller {
 
 		isset($_REQUEST['date_calendar']) ? $datecal = date("d-m-Y",strtotime($_REQUEST['date_calendar'])) : $datecal = date("d-m-Y");
 		isset($_REQUEST['date_calendar_to']) ? $datecalto = date("d-m-Y",strtotime($_REQUEST['date_calendar_to'])) : $datecalto = date("d-m-Y");
+		isset($_REQUEST['staffname']) ? $staffname = $_REQUEST['staffname'] : $staffname = '';
+		isset($_REQUEST['apsbno']) ? $apsbno = $_REQUEST['apsbno'] : $apsbno = '';
 
 		$data['datecal']	= $datecal;
 		$data['datecalto']	= $datecalto;
+		$data['staffname']	= $staffname;
+		$data['apsbno']		= $apsbno;
 
 		$data['headrow']		= $this->display_model->getheadrow($this->session->userdata('v_UserName'));
 		$data['hrrow']			= $this->display_model->gethrrow($this->session->userdata('v_UserName'));
@@ -568,12 +572,12 @@ class Controllers extends CI_Controller {
 		$data['start'] = ($data['page'] * $data['limit']) - $data['limit'];
 
 		//$data['rec'] = $this->display_model->datecalendar_c($data['datecal']);
-		$data['rec'] = $this->display_model->datecalendar_c(date("Y-m-d",strtotime($data['datecal'])), date("Y-m-d",strtotime($data['datecalto'])));
+		$data['rec'] = $this->display_model->datecalendar_c(date("Y-m-d",strtotime($data['datecal'])), date("Y-m-d",strtotime($data['datecalto'])), $staffname, $apsbno);
 		if($data['rec'][0]->jumlah > ($data['page'] * $data['limit']) ){
 			$data['next'] = ++$data['page'];
 		}
 		$data['getgroupdet'] = $this->display_model->getgroupdet($this->session->userdata('v_UserName'));
-		$data['datecalendar'] = $this->display_model->datecalendar(date("Y-m-d",strtotime($data['datecal'])),$data['limit'],$data['start'],date("Y-m-d",strtotime($data['datecalto'])), $data['getgroupdet'][0]->v_GroupID);
+		$data['datecalendar'] = $this->display_model->datecalendar(date("Y-m-d",strtotime($data['datecal'])), $data['limit'], $data['start'], date("Y-m-d",strtotime($data['datecalto'])), $data['getgroupdet'][0]->v_GroupID, $staffname, $apsbno);
 
 		foreach ($data['datecalendar'] as $row) {
 			$todate = ($row->leave_to) ? $row->leave_to : $row->leave_from;
@@ -645,6 +649,7 @@ class Controllers extends CI_Controller {
 		// 	$data['leaveacc'] = $this->display_model->leaveacc($this->input->get('userid'),$yearapplied);
 		// 	$data['tleavetaken'] = $this->display_model->tleavetakenprint($this->input->get('userid'),$data['fromdate'],$yearapplied);
 		// }
+		$_REQUEST['user_id'] = $data['record'][0]->user_id;
 
 		$data['leaveacc'] = $this->display_model->leaveacc($dept='',$data['record'][0]->user_id,$staffname='',$apsbno='',$yearapplied, $start='',$limit='');
 		$data['tleavetaken'] = $this->display_model->tleavetakenprint($data['record'][0]->user_id,$data['fromdate'],$yearapplied);
