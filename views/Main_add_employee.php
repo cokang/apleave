@@ -44,16 +44,27 @@
                                     ?>
                                     <?php echo form_dropdown('state', $state, set_value('state',isset($employeedet[0]->v_hospitalcode) ? $employeedet[0]->v_hospitalcode : '0') ,  'id="statelist" class="form-control"');?>
                                     </div>
+
                                     <div class="form-group">
-                                    <label>Hospital</label>
-                                    <?php 
-                                    $hosp_l[0] = 'Select';
-                                    foreach ($hosplist as $hlist){
-                                    $hosp_l[$hlist->v_HospitalCode] = $hlist->v_HospitalName;
-                                    }
-                                    ?>
-                                    <?php echo form_dropdown('hosp_code', $hosp_l, set_value('hosp_code',isset($employeedet[0]->site_state) ? $employeedet[0]->site_state : '0') ,  'id="hosp_code" class="form-control"');?>
+                                        <label>Office Group</label>
+                                        <?php 
+                                        $hosp_l[0] = 'Select';
+                                        foreach ($hosplist as $hlist){
+                                        $hosp_l[$hlist->officegrp_code] = $hlist->officegrp_name;
+                                        }
+                                        ?>
+                                        <?php echo form_dropdown('hosp_code', $hosp_l, set_value('hosp_code',isset($employeedet[0]->site_state) ? $employeedet[0]->site_state : '0') ,  'id="hosp_code" class="form-control"');?>
                                     </div>
+                                    <!-- <div class="form-group">
+                                        <label>Hospital</label>
+                                        <?php 
+                                        $hosp_l[0] = 'Select';
+                                        foreach ($hosplist as $hlist){
+                                        $hosp_l[$hlist->v_HospitalCode] = $hlist->v_HospitalName;
+                                        }
+                                        ?>
+                                        <?php echo form_dropdown('hosp_code', $hosp_l, set_value('hosp_code',isset($employeedet[0]->site_state) ? $employeedet[0]->site_state : '0') ,  'id="hosp_code" class="form-control"');?>
+                                    </div> -->
                                     <!--<div class="form-group">
                                             <label>Hospital</label>
                                             <input name="hosp_code" id="hosp_code" type="text" class="form-control" value=""/ >

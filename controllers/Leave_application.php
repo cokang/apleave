@@ -21,7 +21,7 @@ class leave_application extends CI_Controller{
 	function index(){
 		$this->load->library('ap_leave');
 
-		$data['userid'] = $this->input->get('name');
+		$data['userid'] = $this->input->get('user_id');
 		$data['regid'] = $this->input->get('id');
 
 		$this->load->model('display_model');

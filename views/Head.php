@@ -413,7 +413,7 @@
 		function check_days_available(){
 
 			var duration = $("#leave_type").val();
-			var json = get_leave_balance(duration);console.log(json);
+			var json = get_leave_balance(duration);
 			var leave_balance = 1;
 			var leave_type = 0;
 			var ALbalance = get_leave_balance(1)[1];
@@ -670,6 +670,8 @@
 					var annualB = (json['entitled']!=undefined ? Number(json['entitled']) : 0) + (json['carry_fwd_leave']!=undefined ? Number(json['carry_fwd_leave']) : 0) - json['ALtaken'];
 					if (annualB < 0){
 						var ALbalance = 0;
+					}else if( leave_type==1 ){
+						var ALbalance = json.ALbalance;
 					}
 					else{
 						var ALbalance = annualB;
@@ -1948,11 +1950,26 @@
 			padding: 19px;
 		}
 	</style>
+	<?php }elseif( 'Controllers/report_summary/' == $this->uri->slash_segment(1) . $this->uri->slash_segment(2) ){ ?>
+
+	<script type="text/javascript">
+
+		function print_report_summary(dept,staff,year,apsbno,print_type)
+		{
+			// winProp = 'width=600,height=1000,left=' + ((screen.width - 1000) / 2) +',top=' + ((screen.height - 1000) / 2) + ',menubar=no, directories=no, location=no, scrollbars=yes, statusbar=no, toolbar=no, resizable=no';
+			winProp = 'width=1000,height=600,left=' + ((screen.width - 1000) / 2) +',top=' + ((screen.height - 1000) / 2) + ',menubar=no, directories=no, location=no, scrollbars=yes, statusbar=no, toolbar=no, resizable=no';
+			Win = window.open('report_summary?year='+year+'&apsbno='+apsbno+'&print_type='+print_type+'&rowlimit=&no=1&location=<?=$_REQUEST['location'];?>', winProp);
+			Win.window.focus();
+		}
+	</script>
+
 	<?php } ?>
 
 	</head>
 
 <?php if ('Controllers/autoprint/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)) {?>
+<body onload="window.print()">
+<?php }elseif( 'Controllers/report_summary/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2) && $this->input->get("print_type")=='pdf' ){ ?>
 <body onload="window.print()">
 <?php }else{ ?>
 <body>

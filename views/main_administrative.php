@@ -22,6 +22,15 @@
 								Unpaid Leave
 							</div>
 						</a>
+						<?php if( $hrrow=='HR' ){ ?>
+						<a href="<?php echo base_url(); ?>index.php/Controllers/report_summary?tab=<?=$this->input->get('tab');?>&parent=1" class="left box">
+							<div align="center">
+								<img height="99px" src="<?=base_url()?>images/icon/report.png">
+								<br>
+								Report Summary
+							</div>
+						</a>
+						<?php } ?>
 					</div>
 				</div>
 			</div>

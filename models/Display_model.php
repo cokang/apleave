@@ -247,8 +247,15 @@ parent::__construct();
 	public function leaveacc($dept,$user_id,$staffname,$apsbno,$year,$start,$limit){
 		$login_as	= $this->gethrrow($this->session->userdata('v_UserName'));
 		$site_state	= $this->get_site($this->session->userdata('v_UserName'));
+		$month = date("m");
+		if($year < date("Y")){
+			$month = 12;
+		}
+
 		//$this->db->select('L.*,U.v_UserName,U.v_UserName,ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
-		$this->db->select('L.*,U.v_UserName,FLOOR(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		//$this->db->select('L.*,U.v_UserName,FLOOR(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		//$this->db->select('L.*,U.v_UserName,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()),4))as entitled');
+		$this->db->select('L.*,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * '.$month.',4))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		if($user_id!=''){
@@ -265,6 +272,9 @@ parent::__construct();
 		}
 		if($apsbno!=''){
 			$this->db->like('U.apsb_no',$apsbno);
+		}
+		if( isset($_REQUEST['location']) && $_REQUEST['location']!='all' ){
+			$this->db->where("U.site_state", $_REQUEST['location']);
 		}
 		$this->db->group_start();
 		$this->db->where('U.v_Actionflag');
@@ -301,6 +311,9 @@ parent::__construct();
 		return $query_result;
 	}
 	public function leaveacc_c($dept,$staffname,$apsbno,$year){
+		$login_as	= $this->gethrrow($this->session->userdata('v_UserName'));
+		$site_state	= $this->get_site($this->session->userdata('v_UserName'));
+
 		$this->db->select('COUNT(*) AS jumlah');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
@@ -313,11 +326,19 @@ parent::__construct();
 		if($apsbno!=''){
 			$this->db->like('U.apsb_no',$apsbno);
 		}
+		if( isset($_REQUEST['location']) && $_REQUEST['location']!="all" ){
+			$this->db->where("U.site_state", $_REQUEST['location']);
+		}
 		$this->db->where('L.year',$year);
 		$this->db->group_start();
 		$this->db->where('U.v_Actionflag');
 		$this->db->or_where('U.v_Actionflag !=','D');
 		$this->db->group_end();
+
+		if( $login_as=="AA" ){
+			$this->db->where("U.site_state", $site_state);
+		}
+
 		$query = $this->db->get();
 		// echo $this->db->last_query();
 		// exit();
@@ -388,6 +409,9 @@ parent::__construct();
 
 		if( $login_as=="AA" ){
 			$this->db->where("U.site_state", $site_state);
+		}
+		if( isset($_REQUEST['location']) && $_REQUEST['location']!='all' ){
+			$this->db->where("U.site_state", $_REQUEST['location']);
 		}
 
 		$this->db->group_start();
@@ -1659,6 +1683,16 @@ parent::__construct();
 		return $query_result;
 	}
 
+
+	function officelist(){
+		$this->db->select('*');
+		$this->db->from('oficegrp_list');
+		$query = $this->db->get();
+		//echo $this->db->last_query();
+		//exit();
+		$query_result = $query->result();
+		return $query_result;
+	}
 
 }
 ?>

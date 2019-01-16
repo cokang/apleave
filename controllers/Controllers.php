@@ -416,7 +416,8 @@ class Controllers extends CI_Controller {
 		//print_r($data['employeedet']);
 		//exit();
 		$data['statelist'] = $this->display_model->statelist();
-		$data['hosplist'] = $this->display_model->hosplist();
+		//$data['hosplist'] = $this->display_model->hosplist();
+		$data['hosplist'] = $this->display_model->officelist();
 		$data['emptype'] = $this->display_model->emptype($data['username']);
 		$data['probation'] = $this->display_model->probation($data['username']);
 		if (($data['emptype']) && ($data['employeedet'])) {
@@ -755,4 +756,65 @@ class Controllers extends CI_Controller {
 		$this->insert_model->update_process_leave_status();
 	}
 
+
+	public function report_summary(){
+		$this->load->library('Ap_leave');
+
+		$this->load->model('display_model');
+		$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
+		$data['hrrow'] = $this->display_model->gethrrow($this->session->userdata('v_UserName'));
+		$data['group'] = $this->display_model->getgroupdet($this->session->userdata('v_UserName'));
+
+		$data['dept_list'] = $this->display_model->dept_list();
+		$data['statelist'] = $this->display_model->statelist();
+		$data['location'] = set_value("location");
+
+		$data['fyear'] = ( $this->input->get('year') ) ? $this->input->get('year') : date("Y");
+
+		$data['limit'] = '';
+		$data['no'] = 1;
+
+		// if( !$this->input->get("excel") ){
+			$data['location'] = (isset($_REQUEST['location']) && $_REQUEST['location']!='all') ? $_REQUEST['location'] : 'all';
+			// $_GET['location'] = $data['location'];
+
+			$data['limit'] = isset($_REQUEST['rowlimit']) ? $_REQUEST['rowlimit'] : 5;
+			isset($_GET['p']) ? $data['page'] = $_GET['p'] : $data['page'] = 1;
+			$data['start'] = ($data['page'] * $data['limit']) - $data['limit'];
+			$data['no']	= ( $data['start']!=0 ) ? $data['start']+1 : 1;
+		// }
+
+		$holidayArr = $this->ap_leave->get_holiday_state($data['fyear']);
+		$data = array_merge($data,$holidayArr);
+
+		$data['leave_type'] = $this->display_model->leave_type();
+
+		$data['leaveacc'] = $this->display_model->leaveacc($dept='',$user_id='',$staffname='',$apsbno='',$data['fyear'],$data['start'],$data['limit']);
+		$data['jumlah']		= $this->display_model->leaveacc_c($dept='',$staffname='',$apsbno='',$data['fyear'])[0]->jumlah;
+		$data['tleavetaken']= $this->display_model->tleavetaken($dept='',$user_id='',$staffname='',$apsbno='',$data['fyear']);
+
+		$data['last_page']	= ( $data['limit']!='' ) ? ceil( $data['jumlah'] / $data['limit'] ) : 1;
+
+		$data['hajj'][] = array();
+		foreach ($data['leaveacc'] as $hajj){
+			$data['hajjdata'] = $this->display_model->hajjdata($hajj->user_id);
+			$data['hajj'][] = array('user_id' => $hajj->user_id, 'hajjdet' => $data['hajjdata']);
+		}
+		$data['leaveacc'] = $this->ap_leave->get_leave_detail($data['leaveacc'], $data['tleavetaken'], $data['hajj'], $data['fyear'], $data['leave_type']);
+
+		if( $this->input->get("print_type")=='' ){
+			$this->load->view('Head',$data);
+			$this->load->view('top');
+			$this->load->view('left');
+			$this->load->view('Main_report_summary');
+		}else{
+			if( $this->input->get("print_type")=="pdf" ){
+				$this->load->view('Head',$data);
+				$this->load->view("Print_report_summary");
+			}elseif( $this->input->get("print_type")=="excel" ){
+				$this->load->view("excel_report_summary", $data);
+			}
+		}
+		$this->load->view('footer');
+	}
 }

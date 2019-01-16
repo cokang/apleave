@@ -45,6 +45,13 @@
 						<button type="button" name="Back" class="btn btn-default">< Back</button>
 					</a>
 			</div>
+		<?php }elseif( $this->uri->slash_segment(1) .$this->uri->slash_segment(2) == 'Controllers/report_summary/'){ ?>
+			<div style="float:right; margin:7px;">
+				<button type="button" class="btn btn-default" onClick="print_report_summary('','','','','pdf')">Print PDF</button>
+			</div>
+			<div style="float:right; margin:7px;">
+				<button type="button" class="btn btn-default" onClick="print_report_summary('','','','','excel')">Print Excel</button>
+			</div>
 		<?php }else{ ?>
 			<div style="float:right; margin:7px;"><img src="<?php echo base_url();?>images/logo.png" class="img-heading-top"/></div>
 		<?php } ?>

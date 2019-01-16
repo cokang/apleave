@@ -284,7 +284,8 @@ class AP_leave {
 
   					$row->year = $selected_year;
   					$row->carry_fwd_leave = $row->ALbalance;
-  					$row->ALbalance = $row->annual_leave + $row->carry_fwd_leave;
+  					//$row->ALbalance = $row->annual_leave + $row->carry_fwd_leave;
+            $row->ALbalance = (FLOOR(ROUND($row->annual_leave / 12 * (int)date("m"), 4))) + $row->carry_fwd_leave;
   					$row->SLbalance = $row->sick_leave;
   					$row->UPLbalance = $row->UPLtaken + (isset($row->ALEtaken) ? $row->ALEtaken : 0);
   					$row->EXLbalance = $row->EXLtaken;

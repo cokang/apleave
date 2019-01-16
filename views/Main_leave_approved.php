@@ -9,12 +9,12 @@
 		<div class="col-lg-12">
 			<h1 class="page-header">Leave Approval</h1>
 		</div>
-		<!-- /.col-lg-12 --> 
+		<!-- /.col-lg-12 -->
 	</div>
-	<!-- /.row --> 
+	<!-- /.row -->
 
 	<!-- /.row -->
-	<div class="row"> 
+	<div class="row">
 
 		<!-- /.col-lg-6 -->
 		<div class="col-lg-12">
@@ -43,13 +43,13 @@
 										<th></th>
 									</tr>
 								</thead>
-								
+
 								<?php $num=1;foreach($leaveapp as $row): ?>
 									<?php if( $row->leave_status=="" ){?>
 								<tbody>
 									<tr class="">
 										<td><?=($start+1)?></td>
-										<td><a href="<?php echo base_url(); ?>index.php/leave_application?name=<?=$row->user_id?>&id=<?=$row->id?>"><?=isset($row->v_UserName) ? $row->v_UserName : '' ?></a></td>
+										<td><a href="<?php echo base_url(); ?>index.php/leave_application?user_id=<?=$row->user_id?>&id=<?=$row->id?>"><?=isset($row->v_UserName) ? $row->v_UserName : '' ?></a></td>
 										<td><?=isset($row->leave_type) ? $row->leave_name : '' ?></td>
 										<td><?=isset($row->leave_from) ? $row->leave_from : '' ?></td>
 										<td><?=isset($row->leave_to) ? $row->leave_to : '' ?></td>
@@ -91,7 +91,7 @@
 										<th></th>
 									</tr>
 								</thead>
-								
+
 								<?php $num=1;foreach($leaveapp as $row): ?>
 									<?php if( $row->leave_status!="" ){?>
 								<tbody>
@@ -125,13 +125,13 @@
 					</div>
 					<!-- /.table-responsive -->
 				</div>
-				<!-- /.panel-body --> 
+				<!-- /.panel-body -->
 			</div>
-			<!-- /.panel --> 
+			<!-- /.panel -->
 		</div>
-		<!-- /.col-lg-7 --> 
+		<!-- /.col-lg-7 -->
 
 	</div>
-	<!-- /.row --> 
+	<!-- /.row -->
 </div>
-<!-- /#page-wrapper --> 
+<!-- /#page-wrapper -->
