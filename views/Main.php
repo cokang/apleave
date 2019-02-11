@@ -22,7 +22,7 @@
                   <label>Leave Type:</label>
 
                   <?php
-                  $whatimg = array('2','3','5','6','7','8','9','11','13');
+                  $whatimg = array('2','3','5','6','7','8','9','11','13','14');
                   $leaveT[0] = 'Select';
                   foreach ($leave_type as $row){
                     $leaveT[$row->id] = $row->leave_name;
@@ -60,11 +60,7 @@
                   ?>
                   <?php echo form_dropdown('alt', $alt, set_value('alt') ,  'class="form-control"');?>
 
-                  <!--<select name="Alternate" class="form-control">
-                    <option value="0">Select</option>
-                    <option value="talib"<?php echo set_select('Alternate', 'talib')?>>talib</option>
-                    <option value="airil"<?php echo set_select('Alternate', 'airil')?>>airil</option>
-                  </select>-->
+                
                 </div>
               </div>
               <div class="col-lg-6">

@@ -12,7 +12,13 @@ function sickleave_img($insertimg_data){
 	//exit();
 }
 function addempleaves($insert_data){
-$this->db->insert('employee_leave', $insert_data);
+	$this->db->where('year',$insert_data['year']);
+	$this->db->where('user_id',$insert_data['user_id']);
+	 $query = $this->db->get('employee_leave');
+	 if ($query->num_rows()===0){
+		$this->db->insert('employee_leave', $insert_data);
+	 }
+//$this->db->insert('employee_leave', $insert_data);
 }
 function empleave_exist($value1,$variable1,$value2,$variable2){
 			$this->db->select($value1,$value2);

@@ -97,7 +97,7 @@
 								<tbody>
 									<tr class="">
 										<td><?=($start+1)?></td>
-										<td><a href="<?php echo base_url(); ?>index.php/leave_application?name=<?=$row->user_id?>&id=<?=$row->id?>"><?=isset($row->v_UserName) ? $row->v_UserName : '' ?></a></td>
+										<td><a href="<?php echo base_url(); ?>index.php/leave_application?user_id=<?=$row->user_id?>&id=<?=$row->id?>"><?=isset($row->v_UserName) ? $row->v_UserName : '' ?></a></td>
 										<td><?=isset($row->leave_type) ? $row->leave_name : '' ?></td>
 										<td><?=isset($row->leave_from) ? $row->leave_from : '' ?></td>
 										<td><?=isset($row->leave_to) ? $row->leave_to : '' ?></td>

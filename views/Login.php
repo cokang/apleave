@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" >
-
     <head>
         <meta charset="UTF-8">
         <title>Login</title>
@@ -10,17 +9,16 @@
     </head>
 
     <body>
-
         <div class="wrapper">
             <div class="container">
                 <div class="col-md-12 loginbox">
-                    <div class="col-md-6">
+                    <div class="col-md-6 loginbox1">
                         <img src="<?php echo base_url();?>images/logo.png" class="logo">
                         <h2>Advance Pact e-Leave<?php  //echo "version ci : " . CI_VERSION; ?></h2>
                         <img src="<?php echo base_url();?>images/login_image.png" class="login-img">
                     </div>
-                    <div class="col-md-6">
-                        <h4>Login To Advance Pact e-Leave <i class="fa fa-lock" area-hidden="true"></i></h4>
+                    <div class="col-md-6 loginbox2">
+                        <h4>Login To Advance Pact e-leave <i class="fa fa-lock" area-hidden="true"></i></h4>
                         <h5>Enter Your Username And Password To Log On</h5>
 
                         <?php $hidden = array('class' => 'login-form','role' => 'form');?>
@@ -35,6 +33,7 @@
             </div>
 
         </div>
+        
         
         <script src='<?php echo base_url()?>js/jquery-1.11.1.min.js'></script>
     </body>

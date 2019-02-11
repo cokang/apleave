@@ -257,7 +257,7 @@
 			}else{
 				$("#duration option[value='Half Day']").remove();
 			}
-			var imgneeded = ['2','3','5','6','7','8','9','11','13'];
+			var imgneeded = ['2','3','5','6','7','8','9','11','13','14'];//masukattattachmentsini
 			$("#from").prop("disabled", false);
 			$("#to").prop("disabled", false);
 
@@ -693,6 +693,7 @@
 					json[11]= ['Study',(json['STLbalance']) ? json['STLbalance'] : 0];
 					json[12]= ['Transfer',(json['TLbalance']) ? json['TLbalance'] : 0];
 					json[13]= ['Hajj',(json['HLbalance']) ? json['HLbalance'] : 0];
+					json[14]= ['Hospitalisation',(json['HPLbalance']) ? json['HPLbalance'] : 0];
 
 					if(leave_type){
 						if(json['probation']!=undefined){

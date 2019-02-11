@@ -57,7 +57,7 @@
                   <th style="text-align:right;"><b>Reliever:</b></th>
                   <td data-title="Reliever:" align="left"><?=isset($leavedet[0]->employee_replaced) ? $leavedet[0]->employee_replaced : '' ?></td>
                 </tr>
-                <?php $whatimg = array('2','3','5','6','7','8','9','11','13'); if(in_array($leavedet[0]->leave_type, $whatimg)) { ?>
+                <?php $whatimg = array('2','3','5','6','7','8','9','11','13','14'); if(in_array($leavedet[0]->leave_type, $whatimg)) { ?>
                 <tr class="">
                   <th style="text-align:right;"><b>Sick Leave Image:</b></th>
                   <td colspan="3" data-title="Sick Leave Image:">

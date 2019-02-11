@@ -40,7 +40,7 @@ class apply_leave_ctrl extends CI_Controller{
 		$this->insert_model->leavereq($insert_data);
 
 		//if ($this->input->post('leave_type') == '2' OR $this->input->post('leave_type') == '3'){
-	 	$whatimg = array('2','3','5','6','7','8','9','11','13');
+	 	$whatimg = array('2','3','5','6','7','8','9','11','13','14');
 		if ((in_array($this->input->post('leave_type'), $whatimg))){
 			$this->load->model('display_model');
 			//$data['regid'] = $this->display_model->get_reqid($this->input->post('from_leavedate'),$this->session->userdata('v_UserName'));
@@ -155,7 +155,7 @@ class apply_leave_ctrl extends CI_Controller{
 
          $this->email->from($from_email, 'AP LEAVE System');
          $this->email->to($to_email);
-         $this->email->subject('Leave Application Notice');
+         $this->email->subject('Leave Application Reminder');
          $this->email->message('A leave application is pending your approval  -> http://aphrms.advancepact.com/index.php/Controllers/leave_approved?tab=9');
 
          //Send mail
