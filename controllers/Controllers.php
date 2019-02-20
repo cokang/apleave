@@ -420,6 +420,7 @@ class Controllers extends CI_Controller {
 		$data['hosplist'] = $this->display_model->officelist();
 		$data['emptype'] = $this->display_model->emptype($data['username']);
 		$data['probation'] = $this->display_model->probation($data['username']);
+		$data['flex_wrk'] = $this->display_model->flex_wrk($data['username']);//flex
 		if (($data['emptype']) && ($data['employeedet'])) {
 			$data['employeetype'] = 'Head';
 		}
@@ -582,7 +583,7 @@ class Controllers extends CI_Controller {
 
 		foreach ($data['datecalendar'] as $row) {
 			$todate = ($row->leave_to) ? $row->leave_to : $row->leave_from;
-			$row->noleave = $this->ap_leave->get_no_ofday($row->leave_from, $todate, $row->leave_type, $row->leave_duration, $row->v_hospitalcode, date('Y',strtotime($datecal)));
+			$row->noleave = $this->ap_leave->get_no_ofday($row->leave_from, $todate, $row->leave_type, $row->leave_duration, $row->v_hospitalcode, date('Y',strtotime($datecal)),$row->user_id);
 		}
 		$this->load->view('Head',$data);
 		$this->load->view('top');
@@ -665,7 +666,7 @@ class Controllers extends CI_Controller {
 
 		$data['leaveacc'] = $this->ap_leave->get_leave_detail($data['leaveacc'], $data['tleavetaken'], $hajj='', $yearapplied, $leave_type);
 
-		$data['noleave'] = $this->ap_leave->get_no_ofday($data['fromdate'], $data['todate'], $data['record'][0]->leave_type, $data['record'][0]->leave_duration, $data['record'][0]->v_hospitalcode, $yearapplied);
+		$data['noleave'] = $this->ap_leave->get_no_ofday($data['fromdate'], $data['todate'], $data['record'][0]->leave_type, $data['record'][0]->leave_duration, $data['record'][0]->v_hospitalcode, $yearapplied, $data['record'][0]->user_id);
 
 		// echo "<pre>";var_export($leavebalance);die;
 		$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));

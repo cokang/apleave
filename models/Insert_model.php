@@ -137,10 +137,51 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 						$this->update_model->u_addprobation($probation_stat,$variable1);
 					}
 				}
+
+				//flexwork
+				if ($this->input->post('flex_work') != '1'){
+					$this->db->select('userid');
+					$this->db->where('userid',$variable1);
+					$this->db->where('action_flag <>','D');
+
+					$query = $this->db->get('flex_working');
+
+					if($query->num_rows()>0){
+						$flex_Work = array(
+										'yn' => '0',
+										'action_flag'  => 'U'
+											);
+
+						$this->update_model->upflex($flex_Work,$variable1);
+					}
+				}
+				else{
+					$this->db->select('userid');
+					$this->db->where('userid',$variable1);
+
+					$query = $this->db->get('flex_working');
+
+					if($query->num_rows()<=0){
+						$flex_Work = array(
+												'yn' => $this->input->post('flex_work'),
+												'userid' => $this->input->post('emp_uname'),
+												'action_flag'  => 'I',
+												);
+						$this->insert_model->addflex($flex_Work);
+					}
+					else{
+						$flex_Work = array(
+										    'yn' => $this->input->post('flex_work'),
+											'action_flag'  => 'U',
+											);
+						$this->update_model->upflex($flex_Work,$variable1);
+					}
+				}
 				//print_r($insert_data);
 				//exit();
 				//echo $this->db->last_query();
 				//exit();
+
 			}
 			else if( $query->num_rows()<1 ){
 				$insert_data = array(
@@ -305,5 +346,8 @@ function leave_limit_exist(){
 			// $res = $this->db->where("leavereq_id", $this->input->post("leave_id"))->update("processed_leave", array("v_actionflag"=>"D"));
 		}
 	}
+		function addflex($insert_data){
+    $this->db->insert('flex_working', $insert_data);
+}
 }
 ?>

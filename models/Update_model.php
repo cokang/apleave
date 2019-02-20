@@ -45,5 +45,12 @@ function u_addprobation($probation_stat,$userid){
 function u_leave_limit($insert_data){
 	$this->db->update_batch('leave_type', $insert_data, 'leave_name');
 }
+function upflex($updflex,$userid){
+
+	$this->db->where('userid',$userid);
+    $this->db->update('flex_working', $updflex);
+/* 	 echo $this->db->last_query();
+ exit(); */
+}
 }
 ?>

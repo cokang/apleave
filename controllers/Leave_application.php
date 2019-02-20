@@ -108,7 +108,7 @@ class leave_application extends CI_Controller{
 			}
 
         // echo "<pre>";var_export($data['leavedet']);die;
-        $data['noleave']		= $noleave = $this->ap_leave->get_no_ofday($data['leavedet'][0]->leave_from, $data['leavedet'][0]->leave_to, $data['leavedet'][0]->leave_type, $data['leavedet'][0]->leave_duration, $data['leavedet'][0]->v_hospitalcode, $yearapplied);
+        $data['noleave']		= $noleave = $this->ap_leave->get_no_ofday($data['leavedet'][0]->leave_from, $data['leavedet'][0]->leave_to, $data['leavedet'][0]->leave_type, $data['leavedet'][0]->leave_duration, $data['leavedet'][0]->v_hospitalcode, $yearapplied,$data['leavedet'][0]->user_id);
         // echo "<pre>";var_export($data);die;
 
 		$this->load->view('Head');

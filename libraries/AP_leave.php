@@ -92,7 +92,8 @@ class AP_leave {
   					$fromdate	= $list->leave_from;//($list->leave_from) ? $list->leave_from : $list->leave_to;
   					$todate		= ($list->leave_to) ? $list->leave_to : $list->leave_from;
 
-  					$row->noleave = $this->get_no_ofday($fromdate, $todate, $list->leave_type, $list->leave_duration, $list->v_hospitalcode, $year);
+  					//$row->noleave = $this->get_no_ofday($fromdate, $todate, $list->leave_type, $list->leave_duration, $list->v_hospitalcode, $year);
+            $row->noleave = $this->get_no_ofday($fromdate, $todate, $list->leave_type, $list->leave_duration, $list->v_hospitalcode, $year,$list->user_id);
 
 
 
@@ -339,7 +340,8 @@ class AP_leave {
 		return $data;
 	}
 
-	public function get_no_ofday($fromdate, $todate, $leave_type, $leave_duration, $v_hospitalcode, $year){
+	public function get_no_ofday($fromdate, $todate, $leave_type, $leave_duration, $v_hospitalcode, $year,$userid=""){
+	$flex_wrk = $this->ci->display_model->flex_wrk($userid);
     $holiday_array = array();
 		$begin = strtotime($fromdate);
 		$end   = strtotime($todate);
@@ -367,7 +369,8 @@ class AP_leave {
 				$no_days = $no_days + 0.5;
 			}
 			$weekend_count = $this->weekend_count();//leave need calculate weekend and public holiday
-			if( !in_array($leave_type, $weekend_count) ){
+			//if( !in_array($leave_type, $weekend_count) ){
+      if( (!in_array($leave_type, $weekend_count)) && ($flex_wrk != 1) ){
 				$what_day = date("N", $begin);
 				if($v_hospitalcode == 'JB'){
 					if (($what_day == 5) || ($what_day == 6) || (in_array($begin, $holiday_array))) { // 5 and 6 are weekend days
@@ -382,6 +385,10 @@ class AP_leave {
 						$weekends++;
 					}
 				}
+			}else{
+				$weekends=0;
+
+				//$weekends=0;
 			}
 			$begin += 86400; // +1 day
 		};

@@ -145,8 +145,10 @@
                                     <input name="emp_pass" id="emp_pass" type="password" class="form-control" value="<?= isset($employeedet[0]->v_password) ? $employeedet[0]->v_password : '' ?>"/ >
                                     </div>
                                     <?php } ?>
-                                    <div class="form-group">
+                                  <div class="form-group">
                                         <input type="checkbox" name="probation_stat" value="Y"<?= ($probation) ? 'checked' : ''?>> Probation Staff
+                                        &nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="flex_work" value="1"<?= ($flex_wrk) ? 'checked' : ''?>> Flexible Working Hour
                                     </div>
                                     <input name="submit" type="submit" class="btn btn-default" id="button" value=" Submit " onClick="return validate_form();"/>
                                 </div>

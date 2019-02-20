@@ -1474,7 +1474,7 @@ parent::__construct();
 		$this->db->or_where('a.v_Actionflag !=','D');
 		$this->db->group_end();
 		$query = $this->db->get();
-		echo $this->db->last_query();
+		//echo $this->db->last_query();
 		//exit();
 		$query_result = $query->result();
 		return $query_result;
@@ -1491,8 +1491,8 @@ parent::__construct();
 		$this->db->or_where('a.v_Actionflag !=','D');
 		$this->db->group_end();
 		$query = $this->db->get();
-		echo $this->db->last_query();
-		exit();
+		//echo $this->db->last_query();
+		//exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
@@ -1691,6 +1691,18 @@ parent::__construct();
 		//echo $this->db->last_query();
 		//exit();
 		$query_result = $query->result();
+		return $query_result;
+	}
+	function flex_wrk($userid){
+		$this->db->select('*');
+		$this->db->from('flex_working');
+		$this->db->where('userid',$userid);
+		$this->db->where('action_flag <>','D');
+		$this->db->where('yn','1');
+		$query = $this->db->get();
+		//echo $this->db->last_query();
+		//exit();
+		$query_result = $query->num_rows();
 		return $query_result;
 	}
 
