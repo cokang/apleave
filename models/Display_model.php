@@ -1706,5 +1706,107 @@ parent::__construct();
 		return $query_result;
 	}
 
+	function get_cuti($year,$month,$group=''){
+		//set_time_limit(300);
+		$this->load->library('Ap_leave');
+		$login_as	= $this->gethrrow($this->session->userdata('v_UserName'));
+
+		$site_state	= $this->get_site($this->session->userdata('v_UserName'));
+		$head		= $this->getheadrow($this->session->userdata('v_UserName'));
+		$report_to	= $this->getreporttorow($this->session->userdata('v_UserName'));
+		//$query=array();
+        $this->db->distinct();
+		 $this->db->select('year(R.leave_from) as year, month(R.leave_from) as month,day(R.leave_from) as day, R.leave_from as date,R.leave_to,(CASE WHEN R.leave_status IS NULL THEN "Pending" ELSE R.leave_status END) as data,R.user_id,R.leave_duration,U.v_hospitalcode,R.leave_type,F.yn');
+	    $this->db->from('employee_leave_req R');
+		$this->db->join('pmis2_sa_user U','U.v_UserID = R.user_id');
+		$this->db->join('leave_type T','T.id = R.leave_type');
+		$this->db->join('group G','G.group_name = U.v_GroupID','left');
+		$this->db->join('flex_working F','F.userid= `R`.`user_id`','left');
+		//$this->db->join('(SELECT group_concat(day(date_holiday)) as cuti,state FROM apleave.holiday_list WHERE year(date_holiday)="'.$year.'" AND month(date_holiday)="'.$month.'"
+                       //GROUP BY state) H','H.state=U.v_hospitalcode AND (F.yn IS NULL OR F.yn <> "1" )','left');
+		$this->db->group_start();
+		$this->db->where('R.leave_status','Approved');
+		$this->db->or_where('R.leave_status IS NULL');
+		$this->db->group_end();
+        $this->db->where('year(R.leave_from)', $year);
+        $this->db->where('month(R.leave_from)', $month);
+        $this->db->where('leave_to is not null');
+
+		if( !in_array($login_as, array("AA","HR")) ){
+
+			if( $head || $report_to ){
+				if( $report_to ){
+					$this->db->group_start();
+					$this->db->where("G.report_to", $this->session->userdata("v_UserName"));
+					$this->db->or_where("U.v_GroupID", $group);
+					$this->db->group_end();
+				}else{
+					$this->db->where("U.v_GroupID", $group);
+				}
+			}
+		}
+		if( $login_as=="AA" ){
+			$this->db->where("U.site_state", $site_state);
+
+		}
+       $this->db->order_by('data','ASC');
+
+   $query = $this->db->get()->result_array();
+ 		//echo $this->db->last_query();
+ //exit();
+	return $query;
+	}
+
+	function get_cuti_details($status,$date,$group=''){
+		$login_as	= $this->gethrrow($this->session->userdata('v_UserName'));
+		$site_state	= $this->get_site($this->session->userdata('v_UserName'));
+		$head		= $this->getheadrow($this->session->userdata('v_UserName'));
+		$report_to	= $this->getreporttorow($this->session->userdata('v_UserName'));
+        $this->db->distinct();
+		$this->db->select('R.leave_type,T.leave_name,R.leave_from,R.leave_to,U.v_UserName,R.leave_status,R.user_id,R.leave_duration,U.v_hospitalcode,F.yn');
+	    $this->db->from('employee_leave_req R');
+		$this->db->join('pmis2_sa_user U','U.v_UserID = R.user_id');
+		$this->db->join('leave_type T','T.id = R.leave_type');
+		$this->db->join('group G','G.group_name = U.v_GroupID','left');
+		$this->db->join('flex_working F','F.userid= `R`.`user_id`','left');
+		//$this->db->join('(SELECT group_concat(day(date_holiday)) as cuti,state FROM apleave.holiday_list WHERE year(date_holiday)="'.date("Y",$date).'" AND month(date_holiday)="'.date("m",$date).'"
+        //GROUP BY state) H','H.state=U.v_hospitalcode AND (F.yn IS NULL OR F.yn <> "1" )','left');
+		$this->db->group_start();
+		if($status=='Approved'){
+		$this->db->where('R.leave_status','Approved');
+		}else{
+		$this->db->where('R.leave_status IS NULL');
+		}
+		//$this->db->or_where('R.leave_status IS NULL');
+		$this->db->group_end();
+        $this->db->where('"'.date("Y-m-d",$date).'"between leave_from and leave_to');
+        $this->db->where('year(R.leave_from)', date("Y",$date));
+		 $this->db->where('leave_to is not null');
+
+		if( !in_array($login_as, array("AA","HR")) ){
+
+			if( $head || $report_to ){
+				if( $report_to ){
+					$this->db->group_start();
+					$this->db->where("G.report_to", $this->session->userdata("v_UserName"));
+					$this->db->or_where("U.v_GroupID", $group);
+					$this->db->group_end();
+				}else{
+					$this->db->where("U.v_GroupID", $group);
+				}
+			}
+		}
+		if( $login_as=="AA" ){
+			$this->db->where("U.site_state", $site_state);
+			// $this->db->or_where("U.v_GroupID", $group);
+		}
+
+
+   $query = $this->db->get()->result_array();
+ //echo $this->db->last_query();
+ //exit();
+	return $query;
+	}
+
 }
 ?>

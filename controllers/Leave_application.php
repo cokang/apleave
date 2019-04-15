@@ -67,7 +67,7 @@ class leave_application extends CI_Controller{
 	    $end   = strtotime($data['todate']);
 
 		//same date
-		$data['limit'] = 2;
+		$data['limit'] = 4;
 		isset($_GET['p']) ? $data['page'] = $_GET['p'] : $data['page'] = 1;
 		$data['start'] = ($data['page'] * $data['limit']) - $data['limit'];
 		//echo "lalalalallala : ".$data['fromdate'];

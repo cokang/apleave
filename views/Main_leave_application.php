@@ -180,14 +180,15 @@
                 </tbody>
               <?php endforeach; ?>
               </table>
-              <ul class="pagination">
+
+              <!--<ul class="pagination">
                 <?php if ($rec[0]->jumlah > $limit){ ?>
                   <?php for ($i=1;$i<=$page;$i++){ ?>
                 <li class="paginate_button">&nbsp;<a href="?p=<?php echo $i?>&name=<?=$userid?>&id=<?=$regid?>"><?=$i?></a></li>
                   <?php } ?>
                 <li class="paginate_button previous"><a href="?p=<?php echo $page?>&name=<?=$userid?>&id=<?=$regid?>">Next</a></li>
                 <?php } ?>
-              </ul>
+              </ul>-->
             </div>
             <!-- /.table-responsive -->
           </div>

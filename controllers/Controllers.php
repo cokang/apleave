@@ -550,9 +550,10 @@ class Controllers extends CI_Controller {
 		$this->load->view('Main_leave_Limit');
 		$this->load->view('footer');
 	}
-	public function date_calender()
+	public function date_calender($year=null, $month=null)
 	{
 		$this->load->library("ap_leave");
+		$this->load->library("mycal");
 		$this->load->model('display_model');
 
 		isset($_REQUEST['date_calendar']) ? $datecal = date("d-m-Y",strtotime($_REQUEST['date_calendar'])) : $datecal = date("d-m-Y");
@@ -585,10 +586,14 @@ class Controllers extends CI_Controller {
 			$todate = ($row->leave_to) ? $row->leave_to : $row->leave_from;
 			$row->noleave = $this->ap_leave->get_no_ofday($row->leave_from, $todate, $row->leave_type, $row->leave_duration, $row->v_hospitalcode, date('Y',strtotime($datecal)),$row->user_id);
 		}
+		$tahun= ($year <> null) ? $year : date("Y");
+		$bulan= ($month <> null) ? $month : date("m");
+
 		$this->load->view('Head',$data);
 		$this->load->view('top');
 		$this->load->view('left');
-		$this->load->view('Main_date_calender');
+		$data['kal']= $this->mycal->kal($tahun, $bulan,$data['getgroupdet'][0]->v_GroupID);
+		$this->load->view('Main_date_calender',$data);
 		$this->load->view('footer');
 	}
 
@@ -818,4 +823,55 @@ class Controllers extends CI_Controller {
 		}
 		$this->load->view('footer');
 	}
+
+	public function cutidetails(){
+		//echo date("Y-m-d",$this->input->get('date'));
+$this->load->library('Ap_leave');
+$this->load->model('display_model');
+$getgroupdet = $this->display_model->getgroupdet($this->session->userdata('v_UserName'));
+$maklumat=$this->display_model->get_cuti_details($this->input->get('status'),strtotime($this->input->get('date')),$getgroupdet[0]->v_GroupID);
+$data=array();
+//$jum=array();
+//echo "<pre>";
+//print_r($maklumat);
+//echo date("d",$this->input->get('date'));
+//echo $this->input->get('date');
+//echo date_format($this->input->get('date'),'Y-m-d');
+//echo date("Y-m-d", strtotime($this->input->get('date')) );
+//print_r($maklumat);
+foreach ($maklumat as $row){
+	$begin = strtotime($row['leave_from']);
+	$end = strtotime($row['leave_to']);
+	$nilai=array();
+	//$bulan = date("m",strtotime($row['leave_from']));
+	$bulan = date("m",strtotime($this->input->get('date')));
+	while ($begin <= $end) {
+	if (date("m",$begin) == $bulan){
+	$nilai[$row['user_id']][]=$this->ap_leave->semak_cuti($begin,$row['v_hospitalcode'],$row['yn'],$row['leave_type']);
+	}
+	$begin += 86400;
+	}
+	//print_r($nilai);
+if(in_array(date("d",strtotime($this->input->get('date'))),$nilai[$row['user_id']])){
+if (array_key_exists($row['leave_name'], $data)) {
+	 $data[$row['leave_name']][]= $row['v_UserName'];
+}else{
+     $data[$row['leave_name']][]= $row['v_UserName'];
+}
+
+ }
+  }
+//echo "<pre>";
+//print_r($nilai);
+
+foreach($data as $key=>$row){
+echo'<h3>'.$key.'</h3>';
+ echo'<ol>';
+ foreach($row as $row2){
+	echo'<li>'.$row2.'</li>';
+ }
+ echo'</ol>';
+}
+}
+
 }

@@ -489,5 +489,53 @@ public function getleavefield(){
 	   }
    return $test;
 }
+
+public function semak_cuti($mula,$hospitalcode,$flex,$leave_type){
+
+$x=date("N",$mula);
+$test=null;
+$weekend_count = $this->weekend_count();
+if((!in_array($leave_type, $weekend_count))&&($flex != 1)){
+if($hospitalcode == 'JB'){
+if (($x == 5) || ($x == 6)) { // 5 and 6 are weekend days
+	$test=null;
+	}else{
+    /* if(in_array(date("d",$mula),$cuti)){
+	$test=null;
+	}else{
+	$test=date("d",$mula);
+	} */
+	$test=(int)date("d",$mula);
+	  }
+}elseif($hospitalcode == NULL ){
+	if ($x > 5 ) { // 6 and 7 are weekend days
+		$test=null;
+	 }else{
+/* 	if(in_array(date("d",$mula),$cuti)){
+	$test=null;
+	}else{
+	$test=date("d",$mula);
+	} */
+	$test=(int)date("d",$mula);
+	 }
+}else{
+ if ($x > 5) { // 6 and 7 are weekend days
+
+	}else{
+
+	/* if(in_array(date("d",$mula),$cuti)){
+	$test=null;
+	}else{
+	$test=date("d",$mula);
+	} */
+	$test=(int)date("d",$mula);
+	}
+}
+}else{
+$test=(int)date("d",$mula);
+}
+return $test;
+}
+
 }
 ?>

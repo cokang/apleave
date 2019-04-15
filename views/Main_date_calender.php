@@ -1,10 +1,52 @@
+<?php if( $this->input->get()=="taken_action" ){?>
+<?php $action_pending = "";$taken_action="active";?>
+<?php }else{ ?>
+<?php $action_pending = "active";$taken_action="";?>
+<?php } ?> 
+<head>
+<style type="text/css">
+
+    .calendar{
+          text-align: center;
+    }
+    .calendar .highlight {
+		width: 2em;
+      border-radius: 50%;
+      background-color: #154360;
+        color: white;
+        text-decoration: none;
+      display: inline-block;
+        padding: 3px 3px;
+    }
+    .highlight:hover {
+        background-color: #ddd;
+        color: black;
+    } 
+    .test{
+      background-color: #4B0082;
+      font-size: 12px;
+      color: white;
+    }
+    .test2{
+      background-color: #FFB6C1;
+      font-size: 12px;
+      color: black;
+    }
+.sapik {
+  height: 300px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+</style>
+</head>
 <div id="page-wrapper">
 	<div class="row">
 		<div class="col-lg-12">
-			<h1 class="page-header">Leave Calender</h1>
+			<h1 class="page-header">Leave Calendar</h1>
 		</div>
 		<!-- /.col-lg-12 -->
 	</div>
+	<!-- /.row -->
 
 	<!-- /.row -->
 	<div class="row">
@@ -12,10 +54,18 @@
 		<!-- /.col-lg-6 -->
 		<div class="col-lg-12">
 			<div class="panel panel-default">
-				<div class="panel-heading"> </div>
+				<div class="panel-heading" style="padding: 0px 0px 0px 0px; border-bottom: 0px solid transparent;">
+					<div class="tab">
+						<button class="tablinks <?=$action_pending;?>" onclick="tabs_navigation(event, 'pending')">List Search</button>
+						<button id="defaultOpen" class="tablinks <?=$taken_action;?>" onclick="tabs_navigation(event, 'taken_action')">Calendar</button>
+					</div>
+				</div>
 				<!-- /.panel-heading -->
 				<div class="panel-body">
-					<form method="POST" action="">
+
+					<div id="pending" class="tabcontent <?=$action_pending;?>">
+						<div class="table-responsive">
+						<form method="POST" action="">
 						<div class="form-group col-lg-3" id="from_date">
 							<label>Date From</label>
 							<input name="date_calendar" id="date_calendar" type="text" class="form-control" value="<?=isset($datecal) ? $datecal : ''?>" onchange="submit()" autocomplete="off" />
@@ -68,16 +118,73 @@
 							<li class="paginate_button previous"><a href="?tabIndex=1&p=<?php echo $page?>&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>">Next</a></li>
 						<?php } ?>
 						</ul>
+						</div>
 					</div>
+					</div>
+
+					<div id="taken_action" class="tabcontent <?=$taken_action;?>">
+						<div class="table-responsive">
+                			<?php echo $kal; ?>
+ 							 </div>
+  					</div>			
 					<!-- /.table-responsive -->
 				</div>
 				<!-- /.panel-body -->
 			</div>
 			<!-- /.panel -->
 		</div>
-		<!-- /.col-lg-6 -->
+		<!-- /.col-lg-7 -->
 
 	</div>
 	<!-- /.row -->
 </div>
 <!-- /#page-wrapper -->
+
+<!-- #modal Dialog -->
+<div  id="myModal">
+	<div class="sapik" id="responsecontainer"></div>
+</div>
+
+<script>
+function tabs_navigation(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+// Get the element with id="defaultOpen" and click on it
+<?php if ($this->input->post('date_calendar')) { ?>
+document.getElementById("tablinks").click();
+<?php } else {?>
+document.getElementById("defaultOpen").click();
+<?php }?>
+
+function tengokcuti(status,date){
+	//var james='ewqe';
+	//alert(date);
+    $.ajax({    //create an ajax request to display.php
+        type: "GET",
+        url: "<?=base_url();?>index.php/Controllers/cutidetails?date="+date+"&status="+status,         
+        dataType: "html",   //expect html to be returned                
+        success: function(response){
+         $("#myModal").dialog();	
+		$('.ui-dialog').css('height', '50%');
+		$('.ui-dialog').css('top', '285px');
+		$('.ui-dialog-content').css('overflow', 'hidden');
+		$('#ui-id-1').html(status+" "+date);
+        // $("a.close-modal").css("top","1.5px");
+        // $("a.close-modal").css("right","1.5px");                   
+         $("#responsecontainer").html(response); 
+        }
+
+    });
+        } 
+</script>
+
