@@ -71,16 +71,17 @@ function addprobation($probation_stat){
 function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 			$this->db->select("$value1, $value2");
 			$this->db->where($value1,$variable1);
-			$this->db->group_start();
-			$this->db->where('v_Actionflag');
-			$this->db->or_where('v_Actionflag !=','D');
-			$this->db->group_end();
+			//$this->db->group_start();
+			//$this->db->where('v_Actionflag');
+			//$this->db->or_where('v_Actionflag !=','D');
+			//$this->db->group_end();
 			// $this->db->where($value2,$variable2);
 			$query = $this->db->get('pmis2_sa_user');
 
 			if( $query->num_rows()>0 && $query->row()->$value2==$variable2 ){
 
 				$this->load->model('update_model');
+				$af=($this->input->post('del_user')) ? $this->input->post('del_user') : 'I';
 				$insert_data = array(
 									 'grade' => $this->input->post('emp_grade'),
 									 'design_emp' => $this->input->post('emp_desg'),
@@ -89,6 +90,7 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 									 'site_state' => $this->input->post('hosp_code'),
 									 'v_email' => $this->input->post('emp_email'),
 									 'phone_no' => $this->input->post('phone_no'),
+									 'v_Actionflag' => $af,
 									);
 				$this->update_model->u_addemployee($insert_data,$variable1,$variable2);
 

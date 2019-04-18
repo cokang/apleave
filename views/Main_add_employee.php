@@ -149,11 +149,14 @@
                                         <input type="checkbox" name="probation_stat" value="Y"<?= ($probation) ? 'checked' : ''?>> Probation Staff
                                         &nbsp;&nbsp;&nbsp;
 										<input type="checkbox" name="flex_work" value="1"<?= ($flex_wrk) ? 'checked' : ''?>> Flexible Working Hour
+										&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="del_user" value="D" <?=isset($employeedet[0]->v_Actionflag)&&($employeedet[0]->v_Actionflag =='D') ? 'checked' : '' ?>> Delete User
                                     </div>
                                     <input name="submit" type="submit" class="btn btn-default" id="button" value=" Submit " onClick="return validate_form();"/>
                                 </div>
 
                             </div>
+							
                             </form>
                             <!-- /.row (nested) -->
                         </div>
