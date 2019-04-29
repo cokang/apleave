@@ -9,6 +9,8 @@
 	<link href="<?php echo base_url(); ?>css/bootstrap.min.css" rel="stylesheet">
 	<link href="<?php echo base_url(); ?>css/font-awesome.css" rel="stylesheet">
 	<link href="<?php echo base_url(); ?>css/skin-orange.css" rel="stylesheet">
+	<script src="<?php echo base_url(); ?>js/jquery1.js"></script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>js/jquery-ui.custom.js"></script>
 
 	<!-- Page-Level Plugin CSS - Forms -->
 	<?php if ('Controllers/print_out/'== $this->uri->slash_segment(1) .$this->uri->slash_segment(2)) { ?>
@@ -761,18 +763,22 @@
 		}
 
 		function tabs_navigation(evt, cityName) {
-			var i, tabcontent, tablinks;
-			tabcontent = document.getElementsByClassName("tabcontent");
-			for (i = 0; i < tabcontent.length; i++) {
-				tabcontent[i].style.display = "none";
-			}
-			tablinks = document.getElementsByClassName("tablinks");
-			for (i = 0; i < tablinks.length; i++) {
-				tablinks[i].className = tablinks[i].className.replace(" active", "");
-			}
-			document.getElementById(cityName).style.display = "block";
-			evt.currentTarget.className += " active";
+		  var i, tabcontent, tablinks;
+		  tabcontent = document.getElementsByClassName("tabcontent");
+		  for (i = 0; i < tabcontent.length; i++) {
+		    tabcontent[i].style.display = "none";
+		  }
+		  tablinks = document.getElementsByClassName("tablinks");
+		  for (i = 0; i < tablinks.length; i++) {
+		    tablinks[i].className = tablinks[i].className.replace(" active", "");
+		  }
+		  document.getElementById(cityName).style.display = "block";
+		  evt.currentTarget.className += " active";
 		}
+		// Get the element with id="defaultOpen" and click on it
+		document.getElementById("defaultOpen").click();
+		
+
 	</script>
 
 	<?php } elseif ( 'Controllers/leave_listing/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)){?>
@@ -1963,6 +1969,146 @@
 			Win.window.focus();
 		}
 	</script>
+
+	<?php } elseif ('Controllers/employee_profile/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)) {?>
+	<style>
+		.error_message {
+			border:1px solid #F35C4B;
+			border-left:3px solid #F35C4B;
+			color: #000;
+			display: block;
+			float:left;
+			margin:0 0 20px 0;
+			text-align: left;
+			background:#f5f5f5;
+			width: 900px;
+			padding:10px 15px;
+		}
+		.error_message span {
+			/*background: #F35C4B;*/clear:both;
+			font-weight:bold;
+			padding:0;
+			color:#666;
+			float: left;
+			font-size:12px;
+		}
+		.success_message {
+			border:1px solid #0F9;
+			border-left:3px solid #0F9;
+			color: #000;
+			display: block;
+			float:left;
+			margin:0 0 20px 0;
+			text-align: left;
+			background:#f5f5f5;
+			width: 900px;
+			padding:10px 15px;
+		}
+	</style>
+		<link href="<?php echo base_url(); ?>/css/jquery-ui.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="<?php echo base_url(); ?>/js/jquery9.js"></script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>/js/jquery-ui.js"></script>
+	<script type="text/javascript">
+	$( function() {
+    $( "#datepicker" ).datepicker({ dateFormat: 'dd-mm-yy',
+ changeYear: true,	});
+
+  } );
+		function validate_form(form){
+
+			$("#address").css("border-color","#D9D8D4");
+	
+			//$("#hosp_code").css("border-color","#D9D8D4");
+			//$("#phone_no").css("border-color","#D9D8D4");
+			//$("#phone_no").parent().find("small").empty();
+
+			var error=0;
+			var err_msg="";
+
+			/*if($('#mobile').val().length>10){
+			err_msg="Mobile number should not be more than 10 digits<br>";
+			error=1;
+			}*/
+
+			if($("#address").val()==""){
+				$("#address").css("border-color","red");
+				error=1;
+			}
+			
+		if($("#phone_no").val()==""){
+			$("#phone_no").css("border-color","red");
+			error=1;
+		}
+		if($("#poscode").val()==""){
+			$("#poscode").css("border-color","red");
+			error=1;
+		}
+		if($("#bgsa").val()==""){
+			$("#bgsa").css("border-color","red");
+			error=1;
+		}
+	
+		if ( ( form.mstatus[0].checked == false ) && ( form.mstatus[1].checked == false )&& ( form.mstatus[2].checked == false )  ) 
+       {
+       $('#bujang').addClass('garismerah');
+    	error=1;	
+       }else{
+		$('#bujang').removeClass('garismerah');  
+	   }
+	   	if ( ( form.bstatus[0].checked == false ) && ( form.bstatus[1].checked == false )&& ( form.bstatus[2].checked == false )&& ( form.bstatus[3].checked == false )  ) 
+       {
+       $('#bangsa').addClass('garismerah');
+    	error=1;	
+       }else{
+		 $('#bangsa').removeClass('garismerah');   
+	   }
+	
+
+		if( $("#phone_no").val()!="" ){
+			if( isNaN($("#phone_no").val()) ){
+				$("#phone_no").css("border-color","red");
+				$("#phone_no").after("<small style='color:red'>Phone Number Cannot Be String.</small>");
+				error=1;
+			}else if($("#phone_no").val().charAt(0) != 0 && $("#phone_no").val().charAt(1)){
+				$("#phone_no").css("border-color","red");
+				$("#phone_no").after("<small style='color:red'>Phone Number Must Start With 01....</small>");
+				error=1;
+			}else if($("#phone_no").val()!="" && $("#phone_no").val().length < 10){
+				$("#phone_no").css("border-color","red");
+				$("#phone_no").after("<small style='color:red'>Phone Number Not Completed.</small>");
+				error=1;
+			}
+		}
+		
+
+
+
+
+		if(error==1){
+			if(err_msg!="")
+				alert(err_msg);
+				return false;
+			}else{
+				//alert('ok');
+			/* 	$.ajax({
+					type: "POST",
+					url: "http://serverfordemo.com/green_leave/ajax.php",
+					data: "action=add_employee&name="+$("#emp_name").val()+"&email="+$("#emp_email").val()+"&type="+$("#emp_type").val()+"&uname="+$("#emp_uname").val()+"&code="+$("#emp_code").val()+"&pass="+$("#emp_pass").val()+"&report_to="+$("#report_to").val(),
+					dataType: "json",
+					success: function(result) {
+						alert("Employee Personal Added successfully");
+						location.reload();
+					}
+				}); */
+				location.reload();
+			}
+		}
+	</script>
+	<style>
+		div.ui-datepicker {
+			font-size:13px;
+		}
+	</style>
 
 	<?php } ?>
 

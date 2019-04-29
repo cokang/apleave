@@ -6,6 +6,9 @@
 		<?php if ($this->session->userdata('passvalidity') == "valid") {?>
 			<?= (($this->input->get('tab') == $num2++) or ($this->uri->slash_segment(1) .$this->uri->slash_segment(2) == 'Controllers/apply_leave/')or ($this->uri->slash_segment(1) .$this->uri->slash_segment(2) == 'Controllers/do_upload/')) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/apply_leave?tab=<?=$num++?>" class="ahref"><i class="fa fa-windows fa-fw"></i>Apply Leave</a></li>
 			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/leave_listing?tab=<?=$num++?>" class="ahref"><i class="fa fa-pencil fa-fw"></i>Leave Requests</a></li>
+
+			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/employee_profile?tab=<?=$num++?>" class="ahref"><i class="fa fa-book fa-fw"></i>Employee Profile</a></li>
+
 			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/leave_account_view?tab=<?=$num++?>" class="ahref"><i class="fa fa-paperclip fa-fw"></i>Leave Balance</a></li>
 
 			<?php if ( ($hrrow == "HR") OR ($headrow > 0) OR ($hrrow == "AA") ){ ?>

@@ -874,4 +874,24 @@ echo'<h3>'.$key.'</h3>';
 }
 }
 
+public function employee_profile()
+	{
+		$this->load->model('display_model');
+		$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
+		$data['hrrow'] = $this->display_model->gethrrow($this->session->userdata('v_UserName'));
+		$data['personal']=$this->display_model->personal_disp();
+		$data['p_child']=$this->display_model->personal_child();
+		$data['p_emgcy']=$this->display_model->personal_emgcy();
+		//echo "<pre>";
+		//print_r($data['p_child']); exit();
+		//$data['leavelist'] = $this->display_model->leavelisttt($this->session->userdata('v_UserName'));
+
+
+		$this->load->view('Head');
+		$this->load->view('top');
+		$this->load->view('left',$data);
+		$this->load->view('Main_employee_profile');
+		$this->load->view('footer');
+	}
+
 }

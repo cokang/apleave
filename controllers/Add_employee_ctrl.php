@@ -17,7 +17,7 @@ class add_employee_ctrl extends CI_Controller{
 			redirect("/");
 		}
 	}
-	
+
 	function index(){
 		$userid = $this->input->post('emp_uname');
 		$emp_type = $this->input->post('emp_type');
@@ -30,5 +30,128 @@ class add_employee_ctrl extends CI_Controller{
 			redirect_back();
 		}
 	}
+
+
+	function save_personal(){
+		//echo $this->input->post('date_kahwin');
+		//exit();
+			$this->load->model('insert_model');
+			$this->load->model('update_model');
+
+		$insert_data=array('v_user_id'=>$this->session->userdata('v_UserName'),
+											 'v_add1'=>$this->input->post('address'),
+											 'v_add2'=>$this->input->post('poscode'),
+											 'v_tel_1'=>$this->input->post('phone_no'),
+											 'v_tel_2'=>$this->input->post('phone_no1'),
+											 'v_marital_st'=>$this->input->post('mstatus'),
+											 'v_spouse_name'=>$this->input->post('nama_psgn'),
+											 'v_race'=>$this->input->post('bstatus'),
+											 'v_religion'=>$this->input->post('agama'),
+											 'v_marital_date'=>($this->input->post('date_kahwin')) ? date('y-m-d',strtotime($this->input->post('date_kahwin'))) : null,
+											 'v_nationality'=>$this->input->post('n_nality'),
+											 'v_spouse_ic'=>$this->input->post('icpsgn'),
+											 'v_spouse_ps'=>$this->input->post('ppsgn'),
+											 'v_spouse_cr'=>$this->input->post('jobpsgn'),
+											 'v_spouse_emp'=>$this->input->post('emppsgn'),
+											 'v_spouse_tel'=>$this->input->post('phonpsgn'),
+											 'D_timestamp' => date('Y-m-d H:i:s')
+							 );
+
+			$update_data=array('v_add1'=>$this->input->post('address'),
+											 'v_add2'=>$this->input->post('poscode'),
+											 'v_tel_1'=>$this->input->post('phone_no'),
+											 'v_tel_2'=>$this->input->post('phone_no1'),
+											 'v_marital_st'=>$this->input->post('mstatus'),
+											 'v_spouse_name'=>$this->input->post('nama_psgn'),
+											 'v_race'=>$this->input->post('bstatus'),
+											 'v_religion'=>$this->input->post('agama'),
+											 'v_marital_date'=>date('y-m-d',strtotime($this->input->post('date_kahwin'))),
+											 'v_nationality'=>$this->input->post('n_nality'),
+											 'v_spouse_ic'=>$this->input->post('icpsgn'),
+											 'v_spouse_ps'=>$this->input->post('ppsgn'),
+											 'v_spouse_cr'=>$this->input->post('jobpsgn'),
+											 'v_spouse_emp'=>$this->input->post('emppsgn'),
+											 'v_spouse_tel'=>$this->input->post('phonpsgn'),
+											 'D_timestamp' => date('Y-m-d H:i:s')
+							 );
+
+		if($this->insert_model->simpan_personal($insert_data,$update_data)){
+			//echo $this->input->post('del_c');exit();
+			$delc=explode(",",$this->input->post('del_c'));
+			$delc1=explode(",",$this->input->post('del_c1'));
+			if($delc){
+			$this->update_model->delete_anak($delc);
+			}
+			if($delc1){
+			$this->update_model->delete_emg($delc1);
+			}
+			//echo "<pre>";
+			//print_r($delc);exit();
+		 $id=($this->input->post('id')) ? $this->input->post('id') : $this->db->insert_id();
+		if($this->input->post('id_c')){
+		foreach($this->input->post('id_c') as $key){
+		$child_data=array(
+		'v_ch_name'=>$this->input->post('nama_son')[$key],
+		'v_marital_st'=>$this->input->post('sts_son')[$key],
+		'v_career'=>$this->input->post('crc_son')[$key],
+		'v_gender'=>$this->input->post('gdr_son')[$key],
+		'v_birth_dt'=>($this->input->post('bfdate')[$key]) ? date('y-m-d',strtotime($this->input->post('bfdate')[$key])) : null,
+		'v_ch_id'=>$this->input->post('id_son')[$key],
+		'v_ch_ps'=>$this->input->post('ps_son')[$key]
+		);
+		$this->update_model->update_anak($key,$child_data);
+		}
+		}
+		foreach($this->input->post('nama_son') as $key=>$nilai){
+		if(!in_array($key,$this->input->post('id_c'))){
+		$child_data=array(
+		'v_row_id'=>$id,
+		'v_ch_name'=>$nilai,
+		'v_marital_st'=>$this->input->post('sts_son')[$key],
+		'v_career'=>$this->input->post('crc_son')[$key],
+		'v_gender'=>$this->input->post('gdr_son')[$key],
+		'v_birth_dt'=>($this->input->post('bfdate')[$key]) ? date('y-m-d',strtotime($this->input->post('bfdate')[$key])) : null,
+		'v_ch_id'=>$this->input->post('id_son')[$key],
+		'v_ch_ps'=>$this->input->post('ps_son')[$key]
+		);
+		if($nilai <> ''){
+		$this->insert_model->simpan_anak($child_data);
+		}
+			}
+		}
+
+
+			if($this->input->post('id_c1')){
+		foreach($this->input->post('id_c1') as $key1){
+		$emg_data=array(
+				'v_em_name'=>$this->input->post('emg_name')[$key1],
+				'v_em_relay'=>$this->input->post('emg_rel')[$key1],
+				'v_em_tel'=>$this->input->post('emg_phne')[$key1]
+		);
+		$this->update_model->update_emg($key1,$emg_data);
+		}
+		 }
+		foreach($this->input->post('emg_name') as $key1=>$nilai1){
+		if(!in_array($key1,$this->input->post('id_c1'))){
+		$emg_data=array(
+		'v_row_id'=>$id,
+				'v_em_name'=>$nilai1,
+				'v_em_relay'=>$this->input->post('emg_rel')[$key1],
+				'v_em_tel'=>$this->input->post('emg_phne')[$key1]
+		);
+		if($nilai1 <> ''){
+		$this->insert_model->simpan_emg($emg_data);
+		}
+			 }
+		}
+
+
+		redirect('Controllers/employee_profile?tab=3');
+		}else{
+			$this->load->helper('url');
+			redirect_back();
+		}
+	}
+
 }
 ?>

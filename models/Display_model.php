@@ -1808,5 +1808,44 @@ parent::__construct();
 	return $query;
 	}
 
+
+
+	   function personal_disp(){
+	$this->db->select('*');
+	$this->db->from('pmis2_sa_details');
+	$this->db->where('v_user_id',$this->session->userdata('v_UserName'));
+    $query = $this->db->get();
+		//echo $this->db->last_query();
+		//exit();
+	$query_result = $query->result();
+	return $query_result;
+	}
+
+		   function personal_child(){
+	$this->db->select('pmis2_sa_child.*');
+	$this->db->from('pmis2_sa_child');
+	$this->db->join('pmis2_sa_details','pmis2_sa_child.v_row_id=pmis2_sa_details.id');
+	$this->db->where('pmis2_sa_details.v_user_id',$this->session->userdata('v_UserName'));
+	$this->db->where('pmis2_sa_child.v_Actionflag <>','D');
+    $query = $this->db->get();
+		//echo $this->db->last_query();
+		//exit();
+	$query_result = $query->result();
+	return $query_result;
+	}
+
+			   function personal_emgcy(){
+	$this->db->select('pmis2_sa_emgct.*');
+	$this->db->from('pmis2_sa_emgct');
+	$this->db->join('pmis2_sa_details','pmis2_sa_emgct.v_row_id=pmis2_sa_details.id');
+	$this->db->where('pmis2_sa_details.v_user_id',$this->session->userdata('v_UserName'));
+	$this->db->where('pmis2_sa_emgct.v_Actionflag <>','D');
+    $query = $this->db->get();
+		//echo $this->db->last_query();
+		//exit();
+	$query_result = $query->result();
+	return $query_result;
+	}
+
 }
 ?>

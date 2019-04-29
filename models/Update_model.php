@@ -52,5 +52,30 @@ function upflex($updflex,$userid){
 /* 	 echo $this->db->last_query();
  exit(); */
 }
+
+function update_personal($insert_data){
+	 $this->db->where('v_user_id',$this->session->userdata('v_UserName'));
+	$this->db->update('pmis2_sa_details', $insert_data);
+}
+function update_anak($id,$insert_data){
+	 $this->db->where('id',$id);
+	$this->db->update('pmis2_sa_child', $insert_data);
+}
+function delete_anak($del){
+	//print_r($del);exit();
+	$del_data=array('v_Actionflag'=>'D');
+	 $this->db->where_in('id',$del);
+	$this->db->update('pmis2_sa_child', $del_data);
+}
+function update_emg($id,$insert_data){
+	 $this->db->where('id',$id);
+	$this->db->update('pmis2_sa_emgct', $insert_data);
+}
+function delete_emg($del){
+	//print_r($del);exit();
+	$del_data=array('v_Actionflag'=>'D');
+	 $this->db->where_in('id',$del);
+	$this->db->update('pmis2_sa_emgct', $del_data);
+}
 }
 ?>
