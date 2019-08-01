@@ -149,6 +149,8 @@ parent::__construct();
 	}
 	function samedateleave($fromdate,$todate,$userid,$limit,$start,$group=''){
 		//$this->db->select('R.*,U.v_UserName,U.v_hospitalcode');
+
+		$this->db->distinct();
 		$this->db->select('R.*,U.v_UserName,U.v_hospitalcode, LT.leave_name');
 		//$this->db->where('leave_from',$fromdate);
 		$this->db->group_start();

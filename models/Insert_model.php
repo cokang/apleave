@@ -351,5 +351,29 @@ function leave_limit_exist(){
 		function addflex($insert_data){
     $this->db->insert('flex_working', $insert_data);
 }
+function simpan_personal($insert_data,$update_data){
+	$this->load->model('update_model');
+	$this->db->where('v_user_id',$this->session->userdata('v_UserName'));
+    $query = $this->db->get('pmis2_sa_details');
+    if ($query->num_rows() > 0){
+    $this->update_model->update_personal($update_data);
+	return true;
+	}
+    else{
+	$this->db->insert('pmis2_sa_details',$insert_data);
+    return $this->db->insert_id();
+    }
+
+  }
+
+ function simpan_anak($insert_data){
+	$this->db->insert('pmis2_sa_child',$insert_data);
+return true;
+  }
+
+ function simpan_emg($insert_data){
+	$this->db->insert('pmis2_sa_emgct',$insert_data);
+return true;
+  }
 }
 ?>

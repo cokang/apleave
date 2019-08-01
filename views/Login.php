@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Login</title>
+        <link rel="shortcut icon" href="<?php echo base_url(); ?>images/login_image.png" type="image/x-icon" />
         <link rel="stylesheet" href="<?php echo base_url();?>css/bootstrap.min.css">
         <link rel="stylesheet" href="<?php echo base_url(); ?>font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" href="<?php echo base_url()?>css/login.css">

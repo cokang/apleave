@@ -3,6 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" href="<?php echo base_url(); ?>images/login_image.png" type="image/x-icon" />
 	<title>ADVANCEPACT - Apply Leave</title>
 
 	<!-- Core CSS - Include with every page -->
@@ -107,9 +108,9 @@
 	$leave_to = implode(",", array_values($leave_to));
 	?>
 	<!-- Page-Level Demo Scripts - Forms - Use for reference -->
-	<link href="<?php echo base_url(); ?>/css/jquery-ui.css" rel="stylesheet" type="text/css" />
-	<script type="text/javascript" src="<?php echo base_url(); ?>/js/jquery9.js"></script>
-	<script type="text/javascript" src="<?php echo base_url(); ?>/js/jquery-ui.js"></script>
+	<link href="<?php echo base_url(); ?>css/jquery-ui.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="<?php echo base_url(); ?>js/jquery9.js"></script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>js/jquery-ui.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			/*var unavailableDates = ["23-9-2015", "14-12-2015", "15-12-2015"];
@@ -777,7 +778,7 @@
 		}
 		// Get the element with id="defaultOpen" and click on it
 		document.getElementById("defaultOpen").click();
-		
+
 
 	</script>
 
@@ -2005,9 +2006,9 @@
 			padding:10px 15px;
 		}
 	</style>
-		<link href="<?php echo base_url(); ?>/css/jquery-ui.css" rel="stylesheet" type="text/css" />
-	<script type="text/javascript" src="<?php echo base_url(); ?>/js/jquery9.js"></script>
-	<script type="text/javascript" src="<?php echo base_url(); ?>/js/jquery-ui.js"></script>
+		<link href="<?php echo base_url(); ?>css/jquery-ui.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="<?php echo base_url(); ?>js/jquery9.js"></script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>js/jquery-ui.js"></script>
 	<script type="text/javascript">
 	$( function() {
     $( "#datepicker" ).datepicker({ dateFormat: 'dd-mm-yy',
@@ -2017,7 +2018,7 @@
 		function validate_form(form){
 
 			$("#address").css("border-color","#D9D8D4");
-	
+
 			//$("#hosp_code").css("border-color","#D9D8D4");
 			//$("#phone_no").css("border-color","#D9D8D4");
 			//$("#phone_no").parent().find("small").empty();
@@ -2034,7 +2035,7 @@
 				$("#address").css("border-color","red");
 				error=1;
 			}
-			
+
 		if($("#phone_no").val()==""){
 			$("#phone_no").css("border-color","red");
 			error=1;
@@ -2047,22 +2048,22 @@
 			$("#bgsa").css("border-color","red");
 			error=1;
 		}
-	
-		if ( ( form.mstatus[0].checked == false ) && ( form.mstatus[1].checked == false )&& ( form.mstatus[2].checked == false )  ) 
+
+		if ( ( form.mstatus[0].checked == false ) && ( form.mstatus[1].checked == false )&& ( form.mstatus[2].checked == false )  )
        {
        $('#bujang').addClass('garismerah');
-    	error=1;	
+    	error=1;
        }else{
-		$('#bujang').removeClass('garismerah');  
+		$('#bujang').removeClass('garismerah');
 	   }
-	   	if ( ( form.bstatus[0].checked == false ) && ( form.bstatus[1].checked == false )&& ( form.bstatus[2].checked == false )&& ( form.bstatus[3].checked == false )  ) 
+	   	if ( ( form.bstatus[0].checked == false ) && ( form.bstatus[1].checked == false )&& ( form.bstatus[2].checked == false )&& ( form.bstatus[3].checked == false )  )
        {
        $('#bangsa').addClass('garismerah');
-    	error=1;	
+    	error=1;
        }else{
-		 $('#bangsa').removeClass('garismerah');   
+		 $('#bangsa').removeClass('garismerah');
 	   }
-	
+
 
 		if( $("#phone_no").val()!="" ){
 			if( isNaN($("#phone_no").val()) ){
@@ -2079,7 +2080,7 @@
 				error=1;
 			}
 		}
-		
+
 
 
 

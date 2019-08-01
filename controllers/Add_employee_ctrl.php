@@ -75,7 +75,8 @@ class add_employee_ctrl extends CI_Controller{
 											 'D_timestamp' => date('Y-m-d H:i:s')
 							 );
 
-		if($this->insert_model->simpan_personal($insert_data,$update_data)){
+			$ins=$this->insert_model->simpan_personal($insert_data,$update_data);
+			if($ins){
 			//echo $this->input->post('del_c');exit();
 			$delc=explode(",",$this->input->post('del_c'));
 			$delc1=explode(",",$this->input->post('del_c1'));
@@ -87,7 +88,8 @@ class add_employee_ctrl extends CI_Controller{
 			}
 			//echo "<pre>";
 			//print_r($delc);exit();
-		 $id=($this->input->post('id')) ? $this->input->post('id') : $this->db->insert_id();
+		 //$id=($this->input->post('id')) ? $this->input->post('id') : $this->db->insert_id();
+		 		 $id=($this->input->post('id')) ? $this->input->post('id') : $ins;
 		if($this->input->post('id_c')){
 		foreach($this->input->post('id_c') as $key){
 		$child_data=array(

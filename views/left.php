@@ -7,7 +7,7 @@
 			<?= (($this->input->get('tab') == $num2++) or ($this->uri->slash_segment(1) .$this->uri->slash_segment(2) == 'Controllers/apply_leave/')or ($this->uri->slash_segment(1) .$this->uri->slash_segment(2) == 'Controllers/do_upload/')) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/apply_leave?tab=<?=$num++?>" class="ahref"><i class="fa fa-windows fa-fw"></i>Apply Leave</a></li>
 			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/leave_listing?tab=<?=$num++?>" class="ahref"><i class="fa fa-pencil fa-fw"></i>Leave Requests</a></li>
 
-			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/employee_profile?tab=<?=$num++?>" class="ahref"><i class="fa fa-book fa-fw"></i>Employee Profile</a></li>
+
 
 			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/leave_account_view?tab=<?=$num++?>" class="ahref"><i class="fa fa-paperclip fa-fw"></i>Leave Balance</a></li>
 
@@ -16,6 +16,7 @@
 			<?php } ?>
 
 			<?php if ($hrrow== "HR") { ?>
+				<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/employee_profile?tab=<?=$num++?>" class="ahref"><i class="fa fa-book fa-fw"></i>Employee Profile</a></li>
 			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/add_employee?tab=<?=$num++?>" class="ahref"><i class="fa fa-user-md fa-fw"></i>Add Employees</a></li>
 			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/add_leaves?tab=<?=$num++?>" class="ahref"><i class="fa fa-edit fa-fw"></i>Add Leaves</a></li>
 			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/leave_Limit?tab=<?=$num++?>" class="ahref"><i class="fa fa-exchange fa-fw"></i>Leave Limit</a></li>

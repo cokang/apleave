@@ -1,50 +1,6 @@
-
-<style type="text/css">
-
-  table.tblaq tr.row td{
-  	font-size: 15px;
-  	font-weight: bold;
-  	font-family: Arial;
-  }
-  table.tblaq2{
-   
-  	font-family: Arial;	
-  	text-align: left;
-  	width: 100%;
-    
-  	} 
-  	table.tblaq2 th {
-  	font-size: 18px;
-  	font-family: Arial;	
-  	text-align: left;
-  	background-color: #d2ece8;
-  	font-weight: bold;
-  	padding-left: 1%;
-  }
-
-  table.tblaq2 .tr1 td {
-  	font-size: 15px;
-  	font-family: Arial;
-  	background-color: white;
-  	border: 1px solid black;
-  	font-weight: bold;
-  	text-align: center;
-  }
-  table.tblaq2 th tr td {
-  	font-size: 15px;
-  	font-family: Arial;	
-  	text-align: left;
-  	padding: 10%;
-  }
-  
-  .garismerah{
-	border-style:solid;
-	border-color: red;
-  }
-  
-</style>
-
-<div style="margin-left: 5%; margin-right: 5%; margin-top: 1%; margin-bottom: 5%;">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<div class="main-div">
 <div align="right" style="font-family: Arial;font-size: 8px;">FORM/MSD/HR/08</div>
 <table class="tblaq2">
 			<tr>
@@ -599,3 +555,109 @@
 		
 		   }
 </script>
+
+<style type="text/css">
+@media (min-width: 1024px){
+    table.tblaq tr.row td{
+  	font-size: 15px;
+  	font-weight: bold;
+  	font-family: Arial;
+  }
+  table.tblaq2{
+   
+  	font-family: Arial;	
+  	text-align: left;
+  	width: 100%;
+    
+  	} 
+  	table.tblaq2 th {
+  	font-size: 18px;
+  	font-family: Arial;	
+  	text-align: left;
+  	background-color: #d2ece8;
+  	font-weight: bold;
+  	padding-left: 1%;
+  }
+
+  table.tblaq2 .tr1 td {
+  	font-size: 15px;
+  	font-family: Arial;
+  	background-color: white;
+  	border: 1px solid black;
+  	font-weight: bold;
+  	text-align: center;
+  }
+  table.tblaq2 th tr td {
+  	font-size: 15px;
+  	font-family: Arial;	
+  	text-align: left;
+  	padding: 10%;
+  }
+  
+  .garismerah{
+	border-style:solid;
+	border-color: red;
+  }
+
+  .main-div{
+  	margin-left: 5%; 
+  	margin-right: 5%; 
+  	margin-top: 1%; 
+  	margin-bottom: 5%; 
+  }
+  }
+
+  @media (min-width:44px) and (max-width: 1023px){
+  	table.tblaq tr.row td{
+  	font-size: 15px;
+  	font-weight: bold;
+  	font-family: Arial;
+  }
+  table.tblaq2{
+   
+  	font-family: Arial;	
+  	text-align: left;
+  	width: 100%;
+    
+  	} 
+  	table.tblaq2 th {
+  	font-size: 12px;
+  	font-family: Arial;	
+  	text-align: left;
+  	background-color: #d2ece8;
+  	font-weight: bold;
+  	padding-left: 1%;
+  }
+
+  table.tblaq2 .tr1 td {
+  	font-size: 15px;
+  	font-family: Arial;
+  	background-color: white;
+  	border: 1px solid black;
+  	font-weight: bold;
+  	text-align: center;
+  }
+  table.tblaq2 th tr td {
+  	font-size: 15px;
+  	font-family: Arial;	
+  	text-align: left;
+  	padding: 10%;
+  }
+  
+  .garismerah{
+	border-style:solid;
+	border-color: red;
+  }
+  .main-div{
+  	margin-left: 5%; 
+  	margin-right: 5%; 
+  	margin-top: 1%; 
+  	margin-bottom: 5%; 
+  }
+    
+  }
+
+
+
+</style>
+</head>
