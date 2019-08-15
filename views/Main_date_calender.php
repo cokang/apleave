@@ -56,7 +56,7 @@
 			<div class="panel panel-default">
 				<div class="panel-heading" style="padding: 0px 0px 0px 0px; border-bottom: 0px solid transparent;">
 					<div class="tab">
-						<button class="tablinks <?=$action_pending;?>" onclick="tabs_navigation(event, 'pending')">List Search</button>
+						<button id="tablinks" class="tablinks <?=$action_pending;?>" onclick="tabs_navigation(event, 'pending')">List Search</button>
 						<button id="defaultOpen" class="tablinks <?=$taken_action;?>" onclick="tabs_navigation(event, 'taken_action')">Calendar</button>
 					</div>
 				</div>
@@ -87,6 +87,7 @@
 						<table class="table" id="no-more-tables">
 							<thead>
 								<tr bgcolor="#eee">
+									<th>#</th>
 									<th>Applicant Name</th>
 									<th>Leave Type</th>
 									<th>From</th>
@@ -99,6 +100,7 @@
 							<?php foreach ($datecalendar as $row): ?>
 							<tbody>
 								<tr>
+									<td><?=($start+1)?></td>
 									<td data-title="Applicant Name:"><?=isset($row->v_UserName) ? $row->v_UserName : ''?></td>
 									<td data-title="Leave Type:"><?=isset($row->leave_name) ? $row->leave_name : ''?></td>
 									<td data-title="From:"><?=isset($row->leave_from) ? date("d-m-Y", strtotime($row->leave_from)) : ''?></td>
@@ -108,14 +110,19 @@
 									<td><?= !(isset($row->leave_status)) ||  $row->leave_status == '' ? '<a href="'.base_url().'index.php/Controllers/print_out?id='.$row->id.'&userid='.$row->user_id.'&tab='.$this->input->get('tab').'" >Print</a>' : '' ?></td>
 								</tr>
 							</tbody>
+							<?php $start++ ?>
 							<?php endforeach; ?>
 						</table>
 						<ul class="pagination">
 						<?php if ($rec[0]->jumlah > $limit){ ?>
-							<?php for ($i=1;$i<=$page;$i++){ ?>
+							<li><a href="?tabIndex=1&p=1&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>&staffname=<?=$staffname?>&apsbno=<?=$apsbno?>"> <i class="fa fa-chevron-circle-left" style="color:green"></i> First Page </a></li>
+							<li><a href="?tabIndex=1&p=<?=($this->input->get('p') > 1 ? $this->input->get('p')-1 : 1)?>&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>&staffname=<?=$staffname?>&apsbno=<?=$apsbno?>">Prev</a></li> 
+							<!-- <?php for ($i=1;$i<=$page;$i++){ ?>
 							<li class="paginate_button">&nbsp;<a href="?tabIndex=1&p=<?php echo $i?>&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>"><?=$i?></a></li>
-							<?php } ?>
-							<li class="paginate_button previous"><a href="?tabIndex=1&p=<?php echo $page?>&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>">Next</a></li>
+							<?php } ?> -->
+							<li><a href=""><?=($this->input->get('p') ? $this->input->get('p') : 1)?></a></li>
+							<li class="paginate_button previous"><a href="?tabIndex=1&p=<?php echo $page?>&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>&staffname=<?=$staffname?>&apsbno=<?=$apsbno?>">Next</a></li>
+							<li><a href="?tabIndex=1&p=<?php echo ceil($rec[0]->jumlah/$limit);?>&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>&staffname=<?=$staffname?>&apsbno=<?=$apsbno?>"> Last Page <i class="fa fa-chevron-circle-right" style="color:red;"></i></a></li>		
 						<?php } ?>
 						</ul>
 						</div>
@@ -158,12 +165,15 @@ function tabs_navigation(evt, cityName) {
   }
   document.getElementById(cityName).style.display = "block";
   evt.currentTarget.className += " active";
+  console.log(tablinks);
 }
 // Get the element with id="defaultOpen" and click on it
 <?php if ($this->input->post('date_calendar')) { ?>
 document.getElementById("tablinks").click();
-<?php } else {?>
-document.getElementById("defaultOpen").click();
+console.log("testdate");
+
+<?php } elseif($this->input->get('date_calendar')=='') {?>
+document.getElementById("defaultOpen").click();console.log("test");
 <?php }?>
 
 function tengokcuti(status,date){
