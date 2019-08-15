@@ -1286,9 +1286,15 @@ parent::__construct();
 		$this->db->where('U.v_Actionflag');
 		$this->db->or_where('U.v_Actionflag !=','D');
 		$this->db->group_end();
+		$this->db->group_start();
 		$this->db->where("'".$fromdate."' BETWEEN leave_from AND leave_to", NULL, FALSE);
 		$this->db->or_where("R.leave_from BETWEEN '".$fromdate."' AND '".$todate."'", NULL, FALSE);
 		$this->db->or_where("R.leave_to BETWEEN '".$fromdate."' AND '".$todate."'", NULL, FALSE);
+		$this->db->group_end();
+		$this->db->group_start();
+		$this->db->where("R.leave_status = 'Approved'");
+		$this->db->group_end();
+		
 
 		if( $staffname!='' ){
 			$this->db->like('U.v_UserName', $staffname);
