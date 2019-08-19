@@ -2,7 +2,7 @@
 <?php $action_pending = "";$taken_action="active";?>
 <?php }else{ ?>
 <?php $action_pending = "active";$taken_action="";?>
-<?php } ?> 
+<?php } ?>
 <head>
 <style type="text/css">
 
@@ -21,7 +21,7 @@
     .highlight:hover {
         background-color: #ddd;
         color: black;
-    } 
+    }
     .test{
       background-color: #4B0082;
       font-size: 12px;
@@ -94,6 +94,7 @@
 									<th>To</th>
 									<th>No of days</th>
 									<th>Reason</th>
+									<th>MC Image</th>
 									<th>&nbsp;</th>
 								</tr>
 							</thead>
@@ -107,6 +108,8 @@
 									<td data-title="To:"><?=isset($row->leave_to) ? date("d-m-Y", strtotime($row->leave_to)) : ''?></td>
 									<td data-title="No of days:"><?=isset($row->noleave) ? $row->noleave : '' ?></td>
 									<td data-title="Reason:"><?=isset($row->leave_remarks) ? $row->leave_remarks : ''?></td>
+									<td><?php if($row->leave_name=='Sick Leave'){ ?><a href="<?php echo base_url(); ?>sick_leave_img/<?=isset($row->file_name) ? $row->file_name : 'No_image_available.jpg'?>"  class="btn btn-info btn"><span class="glyphicon glyphicon-picture"></span> </a><?php }?></td>
+									<!-- <td><?php if($row->leave_name=='Sick Leave'){ ?><a href="<?php echo base_url(); ?>sick_leave_img/<?=isset($row->file_name) ? $row->file_name : 'No_image_available.jpg'?>" data-fancybox class="btn btn-info btn"><span class="glyphicon glyphicon-picture"></span> </a><?php }?></td> -->
 									<td><?= !(isset($row->leave_status)) ||  $row->leave_status == '' ? '<a href="'.base_url().'index.php/Controllers/print_out?id='.$row->id.'&userid='.$row->user_id.'&tab='.$this->input->get('tab').'" >Print</a>' : '' ?></td>
 								</tr>
 							</tbody>
@@ -116,13 +119,13 @@
 						<ul class="pagination">
 						<?php if ($rec[0]->jumlah > $limit){ ?>
 							<li><a href="?tabIndex=1&p=1&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>&staffname=<?=$staffname?>&apsbno=<?=$apsbno?>"> <i class="fa fa-chevron-circle-left" style="color:green"></i> First Page </a></li>
-							<li><a href="?tabIndex=1&p=<?=($this->input->get('p') > 1 ? $this->input->get('p')-1 : 1)?>&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>&staffname=<?=$staffname?>&apsbno=<?=$apsbno?>">Prev</a></li> 
+							<li><a href="?tabIndex=1&p=<?=($this->input->get('p') > 1 ? $this->input->get('p')-1 : 1)?>&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>&staffname=<?=$staffname?>&apsbno=<?=$apsbno?>">Prev</a></li>
 							<!-- <?php for ($i=1;$i<=$page;$i++){ ?>
 							<li class="paginate_button">&nbsp;<a href="?tabIndex=1&p=<?php echo $i?>&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>"><?=$i?></a></li>
 							<?php } ?> -->
 							<li><a href=""><?=($this->input->get('p') ? $this->input->get('p') : 1)?></a></li>
 							<li class="paginate_button previous"><a href="?tabIndex=1&p=<?php echo $page?>&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>&staffname=<?=$staffname?>&apsbno=<?=$apsbno?>">Next</a></li>
-							<li><a href="?tabIndex=1&p=<?php echo ceil($rec[0]->jumlah/$limit);?>&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>&staffname=<?=$staffname?>&apsbno=<?=$apsbno?>"> Last Page <i class="fa fa-chevron-circle-right" style="color:red;"></i></a></li>		
+							<li><a href="?tabIndex=1&p=<?php echo ceil($rec[0]->jumlah/$limit);?>&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>&staffname=<?=$staffname?>&apsbno=<?=$apsbno?>"> Last Page <i class="fa fa-chevron-circle-right" style="color:red;"></i></a></li>
 						<?php } ?>
 						</ul>
 						</div>
@@ -133,7 +136,7 @@
 						<div class="table-responsive">
                 			<?php echo $kal; ?>
  							 </div>
-  					</div>			
+  					</div>
 					<!-- /.table-responsive -->
 				</div>
 				<!-- /.panel-body -->
@@ -181,20 +184,20 @@ function tengokcuti(status,date){
 	//alert(date);
     $.ajax({    //create an ajax request to display.php
         type: "GET",
-        url: "<?=base_url();?>index.php/Controllers/cutidetails?date="+date+"&status="+status,         
-        dataType: "html",   //expect html to be returned                
+        url: "<?=base_url();?>index.php/Controllers/cutidetails?date="+date+"&status="+status,
+        dataType: "html",   //expect html to be returned
         success: function(response){
-         $("#myModal").dialog();	
+         $("#myModal").dialog();
 		$('.ui-dialog').css('height', '50%');
 		$('.ui-dialog').css('top', '285px');
 		$('.ui-dialog-content').css('overflow', 'hidden');
 		$('#ui-id-1').html(status+" "+date);
         // $("a.close-modal").css("top","1.5px");
-        // $("a.close-modal").css("right","1.5px");                   
-         $("#responsecontainer").html(response); 
+        // $("a.close-modal").css("right","1.5px");
+         $("#responsecontainer").html(response);
         }
 
     });
-        } 
+        }
 </script>
 

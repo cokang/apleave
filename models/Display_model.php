@@ -1346,13 +1346,14 @@ parent::__construct();
 		$report_to	= $this->getreporttorow($this->session->userdata('v_UserName'));
 
 		$this->db->distinct();
-		$this->db->select('R.*,U.v_UserName,U.v_hospitalcode,T.leave_name');
+		$this->db->select('R.*,U.v_UserName,U.v_hospitalcode,T.leave_name,im.file_name');
 		//$this->db->where('user_id <>',$userid);
 		$this->db->from('employee_leave_req R');
 		$this->db->join('pmis2_sa_user U','U.v_UserID = R.user_id');
 		$this->db->join('leave_type T','T.id = R.leave_type');
 		// $this->db->join('group G','G.group_sup_id = U.v_UserID','left');/*noted:kenape yg ori ni join pakai group_sup_id=user_id?*/
 		$this->db->join('group G','G.group_name = U.v_GroupID','left');
+		$this->db->join('sick_leave_img im','R.id = im.leavereq_id','left');
 
 		$this->db->group_start();
 		$this->db->where("'".$fromdate."' BETWEEN R.leave_from AND R.leave_to", NULL, FALSE);
