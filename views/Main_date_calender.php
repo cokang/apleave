@@ -65,7 +65,7 @@
 
 					<div id="pending" class="tabcontent <?=$action_pending;?>">
 						<div class="table-responsive">
-						<form method="POST" action="">
+						<form method="POST" action="?tabIndex=1&p=1&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>&staffname=<?=$staffname?>&apsbno=<?=$apsbno?>">
 						<div class="form-group col-lg-3" id="from_date">
 							<label>Date From</label>
 							<input name="date_calendar" id="date_calendar" type="text" class="form-control" value="<?=isset($datecal) ? $datecal : ''?>" onchange="submit()" autocomplete="off" />
