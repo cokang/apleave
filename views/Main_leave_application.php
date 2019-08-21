@@ -61,7 +61,7 @@
                 <tr class="">
                   <th style="text-align:right;"><b>Sick Leave Image:</b></th>
                   <td colspan="3" data-title="Sick Leave Image:">
-                    <a class='sample'  data-lighter='<?php echo base_url(); ?>sick_leave_img/<?=isset($leavedet[0]->file_name) ? $leavedet[0]->file_name : 'No_image_available.jpg'?>'  href='<?php echo base_url(); ?>sick_leave_img/<?=isset($leavedet[0]->file_name) ? $leavedet[0]->file_name : 'No_image_available.jpg'?>'>
+                    <a class='sample' data-fancybox   href='<?php echo base_url(); ?>sick_leave_img/<?=isset($leavedet[0]->file_name) ? $leavedet[0]->file_name : 'No_image_available.jpg'?>'>
                       <img src='<?php echo base_url(); ?>sick_leave_img/<?=isset($leavedet[0]->file_name) ? $leavedet[0]->file_name : 'No_image_available.jpg'?>' title="Zoom this Picture">
                     </a>
                   </td>

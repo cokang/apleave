@@ -12,6 +12,8 @@
 	<link href="<?php echo base_url(); ?>css/skin-orange.css" rel="stylesheet">
 	<script src="<?php echo base_url(); ?>js/jquery1.js"></script>
 	<script type="text/javascript" src="<?php echo base_url(); ?>js/jquery-ui.custom.js"></script>
+	<link  href="<?php echo base_url(); ?>js/jquery.fancybox.min.css" rel="stylesheet">
+	<script src="<?php echo base_url(); ?>js/jquery.fancybox.min.js"></script>
 
 	<!-- Page-Level Plugin CSS - Forms -->
 	<?php if ('Controllers/print_out/'== $this->uri->slash_segment(1) .$this->uri->slash_segment(2)) { ?>
