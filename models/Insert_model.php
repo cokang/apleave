@@ -100,8 +100,13 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 										   //'group_sup_id' => $this->input->post('emp_uname'),
 										   'report_to' => $this->input->post('report_to')
 										   );
-						$this->update_model->u_addheademployee($head_data,$variable1);
+				}elseif($emp_type=='Employee'){
+					$head_data = array(
+											'group_name' => $this->input->post('dept_code'),
+											'group_sup_id' => $this->input->post('emp_uname').'D',
+											);	
 				}
+						$this->update_model->u_addheademployee($head_data,$variable1);
 
 				if ($this->input->post('probation_stat') != 'Y'){
 					$this->db->select('userid');
