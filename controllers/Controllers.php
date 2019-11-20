@@ -32,7 +32,7 @@ class Controllers extends CI_Controller {
 				$data['applied_date'] = $this->display_model->applied_date($this->session->userdata('v_UserName'));
 		///$url = $this->input->post('continue') ? $this->input->post('continue') : site_url('contentcontroller/select');
 		//$config['upload_path'] = 'C:\inetpub\wwwroot\FEMSHospital_v3\uploadfile';
-		$config['upload_path'] = 'C:\wamp64\www\apleave\sick_leave_img';
+		$config['upload_path'] = 'C:\inetpub\wwwroot\apleave3\sick_leave_img';
 		//$config['upload_path'] = "sick_leave_img/";
                 //$config['upload_path'] = '/var/www/vhosts/file.advancepact.com/httpdocs/sick_leave_img';
 		$config['allowed_types'] = 'gif|jpg|png';
