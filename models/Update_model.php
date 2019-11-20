@@ -71,6 +71,18 @@ function update_emg($id,$insert_data){
 	 $this->db->where('id',$id);
 	$this->db->update('pmis2_sa_emgct', $insert_data);
 }
+
+function update_fam($id,$insert_data){
+	$this->db->where('id',$id);
+   $this->db->update('pmis2_sa_family_link', $insert_data);
+}
+
+function delete_fam($del){
+	$del_data=array('v_Actionflag'=>'D');
+	$this->db->where_in('id', $del);
+	$this->db->update('pmis2_sa_family_link', $del_data);
+	
+}
 function delete_emg($del){
 	//print_r($del);exit();
 	$del_data=array('v_Actionflag'=>'D');

@@ -380,5 +380,10 @@ return true;
 	$this->db->insert('pmis2_sa_emgct',$insert_data);
 return true;
   }
+
+  function simpan_fam($insert_data){
+	$this->db->insert('pmis2_sa_family_link',$insert_data);
+return true;
+  }
 }
 ?>

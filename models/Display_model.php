@@ -1829,6 +1829,18 @@ parent::__construct();
 	$query_result = $query->result();
 	return $query_result;
 	}
+	function personal_fam(){
+		$this->db->select('fl.*');
+		$this->db->from('pmis2_sa_family_link fl');
+		$this->db->join('pmis2_sa_details d','fl.v_fam_id=d.id');
+		$this->db->where('d.v_user_id',$this->session->userdata('v_UserName'));
+		$this->db->where('fl.v_Actionflag <>','D');
+		$query = $this->db->get();
+			//echo $this->db->last_query();
+			//exit();
+		$query_result = $query->result();
+		return $query_result;
+		}
 
 		   function personal_child(){
 	$this->db->select('pmis2_sa_child.*');
