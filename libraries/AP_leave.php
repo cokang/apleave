@@ -1,19 +1,17 @@
 <?php
 class AP_leave {
-
-
     public function __construct()
     {
         $this->ci =& get_instance();
         $this->ci->load->model('display_model');
     }
-
     public function get_leave_detail($leaveacc, $tleavetaken, $hajj='', $selected_year, $leave_type=''){
         $baru= $this->getleavefield();
 		/* echo "<pre>";
 		print_r($baru);exit(); */
   		$is_selected_leave = (count($leave_type)==1) ? true : false;
-  		$selected_leave = ($is_selected_leave==true) ? $leave_type[0]->id : 0;
+		  $selected_leave = ($is_selected_leave==true) ? $leave_type[0]->id : 0;
+		$cfl_limit=10;
         $jumlah = 0;
   		$current_data = 0;
   		$dept = '';
@@ -25,7 +23,6 @@ class AP_leave {
         //echo $selected_year;
 		//exit();
   		$year = $selected_year;
-
   		if( empty($leaveacc) ){
 			//exit();
   			$dept = ( isset($_REQUEST['dept']) && $_REQUEST['dept']!='0' ) ? $_REQUEST['dept'] : '';
@@ -38,7 +35,6 @@ class AP_leave {
   			}else{
   				$staffname = '';
   			}
-
   			$apsbno = ( isset($_REQUEST['staff_no']) ) ? $_REQUEST['staff_no'] : '';
   			$year = $selected_year-1;
   			$start = ( isset($_REQUEST['start']) ) ? $_REQUEST['start'] : '';
@@ -49,26 +45,17 @@ class AP_leave {
   			}else{
   				$user_id = ( !isset($_REQUEST['staff_no']) && !isset($_REQUEST['staff_name']) && !isset($_REQUEST['staffname']) && (!isset($_REQUEST['dept']) || $_REQUEST['dept']!=0) ) ? $this->ci->session->userdata("v_UserName") : '';
   			}
-
   			$leaveacc = $this->ci->display_model->leaveacc($dept, $user_id, $staffname, $apsbno,$year, $start, $limit);
-
-
   			$tleavetaken = $this->ci->display_model->tleavetaken($dept, $user_id, $staffname, $apsbno, $year);
   			if( !empty($leaveacc) ){
   				$current_data = 1;
 				//exit();
   			}
   		}
-
   		if( !empty($leaveacc) ){
 			$col = $this->ci->display_model->leave_type();
-
-
   			$num=1;
-
   			foreach($leaveacc as $row):
-
-
 			foreach ($baru as $nilai){
 			$row->$nilai['taken']=0;
              if	(isset($nilai['Etaken'])){
@@ -77,7 +64,6 @@ class AP_leave {
 			}
 			//$row->FSbalance=0;
 			$row->hajjstat=0;
-
   				$leave_type = $this->ci->display_model->leave_type();
                // echo "<pre>";
 				//print_r($leave_type);
@@ -88,17 +74,11 @@ class AP_leave {
                 print_r($tleavetaken);
   				exit(); */
 				foreach ($tleavetaken as $list){
-
   					$fromdate	= $list->leave_from;//($list->leave_from) ? $list->leave_from : $list->leave_to;
   					$todate		= ($list->leave_to) ? $list->leave_to : $list->leave_from;
-
   					//$row->noleave = $this->get_no_ofday($fromdate, $todate, $list->leave_type, $list->leave_duration, $list->v_hospitalcode, $year);
             $row->noleave = $this->get_no_ofday($fromdate, $todate, $list->leave_type, $list->leave_duration, $list->v_hospitalcode, $year,$list->user_id);
-
-
-
   					if($list->user_id == $row->user_id){
-
 				   foreach ($baru as $key=> $isi){
 		    if(($list->leave_type == $isi['id'])&&($leave_type[$key]->per_case_basis==0)){
 			        $row->$isi['taken']+= $row->noleave;
@@ -107,7 +87,6 @@ class AP_leave {
 					}
 			 }
 			 elseif(($list->leave_type == $isi['id'])&&($leave_type[$key]->per_case_basis <> 0)){
-
 					if ($row->noleave <= $leave_type[$key]->per_case_basis){
   						 $row->$isi['taken'] += $row->noleave;
 						$jumlah += $row->$isi['taken'];
@@ -119,15 +98,12 @@ class AP_leave {
 						$jumlah += $row->$isi['Etaken'];
   						}
 			         }
-
 					 }
-
   					}
   				}
 	    /*     echo "<pre>";
 			print_r($baru);exit();	 */
 		//echo $jumlah;exit();
-
   				$data['hajjstat']=0;
   				if($hajj!=''){
   					foreach ($hajj as $hajjlist){
@@ -140,7 +116,6 @@ class AP_leave {
   						}
   					}
   				}
-
   				$data['sickB'] = (isset($row->sick_leave) ? $row->sick_leave : 0) - $row->SLtaken;
   				if ($data['sickB'] < 0){
   					$data['SLEtaken'] = abs($data['sickB']);
@@ -148,8 +123,7 @@ class AP_leave {
   				}else{
   					$data['SLbalance'] = $data['sickB'];
   				}
-
-  				$data['annualB'] = (isset($row->annual_leave) ? $row->entitled : 0) + (isset($row->carry_fwd_leave) ? $row->carry_fwd_leave : 0) - $row->ALtaken - (isset($row->ELtaken) ? $row->ELtaken : 0);//kat sini jugak
+  				$data['annualB'] = (isset($row->annual_leave) ? $row->entitled : 0) + (isset($row->carry_fwd_leave) ? ($row->carry_fwd_leave<=$cfl_limit?$row->carry_fwd_leave:$cfl_limit) : 0) - $row->ALtaken - (isset($row->ELtaken) ? $row->ELtaken : 0);//kat sini jugak
   				if ($data['annualB'] < 0){
   					$data['ALEtaken'] = abs($data['annualB']);
   					$data['ALbalance'] = 0;
@@ -171,7 +145,6 @@ class AP_leave {
 			     }
   				$row->ALbalance=$data['ALbalance'];
   				$row->SLbalance=$data['SLbalance'];
-
   				//get totaltaken & balanceleave
   				$row->totaltaken = 0;
   				$row->balanceleave = 0;
@@ -179,18 +152,14 @@ class AP_leave {
 			//echo $selected_leave;exit();
   				if( $is_selected_leave ){
 					$id=$selected_leave-1;
-
   					if( $selected_leave==1 || $selected_leave==3 ){
   						if ($data['annualB'] < 0){
   							$row->balanceleave = 0;
-
 						}else{
-
   							$row->balanceleave = $data['annualB'];
   						}
                        //echo $jumlah; exit();
   						$row->totaltaken = $jumlah + (isset($row->SLEtaken) ? $row->SLEtaken : 0);
-
   					if(  $selected_leave==3 ){
   							$row->balanceEleave = (isset($leave_type[$id]->limit_days) ? $leave_type[$id]->limit_days : 0) - $row->$baru[$id]['taken'];
   							$row->totalELtaken = $row->$baru[$id]['taken'];
@@ -202,37 +171,29 @@ class AP_leave {
   							$row->balanceleave = 0;
   						}
 					$row->totaltaken = $row->SLtaken - (isset($row->SLEtaken) ? $row->SLEtaken : 0);
-
   					}elseif( $selected_leave >=3 ){
-
 					  if (isset($leave_type[$id]->entitle_days)){
 					    $row->balanceleave = (isset($leave_type[$id]->entitle_days) ? $leave_type[$id]->entitle_days : 0) - $row->$baru[$id]['taken'];
-
 					   }
 					    $row->totaltaken = $row->$baru[$id]['taken'];
-
 					}
   					$row->ESLtaken = $row->EXLtaken;
   				}
-
   				if( $current_data==1 ){
-
   					$this->ci->load->model('insert_model');
-
   					$insert_data = array(
   						'user_id' => $row->user_id,
   						'year' => $selected_year,
   						'annual_leave' => $row->annual_leave,
-  						'carry_fwd_leave' => $row->ALbalance,
+  						'carry_fwd_leave' => $row->ALbalance<=$cfl_limit?$row->ALbalance:$cfl_limit,
   						'sick_leave' => $row->sick_leave,
   						'earned_leave' => $row->earned_leave,
   					);
   					$this->ci->insert_model->addempleaves($insert_data);
-
   					$row->year = $selected_year;
   					$row->carry_fwd_leave = $row->ALbalance;
   					//$row->ALbalance = $row->annual_leave + $row->carry_fwd_leave;
-                    $row->ALbalance = (FLOOR(ROUND($row->annual_leave / 12 * (int)date("m"), 4))) + $row->carry_fwd_leave;
+                    $row->ALbalance = (FLOOR(ROUND($row->annual_leave / 12 * (int)date("m"), 4))) + ($row->carry_fwd_leave<=$cfl_limit?$row->carry_fwd_leave:$cfl_limit);
   					$row->SLbalance = $row->sick_leave;
   					$row->UPLbalance = $row->UPLtaken + (isset($row->ALEtaken) ? $row->ALEtaken : 0);
   					$row->EXLbalance = $row->EXLtaken;
@@ -241,14 +202,12 @@ class AP_leave {
                if ($nilai['Bal']=='HLbalance'){
 			   $row->$nilai['Bal'] = ($data['hajjstat'] != '' ? $data['hajjstat'] : (isset($leave_type[$key]->entitle_days) ? $leave_type[$key]->entitle_days : 0) - $row->$nilai['taken']);
 			   }elseif($nilai['Bal']=='ELbalance'){
-
 				  $row->$nilai['Bal'] = (isset($leave_type[$key]->limit_days) ? $leave_type[$key]->limit_days : 0) - $row->$nilai['taken'];
 			   }else{
 			   $row->$nilai['Bal'] = (isset($leave_type[$key]->entitle_days) ? $leave_type[$key]->entitle_days : 0) - $row->$nilai['taken'];
 			        }
 			   }
 			     }
-
   				foreach ($baru as $nilai){
 		     	$row->$nilai['taken']=0;
                 if(isset($nilai['Etaken'])){
@@ -256,29 +215,22 @@ class AP_leave {
 			   }
 			   }
   					$row->hajjstat=0;
-
   					$current_data = 0;
   				}
   			endforeach;
-
   				for ($i = 0; $i < count($leaveacc); $i++) {
   					$leaveacc[$i]->ALtaken = $leaveacc[$i]->ALtaken + $leaveacc[$i]->ELtaken; //ubah sini
   				}
   				$current_data = 0;
-
   			//$leaveacc[0]->ALtaken = $leaveacc[0]->ALtaken + $leaveacc[0]->ELtaken;
   		}
-
   		return $leaveacc;
   	}
-
 	public function get_holiday_state($year){
-
     $data['state_list'] = $this->ci->display_model->statelist();
     foreach($data['state_list'] as $key => $row){
         $statel = 'holiday'.$row->state_code;
         $state2 = $row->state_code.'_hol';
-
         $data[$statel] = $this->ci->display_model->stateH($year,$row->state_code);
         if($data[$statel]){
           foreach ($data[$statel] as $key => $value) {
@@ -339,7 +291,6 @@ class AP_leave {
     */
 		return $data;
 	}
-
 	public function get_no_ofday($fromdate, $todate, $leave_type, $leave_duration, $v_hospitalcode, $year,$userid=""){
 	$flex_wrk = $this->ci->display_model->flex_wrk($userid);
     $holiday_array = array();
@@ -347,21 +298,19 @@ class AP_leave {
 		$end   = strtotime($todate);
 		// echo $fromdate." > ".$todate."<br>";
     if( date("Y", $begin) < date("Y", $end) ){
+		
       $holidayArr1 = $this->get_holiday_state( date("Y", $begin) );
       $holidayArr2 = $this->get_holiday_state( date("Y", $end) );
-
       $holiday_array1 = $this->holiday_array($holidayArr1, $v_hospitalcode);
       $holiday_array2 = $this->holiday_array($holidayArr2, $v_hospitalcode);
-
       $holiday_array = array_merge($holiday_array1, $holiday_array2);
     }elseif ( date("Y", $begin) == date("Y", $end) ) {
       $holidayArr = $this->get_holiday_state( date("Y", $begin ) );
       $holiday_array = $this->holiday_array($holidayArr, $v_hospitalcode);
     }
-
 		$no_days  = 0;
 		$weekends = 0;
-
+		$test = 0;
 		while ($begin <= $end) {
 			if( $leave_duration=="Full Day" || $leave_duration==0 ){
 				$no_days++;
@@ -372,6 +321,7 @@ class AP_leave {
 			//if( !in_array($leave_type, $weekend_count) ){
       if( (!in_array($leave_type, $weekend_count)) && ($flex_wrk != 1) ){
 				$what_day = date("N", $begin);
+				
 				if($v_hospitalcode == 'JB'){
 					if (($what_day == 5) || ($what_day == 6) || (in_array($begin, $holiday_array))) { // 5 and 6 are weekend days
 						$weekends++;
@@ -387,28 +337,23 @@ class AP_leave {
 				}
 			}else{
 				$weekends=0;
-
 				//$weekends=0;
 			}
 			$begin += 86400; // +1 day
+			//echo $no_days;
 		};
+		//print_r($weekend_count);
+		//echo $no_days;
 		$selected_day = $no_days - $weekends;
 		return $selected_day;
 	}
-
 	public function weekend_count(){
 		$weekend_count = array(4,5,7,13);
 		return $weekend_count;
 	}
-
-
-
-
 public function holiday_array($holidayArr, $v_hospitalcode){
   $holiday_array = array();
-
   $data['state_list'] = $this->ci->display_model->statelist();
-
 	foreach($data['state_list'] as $key => $row){
 		$state = $row->state_code.'_hol';
 	 if ($v_hospitalcode == $row->state_code){
@@ -430,10 +375,8 @@ public function holiday_array($holidayArr, $v_hospitalcode){
     $holiday_array = $holidayArr['KL_hol'];
   }
   */
-
   return $holiday_array;
 }
-
 public function getcharacter($words){
 if($words=='Exam Leave'){
 $words = explode(" ", 'S T L');
@@ -451,19 +394,14 @@ $words = explode(" ", 'H P L');
 $words = explode(" ", $words);
 }
 $acronym = "";
-
 foreach ($words as $w) {
  $acronym .= $w[0];
 }
-
 return array('taken'=>$acronym.'taken','Etaken'=>$acronym.'Etaken','Bal'=>$acronym.'balance');
-
 }
-
 public function getleavefield(){
   $col = $this->ci->display_model->leave_type();
   $test=array();
-
    for ($x = 0; $x <= count($col); $x++) {
 	if ($x<=(count($col)-1)){
 	$value=$this->getcharacter($col[$x]->leave_name)['taken'];
@@ -484,14 +422,11 @@ public function getleavefield(){
 	 if($x==5){
 	  $test[$x]['FSbalance']=0;
 	 }
-
 	}
 	   }
    return $test;
 }
-
 public function semak_cuti($mula,$hospitalcode,$flex,$leave_type){
-
 $x=date("N",$mula);
 $test=null;
 $weekend_count = $this->weekend_count();
@@ -520,9 +455,7 @@ if (($x == 5) || ($x == 6)) { // 5 and 6 are weekend days
 	 }
 }else{
  if ($x > 5) { // 6 and 7 are weekend days
-
 	}else{
-
 	/* if(in_array(date("d",$mula),$cuti)){
 	$test=null;
 	}else{
@@ -536,6 +469,5 @@ $test=(int)date("d",$mula);
 }
 return $test;
 }
-
 }
 ?>
