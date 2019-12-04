@@ -54,7 +54,10 @@ class add_employee_ctrl extends CI_Controller{
 											 'v_spouse_cr'=>$this->input->post('jobpsgn'),
 											 'v_spouse_emp'=>$this->input->post('emppsgn'),
 											 'v_spouse_tel'=>$this->input->post('phonpsgn'),
-											 'D_timestamp' => date('Y-m-d H:i:s')
+											 'D_timestamp' => date('Y-m-d H:i:s'),
+											 'v_pos_add1'=>$this->input->post('pos_address'),
+											 'v_pos_add2'=>$this->input->post('pos_poscode'),
+											 'v_tel_comp'=>$this->input->post('phone_no2')
 							 );
 
 			$update_data=array('v_add1'=>$this->input->post('address'),
@@ -72,7 +75,10 @@ class add_employee_ctrl extends CI_Controller{
 											 'v_spouse_cr'=>$this->input->post('jobpsgn'),
 											 'v_spouse_emp'=>$this->input->post('emppsgn'),
 											 'v_spouse_tel'=>$this->input->post('phonpsgn'),
-											 'D_timestamp' => date('Y-m-d H:i:s')
+											 'D_timestamp' => date('Y-m-d H:i:s'),
+											 'v_pos_add1'=>$this->input->post('pos_address'),
+											 'v_pos_add2'=>$this->input->post('pos_poscode'),
+											 'v_tel_comp'=>$this->input->post('phone_no2')
 							 );
 
 			$ins=$this->insert_model->simpan_personal($insert_data,$update_data);
@@ -80,11 +86,16 @@ class add_employee_ctrl extends CI_Controller{
 			//echo $this->input->post('del_c');exit();
 			$delc=explode(",",$this->input->post('del_c'));
 			$delc1=explode(",",$this->input->post('del_c1'));
+			$delc2=explode(",",$this->input->post('del_c2'));
+
 			if($delc){
 			$this->update_model->delete_anak($delc);
 			}
 			if($delc1){
 			$this->update_model->delete_emg($delc1);
+			}
+			if($delc2){
+			$this->update_model->delete_fam($delc2);
 			}
 			//echo "<pre>";
 			//print_r($delc);exit();
@@ -147,6 +158,38 @@ class add_employee_ctrl extends CI_Controller{
 			 }
 		}
 
+
+
+		if($this->input->post('id_c2')){
+			foreach($this->input->post('id_c2')as $key2){
+				$famLink_data=array(
+					'v_fam_name'=>$this->input->post('nama_fam')[$key2],
+					'v_fam_pos'=>$this->input->post('pos_fam')[$key2],
+					'v_fam_dept'=>$this->input->post('dep_fam')[$key2],
+					'v_fam_loc'=>$this->input->post('loc_fam')[$key2],
+					'v_fam_relay'=>$this->input->post('rel_fam')[$key2],
+				);
+
+				$this->update_model->update_fam($key2,$famLink_data);
+			}
+		}
+
+		foreach($this->input->post('nama_fam') as $key2=>$nilai2){
+			if(!in_array($key2,$this->input->post('id_c2'))){
+				$famLink_data=array(
+					'v_fam_id'=>$id,
+					'v_fam_name'=>$nilai2,
+					'v_fam_pos'=>$this->input->post('pos_fam')[$key2],
+					'v_fam_dept'=>$this->input->post('dep_fam')[$key2],
+					'v_fam_loc'=>$this->input->post('loc_fam')[$key2],
+					'v_fam_relay'=>$this->input->post('rel_fam')[$key2],
+				);
+				if($nilai2 <> ''){
+					$this->insert_model->simpan_fam($famLink_data);
+				}
+			}
+		}
+		
 
 		redirect('Controllers/employee_profile?tab=3');
 		}else{

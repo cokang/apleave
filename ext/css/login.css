@@ -530,7 +530,7 @@ body :-ms-input-placeholder {
   form input:focus {
     background-color: white;
     width: 300px;
-    color: #53e3a6;
+    color: #23529e;
   }
 
   form button {

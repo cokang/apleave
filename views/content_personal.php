@@ -11,9 +11,10 @@
 			</tr>
 
 			<tr>
-			<td width="15%">Address</td>
+			<td width="15%">Permanent Address</td>
 			<td colspan="4"><input type="text" id="address" name="address" style="width: 100%" class="form-control" value="<?= isset($personal[0]->v_add1) ? $personal[0]->v_add1 : '' ?>"></td>
 			</tr>
+			
 
 			<tr height="5">
 			</tr>
@@ -30,11 +31,39 @@
 			</tr>
 
 			<tr>
+			<td width="15%">Postal Address</td>
+			<td colspan="4"><input type="text" id="pos_address" name="pos_address" style="width: 100%" class="form-control" value="<?= isset($personal[0]->v_pos_add1) ? $personal[0]->v_pos_add1 : '' ?>"></td>
+			</tr>
+			
+
+			<tr height="5">
+			</tr>
+
+			<tr>
+			<td width="15%">Post Code</td>
+			<td><input type="text" id="pos_poscode" name="pos_poscode" value="<?= isset($personal[0]->v_pos_add2) ? $personal[0]->v_pos_add2 : '' ?>" style="width: 100%" class="form-control"></td>
+			<td width="2%"></td>
+			<!--<td width="15%">Town</td>
+			<td><input type="text" id="town"  name="town"  style="width: 100%" class="form-control"></td>-->
+			</tr>
+
+			<tr height="5">
+			</tr>
+
+			<tr>
 			<td width="15%">Phone No</td>
 			<td><input type="text" id="phone_no" name="phone_no" value="<?= isset($personal[0]->v_tel_1) ? $personal[0]->v_tel_1 : '' ?>"style="width: 100%" class="form-control"></td>
 			<td width="2%"></td>
 			<td width="15%">Phone No(Home)</td>
 			<td><input type="text"  id="phone_no1" name="phone_no1" value="<?= isset($personal[0]->v_tel_2) ? $personal[0]->v_tel_2 : '' ?>" style="width: 100%" class="form-control"></td>
+			</tr>
+
+			<tr height="5">
+			</tr>
+			<tr>
+			
+			<td width="15%">Phone No(Company)</td>
+			<td><input type="text"  id="phone_no2" name="phone_no2" value="<?= isset($personal[0]->v_tel_comp) ? $personal[0]->v_tel_comp : '' ?>" style="width: 100%" class="form-control"></td>
 			</tr>
 
 		</table>
@@ -403,9 +432,53 @@
 
 		</table>
 
+		
+		<table class="tblaq2" style="margin-top: 2%;" id="tera3">
+			<tr>
+			<th colspan="10" >EMPLOYEE RELATION WITHIN THE COMPANY</th>
+			</tr>
+
+			<tr height="7">
+			</tr>
+
+			<tr class="tr1">
+				<td>Name</td>
+				<td>Position</td>
+				<td>Department</td>
+				<td>Location</td>
+				<td>Relationship</td>
+			</tr>
+			<?php if ($p_fam) { ?>
+			<?php foreach($p_fam as $row){ ?>
+			<tr>
+			    <td><input style="width: 100%;" type="text" name="nama_fam[<?=$row->id;?>]" value="<?=$row->v_fam_name;?>" ></td>
+			    <td><input style="width: 100%;" type="text" name="pos_fam[<?=$row->id;?>]" value="<?=$row->v_fam_pos;?>" ></td>
+			    <td><input style="width: 100%;" type="text" name="dep_fam[<?=$row->id;?>]"  value="<?=$row->v_fam_dept;?>"></td>
+				<td><input style="width: 100%;" type="text" name="loc_fam[<?=$row->id;?>]"  value="<?=$row->v_fam_loc;?>" ></td>
+				<td><input style="width: 100%;" type="text" name="rel_fam[<?=$row->id;?>]"  value="<?=$row->v_fam_relay;?>" ></td>
+			    <td><input  type="checkbox" name="record3" value="<?=$row->id;?>"></td> 
+              <?php echo form_hidden('id_c2[]',($row->id) ? $row->id : '');?>				
+             			
+          </tr>
+			<?php } ?>
+			 <?php echo form_hidden('del_c2','');?>	
+			<?php }else{ ?>
+			<tr>
+			    <td><input style="width: 100%;" type="text" name="nama_fam[]"></td>
+			    <td><input style="width: 100%;" type="text" name="pos_fam[]"></td>
+			    <td><input style="width: 100%;" type="text" name="dep_fam[]"></td>
+			    <td><input style="width: 100%;" type="text" name="loc_fam[]"></td>
+				<td><input style="width: 100%;" type="text" name="rel_fam[]"></td>
+			    <td><input  type="checkbox" name="record3"></td>  
+          </tr>
+			<?php } ?>
+          </table>
+          <div style="text-align: right; margin-top: 1%;"><button class="add-row3 btn btn-default">ADD ROW</button> &nbsp&nbsp<button class="delete-row3 btn btn-default">DELETE ROW</button></div>
+
+
 		<table class="tblaq2" style="margin-top: 2%;" id="tera">
 			<tr>
-			<th colspan="8" >CHILD INFORMATION</th>
+			<th colspan="10" >CHILD INFORMATION</th>
 			</tr>
 
 			<tr height="7">
@@ -415,6 +488,8 @@
 				<td>Name</td>
 				<td>Marital Status</td>
 				<td>Status</td>
+				<td>School/College</td>
+				<td>Inside/Outside Country</td>
 				<td>Gender</td>
 				<td>Date of Birth</td>
 				<td>No IC/Birth Certification</td>
@@ -426,8 +501,10 @@
 			    <td><input style="width: 100%;" type="text" name="nama_son[<?=$row->id;?>]" value="<?=$row->v_ch_name;?>" ></td>
 			    <td><input style="width: 100%;" type="text" name="sts_son[<?=$row->id;?>]" value="<?=$row->v_marital_st;?>" ></td>
 			    <td><input style="width: 100%;" type="text" name="crc_son[<?=$row->id;?>]"  value="<?=$row->v_career;?>"></td>
+				<td><input style="width: 100%;" type="text" name="school_son[<?=$row->id;?>]"  value="<?=$row->v_school;?>" ></td>
+			    <td><input style="width: 100%;" type="text" name="country_son[<?=$row->id;?>]"  value="<?=$row->v_country;?>" ></td>
 			    <td><input style="width: 100%;" type="text" name="gdr_son[<?=$row->id;?>]"  value="<?=$row->v_gender;?>" ></td>
-			    <td><input style="width: 100%;" type="text" name='bfdate[<?=$row->id;?>]' value="<?= isset($row->v_birth_dt) ? date('d-m-Y',strtotime($row->v_birth_dt)) : '' ?>" onclick="test(<?=$row->id;?>)"  id="datepilih<?=$row->id;?>" readonly autocomplete="off"></td>
+				<td><input style="width: 100%;" type="text" name='bfdate[<?=$row->id;?>]' value="<?= isset($row->v_birth_dt) ? date('d-m-Y',strtotime($row->v_birth_dt)) : '' ?>" onclick="test(<?=$row->id;?>)"  id="datepilih<?=$row->id;?>" readonly autocomplete="off"></td>
 			    <td><input style="width: 100%;" type="text" name="id_son[<?=$row->id;?>]" value="<?=$row->v_ch_id;?>"></td>  
 			    <td><input style="width: 100%;" type="text" name="ps_son[<?=$row->id;?>]" value="<?=$row->v_ch_ps;?>"></td> 
 			    <td><input  type="checkbox" name="record" value="<?=$row->id;?>"></td> 
@@ -441,7 +518,9 @@
 			    <td><input style="width: 100%;" type="text" name="nama_son[]"></td>
 			    <td><input style="width: 100%;" type="text" name="sts_son[]"></td>
 			    <td><input style="width: 100%;" type="text" name="crc_son[]"></td>
-			    <td><input style="width: 100%;" type="text" name="gdr_son[]"></td>
+				<td><input style="width: 100%;" type="text" name="school_son[]"></td>
+				<td><input style="width: 100%;" type="text" name="country_son[]"></td>
+				<td><input style="width: 100%;" type="text" name="gdr_son[]"></td>
 			    <td><input style="width: 100%;" type="text" name='bfdate[]' onclick="test(0)"  id="datepilih0" readonly autocomplete="off"></td>
 			    <td><input style="width: 100%;" type="text" name="id_son[]"></td>  
 			    <td><input style="width: 100%;" type="text" name="ps_son[]"></td> 
@@ -502,7 +581,7 @@
 
         $(".add-row").click(function(){
 			var id=num++;
-            var markup = "<tr><td><input type='text' style='width: 100%;' id='add-tera"+id+"' name='nama_son[]'></td><td><input type='text' style='width: 100%;'  name='sts_son[]'></td><td><input type='text' style='width: 100%;'  name='crc_son[]'></td><td><input type='text' style='width: 100%;' name='gdr_son[]'></td><td><input type='text' name='bfdate[]' autocomplete='off'  style='width: 100%;' id='datepilih"+id+"' readonly></td><td><input type='text' name='id_son[]' style='width: 100%;'></td><td><input type='text' style='width: 100%;' name='ps_son[]'></td><td><input  type='checkbox' name='record'></td></tr>";
+            var markup = "<tr><td><input type='text' style='width: 100%;' id='add-tera"+id+"' name='nama_son[]'></td><td><input type='text' style='width: 100%;'  name='sts_son[]'></td><td><input type='text' style='width: 100%;'  name='crc_son[]'></td><td><input type='text' style='width: 100%;' name='school_son[]'></td><td><input type='text' style='width: 100%;' name='country_son[]'></td><td><input type='text' style='width: 100%;' name='gdr_son[]'></td><td><input type='text' name='bfdate[]' autocomplete='off'  style='width: 100%;' id='datepilih"+id+"' readonly></td><td><input type='text' name='id_son[]' style='width: 100%;'></td><td><input type='text' style='width: 100%;' name='ps_son[]'></td><td><input  type='checkbox' name='record'></td></tr>";
             $("#tera tbody").append(markup);
 			test(id);
 			//alert(JSON.parse(arr));
@@ -516,6 +595,12 @@
             var email = $("#email").val();
             var markup = "<tr><td><input type='text' style='width: 100%;' name='emg_name[]'></td><td><input type='text' style='width: 100%;' name='emg_rel[]'></td><td><input type='text' style='width: 100%;' name='emg_phne[]'></td><td><input  type='checkbox' name='record2'></tr>";
             $("#tera2 tbody").append(markup);
+			return false;
+        });
+
+		$(".add-row3").click(function(){
+            var markup = "<tr><td><input type='text' style='width: 100%;' name='nama_fam[]'></td><td><input type='text' style='width: 100%;'  name='pos_fam[]'></td><td><input type='text' style='width: 100%;'  name='dep_fam[]'></td><td><input type='text' style='width: 100%;' name='loc_fam[]'></td><td><input type='text' style='width: 100%;' name='rel_fam[]'></td><td><input  type='checkbox' name='record3'></td></tr>";
+            $("#tera3 tbody").append(markup);
 			return false;
         });
 
@@ -540,6 +625,21 @@
             	if($(this).is(":checked")){
 		var number1 = $(this).val();
    $("input[name='del_c1']").val(function() {
+        return this.value +','+number1;
+    });	
+                    $(this).parents("tr").remove();
+                }
+            });
+			return false;
+        });
+
+		$(".delete-row3").click(function(){
+            $("table tbody").find('input[name="record3"]').each(function(){
+				//alert($(this).val());
+				//$("input[name='del_c']").val($(this).val());
+            	if($(this).is(":checked")){
+		var number1 = $(this).val();
+   $("input[name='del_c2']").val(function() {
         return this.value +','+number1;
     });	
                     $(this).parents("tr").remove();

@@ -32,7 +32,7 @@ class apply_leave_ctrl extends CI_Controller{
 							//'leave_approved_by'=>$this->input->post('n_location'),
 							//'date_approved' => $this->input->post('n_phone_number'),
 							'user_id' => $this->session->userdata('v_UserName'),
-							'application_date' => date('Y-m-d'),
+							'application_date' => date('Y-m-d H:i:s'),
 						);
 						//echo "masuk cni";
 						//echo print_r($insert_data);

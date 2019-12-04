@@ -28,8 +28,8 @@ body {
 @media(min-width:768px) {
     #page-wrapper {
         position: inherit;
-        margin: 0 0 0 250px;
-        padding: 0 30px;
+        margin: 0 0 0 200px;
+        padding: 0 10px;
 		
     }
     #wrapper {
@@ -136,7 +136,7 @@ body {
     .navbar-static-side {
         z-index: 1;
         position: absolute;
-        width: 250px;
+        width: 200px;
         margin-top: 51px;
     }
 
@@ -170,7 +170,7 @@ body {
         display: none;
     }
     #wrapper {
-    width: 155%;
+    width: 100%;
 }
 }
 

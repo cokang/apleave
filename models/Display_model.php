@@ -1122,7 +1122,7 @@ parent::__construct();
 		$id_rpt=$this->db->get_where('group', array('group_sup_id =' => $userid))->result();
 		$this->db->select('a.v_UserID,a.v_UserName,a.v_GroupID');
 		$this->db->from('pmis2_sa_user a');
-		$this->db->join('group b','a.v_UserID = b.group_sup_id','left outer');
+		$this->db->join('group b',"a.v_UserID = b.group_sup_id AND a.v_Actionflag != 'D'",'left outer');
 		$this->db->group_start();
 		$this->db->where('a.v_Actionflag');
 		$this->db->or_where('a.v_Actionflag !=','D');
@@ -1286,9 +1286,14 @@ parent::__construct();
 		$this->db->where('U.v_Actionflag');
 		$this->db->or_where('U.v_Actionflag !=','D');
 		$this->db->group_end();
+		$this->db->group_start();
 		$this->db->where("'".$fromdate."' BETWEEN leave_from AND leave_to", NULL, FALSE);
 		$this->db->or_where("R.leave_from BETWEEN '".$fromdate."' AND '".$todate."'", NULL, FALSE);
 		$this->db->or_where("R.leave_to BETWEEN '".$fromdate."' AND '".$todate."'", NULL, FALSE);
+		$this->db->group_end();
+		$this->db->group_start();
+		$this->db->where("R.leave_status = 'Approved'");
+		$this->db->group_end();
 
 		if( $staffname!='' ){
 			$this->db->like('U.v_UserName', $staffname);
@@ -1340,13 +1345,14 @@ parent::__construct();
 		$report_to	= $this->getreporttorow($this->session->userdata('v_UserName'));
 
 		$this->db->distinct();
-		$this->db->select('R.*,U.v_UserName,U.v_hospitalcode,T.leave_name');
+		$this->db->select('R.*,U.v_UserName,U.v_hospitalcode,T.leave_name,im.file_name');
 		//$this->db->where('user_id <>',$userid);
 		$this->db->from('employee_leave_req R');
 		$this->db->join('pmis2_sa_user U','U.v_UserID = R.user_id');
 		$this->db->join('leave_type T','T.id = R.leave_type');
 		// $this->db->join('group G','G.group_sup_id = U.v_UserID','left');/*noted:kenape yg ori ni join pakai group_sup_id=user_id?*/
 		$this->db->join('group G','G.group_name = U.v_GroupID','left');
+		$this->db->join('sick_leave_img im','R.id = im.leavereq_id','left');
 
 		$this->db->group_start();
 		$this->db->where("'".$fromdate."' BETWEEN R.leave_from AND R.leave_to", NULL, FALSE);
@@ -1848,6 +1854,18 @@ parent::__construct();
 	$query_result = $query->result();
 	return $query_result;
 	}
+	function personal_fam(){
+		$this->db->select('fl.*');
+		$this->db->from('pmis2_sa_family_link fl');
+		$this->db->join('pmis2_sa_details d','fl.v_fam_id=d.id');
+		$this->db->where('d.v_user_id',$this->session->userdata('v_UserName'));
+		$this->db->where('fl.v_Actionflag <>','D');
+		$query = $this->db->get();
+			//echo $this->db->last_query();
+			//exit();
+		$query_result = $query->result();
+		return $query_result;
+		}
 
 }
 ?>

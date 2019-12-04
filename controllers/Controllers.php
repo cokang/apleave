@@ -880,6 +880,7 @@ public function employee_profile()
 		$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
 		$data['hrrow'] = $this->display_model->gethrrow($this->session->userdata('v_UserName'));
 		$data['personal']=$this->display_model->personal_disp();
+		$data['p_fam']=$this->display_model->personal_fam();
 		$data['p_child']=$this->display_model->personal_child();
 		$data['p_emgcy']=$this->display_model->personal_emgcy();
 		//echo "<pre>";

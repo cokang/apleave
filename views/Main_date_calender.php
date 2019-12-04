@@ -2,7 +2,7 @@
 <?php $action_pending = "";$taken_action="active";?>
 <?php }else{ ?>
 <?php $action_pending = "active";$taken_action="";?>
-<?php } ?> 
+<?php } ?>
 <head>
 <style type="text/css">
 
@@ -21,7 +21,7 @@
     .highlight:hover {
         background-color: #ddd;
         color: black;
-    } 
+    }
     .test{
       background-color: #4B0082;
       font-size: 12px;
@@ -56,7 +56,7 @@
 			<div class="panel panel-default">
 				<div class="panel-heading" style="padding: 0px 0px 0px 0px; border-bottom: 0px solid transparent;">
 					<div class="tab">
-						<button class="tablinks <?=$action_pending;?>" onclick="tabs_navigation(event, 'pending')">List Search</button>
+						<button id="tablinks" class="tablinks <?=$action_pending;?>" onclick="tabs_navigation(event, 'pending')">List Search</button>
 						<button id="defaultOpen" class="tablinks <?=$taken_action;?>" onclick="tabs_navigation(event, 'taken_action')">Calendar</button>
 					</div>
 				</div>
@@ -65,7 +65,7 @@
 
 					<div id="pending" class="tabcontent <?=$action_pending;?>">
 						<div class="table-responsive">
-						<form method="POST" action="">
+						<form method="POST" action="?tabIndex=1&p=1&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>&staffname=<?=$staffname?>&apsbno=<?=$apsbno?>">
 						<div class="form-group col-lg-3" id="from_date">
 							<label>Date From</label>
 							<input name="date_calendar" id="date_calendar" type="text" class="form-control" value="<?=isset($datecal) ? $datecal : ''?>" onchange="submit()" autocomplete="off" />
@@ -87,35 +87,44 @@
 						<table class="table" id="no-more-tables">
 							<thead>
 								<tr bgcolor="#eee">
+									<th>#</th>
 									<th>Applicant Name</th>
 									<th>Leave Type</th>
 									<th>From</th>
 									<th>To</th>
 									<th>No of days</th>
 									<th>Reason</th>
+									<th>MC Image</th>
 									<th>&nbsp;</th>
 								</tr>
 							</thead>
 							<?php foreach ($datecalendar as $row): ?>
 							<tbody>
 								<tr>
+									<td><?=($start+1)?></td>
 									<td data-title="Applicant Name:"><?=isset($row->v_UserName) ? $row->v_UserName : ''?></td>
 									<td data-title="Leave Type:"><?=isset($row->leave_name) ? $row->leave_name : ''?></td>
 									<td data-title="From:"><?=isset($row->leave_from) ? date("d-m-Y", strtotime($row->leave_from)) : ''?></td>
 									<td data-title="To:"><?=isset($row->leave_to) ? date("d-m-Y", strtotime($row->leave_to)) : ''?></td>
 									<td data-title="No of days:"><?=isset($row->noleave) ? $row->noleave : '' ?></td>
 									<td data-title="Reason:"><?=isset($row->leave_remarks) ? $row->leave_remarks : ''?></td>
+									<td><?php if($row->leave_name=='Sick Leave'){ ?><a href="<?php echo base_url(); ?>sick_leave_img/<?=isset($row->file_name) ? $row->file_name : 'No_image_available.jpg'?>" data-fancybox class="btn btn-info btn"><span class="glyphicon glyphicon-picture"></span> </a><?php }?></td>
 									<td><?= !(isset($row->leave_status)) ||  $row->leave_status == '' ? '<a href="'.base_url().'index.php/Controllers/print_out?id='.$row->id.'&userid='.$row->user_id.'&tab='.$this->input->get('tab').'" >Print</a>' : '' ?></td>
 								</tr>
 							</tbody>
+							<?php $start++ ?>
 							<?php endforeach; ?>
 						</table>
 						<ul class="pagination">
 						<?php if ($rec[0]->jumlah > $limit){ ?>
-							<?php for ($i=1;$i<=$page;$i++){ ?>
+							<li><a href="?tabIndex=1&p=1&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>&staffname=<?=$staffname?>&apsbno=<?=$apsbno?>"> <i class="fa fa-chevron-circle-left" style="color:green"></i> First Page </a></li>
+							<li><a href="?tabIndex=1&p=<?=($this->input->get('p') > 1 ? $this->input->get('p')-1 : 1)?>&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>&staffname=<?=$staffname?>&apsbno=<?=$apsbno?>">Prev</a></li>
+							<!-- <?php for ($i=1;$i<=$page;$i++){ ?>
 							<li class="paginate_button">&nbsp;<a href="?tabIndex=1&p=<?php echo $i?>&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>"><?=$i?></a></li>
-							<?php } ?>
-							<li class="paginate_button previous"><a href="?tabIndex=1&p=<?php echo $page?>&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>">Next</a></li>
+							<?php } ?> -->
+							<li><a href=""><?=($this->input->get('p') ? $this->input->get('p') : 1)?></a></li>
+							<li class="paginate_button previous"><a href="?tabIndex=1&p=<?php echo $page?>&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>&staffname=<?=$staffname?>&apsbno=<?=$apsbno?>">Next</a></li>
+							<li><a href="?tabIndex=1&p=<?php echo ceil($rec[0]->jumlah/$limit);?>&date_calendar=<?=$datecal?>&date_calendar_to=<?=$datecalto?>&staffname=<?=$staffname?>&apsbno=<?=$apsbno?>"> Last Page <i class="fa fa-chevron-circle-right" style="color:red;"></i></a></li>
 						<?php } ?>
 						</ul>
 						</div>
@@ -126,7 +135,7 @@
 						<div class="table-responsive">
                 			<?php echo $kal; ?>
  							 </div>
-  					</div>			
+  					</div>
 					<!-- /.table-responsive -->
 				</div>
 				<!-- /.panel-body -->
@@ -158,12 +167,15 @@ function tabs_navigation(evt, cityName) {
   }
   document.getElementById(cityName).style.display = "block";
   evt.currentTarget.className += " active";
+  console.log(tablinks);
 }
 // Get the element with id="defaultOpen" and click on it
 <?php if ($this->input->post('date_calendar')) { ?>
 document.getElementById("tablinks").click();
-<?php } else {?>
-document.getElementById("defaultOpen").click();
+console.log("testdate");
+
+<?php } elseif($this->input->get('date_calendar')=='') {?>
+document.getElementById("defaultOpen").click();console.log("test");
 <?php }?>
 
 function tengokcuti(status,date){
@@ -171,20 +183,20 @@ function tengokcuti(status,date){
 	//alert(date);
     $.ajax({    //create an ajax request to display.php
         type: "GET",
-        url: "<?=base_url();?>index.php/Controllers/cutidetails?date="+date+"&status="+status,         
-        dataType: "html",   //expect html to be returned                
+        url: "<?=base_url();?>index.php/Controllers/cutidetails?date="+date+"&status="+status,
+        dataType: "html",   //expect html to be returned
         success: function(response){
-         $("#myModal").dialog();	
+         $("#myModal").dialog();
 		$('.ui-dialog').css('height', '50%');
 		$('.ui-dialog').css('top', '285px');
 		$('.ui-dialog-content').css('overflow', 'hidden');
 		$('#ui-id-1').html(status+" "+date);
         // $("a.close-modal").css("top","1.5px");
-        // $("a.close-modal").css("right","1.5px");                   
-         $("#responsecontainer").html(response); 
+        // $("a.close-modal").css("right","1.5px");
+         $("#responsecontainer").html(response);
         }
 
     });
-        } 
+        }
 </script>
 

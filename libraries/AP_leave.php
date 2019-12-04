@@ -14,6 +14,7 @@ class AP_leave {
 		print_r($baru);exit(); */
   		$is_selected_leave = (count($leave_type)==1) ? true : false;
   		$selected_leave = ($is_selected_leave==true) ? $leave_type[0]->id : 0;
+		    $cfl_limit=10;
         $jumlah = 0;
   		$current_data = 0;
   		$dept = '';
@@ -69,11 +70,15 @@ class AP_leave {
   			foreach($leaveacc as $row):
 
 
+//exit();
 			foreach ($baru as $nilai){
+//echo "lalalalla".$nilai['taken'];
+      //$row->gampang=10;
 			$row->$nilai['taken']=0;
              if	(isset($nilai['Etaken'])){
 			$row->$nilai['Etaken']=0;
 			 }
+
 			}
 			//$row->FSbalance=0;
 			$row->hajjstat=0;
@@ -149,7 +154,8 @@ class AP_leave {
   					$data['SLbalance'] = $data['sickB'];
   				}
 
-  				$data['annualB'] = (isset($row->annual_leave) ? $row->entitled : 0) + (isset($row->carry_fwd_leave) ? $row->carry_fwd_leave : 0) - $row->ALtaken - (isset($row->ELtaken) ? $row->ELtaken : 0);//kat sini jugak
+  				//$data['annualB'] = (isset($row->annual_leave) ? $row->entitled : 0) + (isset($row->carry_fwd_leave) ? $row->carry_fwd_leave : 0) - $row->ALtaken - (isset($row->ELtaken) ? $row->ELtaken : 0);//kat sini jugak
+  				$data['annualB'] = (isset($row->annual_leave) ? $row->entitled : 0) + (isset($row->carry_fwd_leave) ? ($row->carry_fwd_leave<=$cfl_limit?$row->carry_fwd_leave:$cfl_limit) : 0) - $row->ALtaken - (isset($row->ELtaken) ? $row->ELtaken : 0);//kat sini jugak
   				if ($data['annualB'] < 0){
   					$data['ALEtaken'] = abs($data['annualB']);
   					$data['ALbalance'] = 0;
@@ -223,7 +229,8 @@ class AP_leave {
   						'user_id' => $row->user_id,
   						'year' => $selected_year,
   						'annual_leave' => $row->annual_leave,
-  						'carry_fwd_leave' => $row->ALbalance,
+  						//'carry_fwd_leave' => $row->ALbalance,
+              'carry_fwd_leave' => $row->ALbalance<=$cfl_limit?$row->ALbalance:$cfl_limit,
   						'sick_leave' => $row->sick_leave,
   						'earned_leave' => $row->earned_leave,
   					);
@@ -232,8 +239,9 @@ class AP_leave {
   					$row->year = $selected_year;
   					$row->carry_fwd_leave = $row->ALbalance;
   					//$row->ALbalance = $row->annual_leave + $row->carry_fwd_leave;
-                    $row->ALbalance = (FLOOR(ROUND($row->annual_leave / 12 * (int)date("m"), 4))) + $row->carry_fwd_leave;
-  					$row->SLbalance = $row->sick_leave;
+                    //$row->ALbalance = (FLOOR(ROUND($row->annual_leave / 12 * (int)date("m"), 4))) + $row->carry_fwd_leave;
+                    $row->ALbalance = (FLOOR(ROUND($row->annual_leave / 12 * (int)date("m"), 4))) + ($row->carry_fwd_leave<=$cfl_limit?$row->carry_fwd_leave:$cfl_limit);
+            $row->SLbalance = $row->sick_leave;
   					$row->UPLbalance = $row->UPLtaken + (isset($row->ALEtaken) ? $row->ALEtaken : 0);
   					$row->EXLbalance = $row->EXLtaken;
   				     foreach ($baru as $key=>$nilai){
