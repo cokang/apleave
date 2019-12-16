@@ -138,6 +138,22 @@
                                         <label>Username</label>
                                     <input name="emp_uname" id="emp_uname" type="text" class="form-control" value="<?= isset($employeedet[0]->v_UserID) ? $employeedet[0]->v_UserID : '' ?>"/ >
                                     </div>
+
+                                    <div class="form-group">
+                                    <label>Employee Level</label>
+                                    <?php 
+                                    $emp_lvl = array('0' => "Select", 
+                                    'TP' => "Top Management (TP)",
+                                    'TM' => "Middle Management (TM)",
+                                    'SS' => "Support Service (SS)");
+                                    ?>
+                                    <?php echo form_dropdown('emp_lvl', $emp_lvl, set_value('emp_lvl',isset($employeedet[0]->v_ActiveUser) ? $employeedet[0]->v_ActiveUser : '0') ,  'id="emp_lvl" class="form-control"');?>
+                                    </div>
+
+                                    <div class="form-group">
+                                    <label>Date Join</label>
+                                    <input name="date_join" id="date_join" type="date" class="form-control" value="<?= isset($employeedet[0]->d_datejoin) ? date("Y-m-d", strtotime($employeedet[0]->d_datejoin)) : '' ?>" autocomplete="off">
+                                    </div>
           
                                     <?php if(!($employeedet)){ ?>
                                     <div class="form-group">
@@ -153,8 +169,8 @@
 										<input type="checkbox" name="del_user" value="D" <?=isset($employeedet[0]->v_Actionflag)&&($employeedet[0]->v_Actionflag =='D') ? 'checked' : '' ?>> Delete User
                                     </div>
                                     <input name="submit" type="submit" class="btn btn-default" id="button" value=" Submit " onClick="return validate_form();"/>
+                                
                                 </div>
-
                             </div>
 							
                             </form>

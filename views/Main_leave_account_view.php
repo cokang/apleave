@@ -219,7 +219,7 @@
 											<td>
 												<table style="width:100%" cellpadding="5" cellspacing="5" border="0">
 													<tr>
-														<td class="col-lg-2">E - <?=isset($row->annual_leave) ? $row->entitled  : 0 ?></td>
+														<td class="col-lg-2">E - <?=isset($row->annual_leave) ? $row->annual_leave  : 0 ?></td>
 													       <b></b>
 														<td class="col-lg-2">E - <?=isset($row->sick_leave) ? $row->sick_leave : 0 ?></td>
 														<td class="col-lg-2">E - <?=isset($leave_type[2]->limit_days) ? $leave_type[2]->limit_days : 0?></td>

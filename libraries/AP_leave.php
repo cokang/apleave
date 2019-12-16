@@ -155,7 +155,7 @@ class AP_leave {
   					$data['SLbalance'] = $data['sickB'];
   				}
 				
-					$data['annualB'] = (isset($row->annual_leave) ? $row->entitled : 0) + (isset($row->carry_fwd_leave) ? $row->carry_fwd_leave : 0) - $row->ALtaken - (isset($row->ELtaken) ? $row->ELtaken : 0);//kat sini jugak
+					$data['annualB'] = (isset($row->annual_leave) ? $row->annual_leave : 0) + (isset($row->carry_fwd_leave) ? $row->carry_fwd_leave : 0) - $row->ALtaken - (isset($row->ELtaken) ? $row->ELtaken : 0);//kat sini jugak
   				if ($data['annualB'] < 0){
   					$data['ALEtaken'] = abs($data['annualB']);
   					$data['ALbalance'] = 0;
@@ -219,36 +219,38 @@ class AP_leave {
 
 					}
   					$row->ESLtaken = $row->EXLtaken;
-  				}
+				  }
 
   				if( $current_data==1 ){
 
-  					$this->ci->load->model('insert_model');
-
+					  $this->ci->load->model('insert_model');
+					  $row->year = $selected_year;
+					  $row->annual_leave= $row->entitled!=null?$row->entitled:($row->annual_leave!=null?$row->annual_leave:null);
+						if($selected_year>=$effective_year){
+							$row->carry_fwd_leave= $row->ALbalance<=$cfl_limit?$row->ALbalance:$cfl_limit;
+						}else{
+							$row->carry_fwd_leave= $row->ALbalance;
+						}
   					$insert_data = array(
   						'user_id' => $row->user_id,
   						'year' => $selected_year,
-  						'annual_leave' => $row->annual_leave,
+						'annual_leave' => $row->annual_leave,
   						// 'carry_fwd_leave' => $row->ALbalance,
-            		    'carry_fwd_leave' => $row->ALbalance<=$cfl_limit?$row->ALbalance:$cfl_limit,
+            		    'carry_fwd_leave' => $row->carry_fwd_leave,
   						'sick_leave' => $row->sick_leave,
   						'earned_leave' => $row->earned_leave,
   					);
   					$this->ci->insert_model->addempleaves($insert_data);
 
-  					$row->year = $selected_year;
   					
 					  //$row->ALbalance = $row->annual_leave + $row->carry_fwd_leave;
-					  if($selected_year>=$effective_year){
-						$row->carry_fwd_leave = $row->ALbalance<=$cfl_limit?$row->ALbalance:$cfl_limit;
-						$row->ALbalance = (FLOOR(ROUND($row->annual_leave / 12 * (int)date("m"), 4))) + ($row->carry_fwd_leave<=$cfl_limit?$row->carry_fwd_leave:$cfl_limit);
-					  }else{
-						  $row->carry_fwd_leave = $row->ALbalance;
+						  //$row->carry_fwd_leave = $row->ALbalance;
 						  $row->ALbalance = (FLOOR(ROUND($row->annual_leave / 12 * (int)date("m"), 4))) + $row->carry_fwd_leave;
-					  }
+					  
             		$row->SLbalance = $row->sick_leave;
   					$row->UPLbalance = $row->UPLtaken + (isset($row->ALEtaken) ? $row->ALEtaken : 0);
-  					$row->EXLbalance = $row->EXLtaken;
+					$row->EXLbalance = $row->EXLtaken;
+					  
   				     foreach ($baru as $key=>$nilai){
                if (isset($nilai['Bal'])){
                if ($nilai['Bal']=='HLbalance'){

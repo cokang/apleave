@@ -47,7 +47,7 @@ parent::__construct();
 		return $query_result;
 	}
 	function getgroupdet($userid){
-		$this->db->select('v_UserID,v_GroupID');
+		$this->db->select('v_UserID,v_GroupID,v_ActiveUser,d_datejoin');
 		$this->db->from('pmis2_sa_user');
 		$this->db->where('v_UserID',$userid);
 		$this->db->group_start();
@@ -254,10 +254,26 @@ parent::__construct();
 			$month = 12;
 		}
 
-		//$this->db->select('L.*,U.v_UserName,U.v_UserName,ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
-		//$this->db->select('L.*,U.v_UserName,FLOOR(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
-		//$this->db->select('L.*,U.v_UserName,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()),4))as entitled');
-		$this->db->select('L.*,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * '.$month.',4))as entitled');
+		$this->db->select('L.*,U.v_UserName,U.v_UserName,ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		$this->db->select('L.*,U.v_UserName,FLOOR(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		$this->db->select('L.*,U.v_UserName,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()),4))as entitled');
+		$this->db->select('L.*,U.v_UserName,CASE WHEN (U.v_ActiveUser = "TP")
+        THEN (CASE 
+   WHEN TIMESTAMPDIFF(YEAR, U.d_datejoin, CURDATE())>=5  THEN  27
+			ELSE 21 
+END) 
+WHEN (U.v_ActiveUser = "TM")
+        THEN (CASE 
+   WHEN TIMESTAMPDIFF(YEAR, U.d_datejoin, CURDATE())>=5  THEN  22
+			ELSE 18 
+END)
+WHEN (U.v_ActiveUser = "SS")
+        THEN (CASE 
+   WHEN TIMESTAMPDIFF(YEAR, U.d_datejoin, CURDATE())>=5  THEN  17
+			ELSE 14 
+END)
+END as entitled');
+//$this->db->select('L.*,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * '.$month.',4))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		if($user_id!=''){
