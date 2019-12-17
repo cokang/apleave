@@ -274,6 +274,7 @@ WHEN (U.v_ActiveUser = "SS")
 END)
 END as entitled');
 //$this->db->select('L.*,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * '.$month.',4))as entitled');
+$this->db->select('L.*,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * '.$month.',4))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		if($user_id!=''){
@@ -1882,6 +1883,20 @@ END as entitled');
 		//exit();
 	$query_result = $query->result();
 	return $query_result;
+	}
+
+	function emp_level_datejoin($user_id){
+		$this->db->select('v_ActiveUser,d_datejoin');
+		$this->db->from('pmis2_sa_user');
+		$this->db->where('v_UserID', $user_id);
+		$this->db->group_start();
+		$this->db->where('v_Actionflag');
+		$this->db->or_where('v_Actionflag !=','D');
+		$this->db->group_end();
+		$query = $this->db->get();
+		//echo $this->db->last_query();
+		$query_result = $query->result();
+		return $query_result;
 	}
 
 }

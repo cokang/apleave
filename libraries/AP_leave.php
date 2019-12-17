@@ -224,8 +224,23 @@ class AP_leave {
   				if( $current_data==1 ){
 
 					  $this->ci->load->model('insert_model');
+					  $emp_lvl_date = $this->ci->display_model->emp_level_datejoin($row->user_id);
+					 	 $d1 = new DateTime($emp_lvl_date[0]->d_datejoin);
+				  		 $d2 = new DateTime();
+				  
+					  $yeardiff = $d2->diff($d1);
+					  $yeardiff= $yeardiff->y;
+					
+						if($emp_lvl_date[0]->v_ActiveUser=='TP'){
+								$entitled=$yeardiff>=5?27:21;
+							}elseif($emp_lvl_date[0]->v_ActiveUser=='TM'){
+								$entitled=$yeardiff>=5?22:18;
+							}elseif($emp_lvl_date[0]->v_ActiveUser=='SS'){
+								$entitled=$yeardiff>=5?17:14;
+							}
+                   
 					  $row->year = $selected_year;
-					  $row->annual_leave= $row->entitled!=null?$row->entitled:($row->annual_leave!=null?$row->annual_leave:null);
+					  $row->annual_leave= isset($entitled)?$entitled:($row->annual_leave!=null?$row->annual_leave:null);
 						if($selected_year>=$effective_year){
 							$row->carry_fwd_leave= $row->ALbalance<=$cfl_limit?$row->ALbalance:$cfl_limit;
 						}else{
