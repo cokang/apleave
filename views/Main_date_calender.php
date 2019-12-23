@@ -94,7 +94,7 @@
 									<th>To</th>
 									<th>No of days</th>
 									<th>Reason</th>
-									<th>MC Image</th>
+									<th>Related Image</th>
 									<th>&nbsp;</th>
 								</tr>
 							</thead>
@@ -108,7 +108,7 @@
 									<td data-title="To:"><?=isset($row->leave_to) ? date("d-m-Y", strtotime($row->leave_to)) : ''?></td>
 									<td data-title="No of days:"><?=isset($row->noleave) ? $row->noleave : '' ?></td>
 									<td data-title="Reason:"><?=isset($row->leave_remarks) ? $row->leave_remarks : ''?></td>
-									<td><?php if($row->leave_name=='Sick Leave'){ ?><a href="<?php echo base_url(); ?>sick_leave_img/<?=isset($row->file_name) ? $row->file_name : 'No_image_available.jpg'?>" data-fancybox class="btn btn-info btn"><span class="glyphicon glyphicon-picture"></span> </a><?php }?></td>
+									<td><?php if($row->leave_name=='Sick Leave'||$row->leave_name=='Unpaid Leave' ){ ?><a href="<?php echo base_url(); ?>sick_leave_img/<?=isset($row->file_name) ? $row->file_name : 'No_image_available.jpg'?>" data-fancybox class="btn btn-info btn"><span class="glyphicon glyphicon-picture"></span> </a><?php }?></td>
 									<td><?= !(isset($row->leave_status)) ||  $row->leave_status == '' ? '<a href="'.base_url().'index.php/Controllers/print_out?id='.$row->id.'&userid='.$row->user_id.'&tab='.$this->input->get('tab').'" >Print</a>' : '' ?></td>
 								</tr>
 							</tbody>

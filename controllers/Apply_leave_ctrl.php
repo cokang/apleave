@@ -40,7 +40,7 @@ class apply_leave_ctrl extends CI_Controller{
 		$this->insert_model->leavereq($insert_data);
 
 		//if ($this->input->post('leave_type') == '2' OR $this->input->post('leave_type') == '3'){
-	 	$whatimg = array('2','3','5','6','7','8','9','11','13','14');
+	 	$whatimg = array('2','3','4','5','6','7','8','9','11','13','14');
 		if ((in_array($this->input->post('leave_type'), $whatimg))){
 			$this->load->model('display_model');
 			//$data['regid'] = $this->display_model->get_reqid($this->input->post('from_leavedate'),$this->session->userdata('v_UserName'));

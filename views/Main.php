@@ -22,7 +22,7 @@
                   <label>Leave Type:</label>
 
                   <?php
-                  $whatimg = array('2','3','5','6','7','8','9','11','13','14');
+                  $whatimg = array('2','3','4','5','6','7','8','9','11','13','14');
                   $leaveT[0] = 'Select';
                   foreach ($leave_type as $row){
                     $leaveT[$row->id] = $row->leave_name;
