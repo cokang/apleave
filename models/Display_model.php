@@ -1416,6 +1416,8 @@ $this->db->select('L.*,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 1
 		/*$this->db->where('R.leave_from >=',$fromdate);
 		$this->db->where('R.leave_to <=',$todate);*/
 		$this->db->limit($limit,$start);
+		$this->db->order_by('leave_from', 'desc');
+		
 		// $this->db->limit($limit);
 		$query = $this->db->get();
 		// echo $this->db->last_query();

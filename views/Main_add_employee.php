@@ -23,7 +23,7 @@
                                     <form role="form">
                                     <div class="form-group">
                                             <label>APSB No.</label>
-                                            <input name="emp_apsb" id="emp_apsb" type="text" class="form-control" value="<?= isset($employeedet[0]->apsb_no) ? $employeedet[0]->apsb_no : '' ?>"/ >
+                                            <input name="emp_apsb" id="emp_apsb" type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" value="<?= isset($employeedet[0]->apsb_no) ? $employeedet[0]->apsb_no : '' ?>"/ >
                                     </div>
                                     <div class="form-group">
                                             <label>Name</label>
