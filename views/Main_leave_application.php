@@ -33,7 +33,7 @@
                   <th style="text-align:right;"><b>Leave Type :</b></th>
                   <td data-title="Leave Type :" align="left"><?=isset($userleave[0]->leave_name) ? $userleave[0]->leave_name : '' ?></td>
                   <th style="text-align:right;"><b>Leave Balance :</b></th>
-                  <td data-title="Leave Balance :" align="left"><?= ($balanceleave) ? $balanceleave : "N/A" ?></td>
+                  <td data-title="Leave Balance :" align="left"><?= !($balanceleave<0) ? $balanceleave : "N/A" ?></td>
                 </tr>
                 <tr class="">
                   <th style="text-align:right;"><b>From :</b></th>
@@ -57,9 +57,9 @@
                   <th style="text-align:right;"><b>Reliever:</b></th>
                   <td data-title="Reliever:" align="left"><?=isset($leavedet[0]->employee_replaced) ? $leavedet[0]->employee_replaced : '' ?></td>
                 </tr>
-                <?php $whatimg = array('2','3','5','6','7','8','9','11','13','14'); if(in_array($leavedet[0]->leave_type, $whatimg)) { ?>
+                <?php $whatimg = array('2','3','4','5','6','7','8','9','11','13','14'); if(in_array($leavedet[0]->leave_type, $whatimg)) { ?>
                 <tr class="">
-                  <th style="text-align:right;"><b>Sick Leave Image:</b></th>
+                  <th style="text-align:right;"><b>Related Image:</b></th>
                   <td colspan="3" data-title="Sick Leave Image:">
                     <a class='sample' data-fancybox   href='<?php echo base_url(); ?>sick_leave_img/<?=isset($leavedet[0]->file_name) ? $leavedet[0]->file_name : 'No_image_available.jpg'?>'>
                       <img src='<?php echo base_url(); ?>sick_leave_img/<?=isset($leavedet[0]->file_name) ? $leavedet[0]->file_name : 'No_image_available.jpg'?>' title="Zoom this Picture">

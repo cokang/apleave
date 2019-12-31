@@ -23,7 +23,7 @@
                                     <form role="form">
                                     <div class="form-group">
                                             <label>APSB No.</label>
-                                            <input name="emp_apsb" id="emp_apsb" type="text" class="form-control" value="<?= isset($employeedet[0]->apsb_no) ? $employeedet[0]->apsb_no : '' ?>"/ >
+                                            <input name="emp_apsb" id="emp_apsb" type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" value="<?= isset($employeedet[0]->apsb_no) ? $employeedet[0]->apsb_no : '' ?>"/ >
                                     </div>
                                     <div class="form-group">
                                             <label>Name</label>
@@ -33,10 +33,10 @@
                                             <label>Department Code</label>
                                             <input name="dept_code" id="dept_code" type="text" class="form-control" value="<?= isset($employeedet[0]->v_GroupID) ? $employeedet[0]->v_GroupID : '' ?>"/ >
                                     </div>
-                                    
+
                                     <div class="form-group">
                                     <label>State</label>
-                                    <?php 
+                                    <?php
                                     $state[0] = 'Select';
                                     foreach ($statelist as $list){
                                     $state[$list->state_code] = $list->state;
@@ -47,7 +47,7 @@
 
                                     <div class="form-group">
                                         <label>Office Group</label>
-                                        <?php 
+                                        <?php
                                         $hosp_l[0] = 'Select';
                                         foreach ($hosplist as $hlist){
                                         $hosp_l[$hlist->officegrp_code] = $hlist->officegrp_name;
@@ -57,7 +57,7 @@
                                     </div>
                                     <!-- <div class="form-group">
                                         <label>Hospital</label>
-                                        <?php 
+                                        <?php
                                         $hosp_l[0] = 'Select';
                                         foreach ($hosplist as $hlist){
                                         $hosp_l[$hlist->v_HospitalCode] = $hlist->v_HospitalName;
@@ -73,12 +73,12 @@
                                             <label>Telephone Number</label>
                                             <input name="phone_no" id="phone_no" type="text" class="form-control" value="<?= isset($employeedet[0]->phone_no) ? $employeedet[0]->phone_no : '' ?>"/ >
                                     </div>
-                                    
-                                    
-                                    
-                        
-                                      <!--<input type="submit" value=" Cancel " id="button" class="btn" name="cancel">-->              
-                                    
+
+
+
+
+                                      <!--<input type="submit" value=" Cancel " id="button" class="btn" name="cancel">-->
+
                                     <input type="hidden" name="hid_id" value="" />
                                 </div>
                                 <div class="col-lg-6">
@@ -92,7 +92,7 @@
                                     </div>
                                     <div class="form-group">
                                     <label>Type</label>
-                                    <?php 
+                                    <?php
                                     $emp_type = array (
                                         "0" => "Select",
                                         "Head" => "Head",
@@ -105,21 +105,21 @@
                                         <option value="Employee" >Employee</option>
                                         </select>-->
                                     </div>
-                                    
+
                                     <div class="form-group">
                                         <label>Email</label>
                                     <input name="emp_email" id="emp_email" type="text" class="form-control" value="<?= isset($employeedet[0]->v_email) ? $employeedet[0]->v_email : '' ?>"/ >
                                     </div>
-                                    
-                                    
+
+
                                     <?php if (($employeetype) && $employeetype == 'Head'){ ?>
                                     <div class="form-group" id="report_to" style="display:block;">
-                                    <?php } else {  ?>   
+                                    <?php } else {  ?>
                                     <div class="form-group" id="report_to" style="display:none;">
                                     <?php } ?>
                                         <label>Report To</label>
 
-                                        <?php 
+                                        <?php
                                         $report[0] = 'Select';
                                         foreach ($reportto as $row){
                                           $report[$row->group_sup_id] = $row->v_UserName;
@@ -129,16 +129,32 @@
 
                                         <!--<select name="report_to" id="report_to"  class="form-control" >
                                         <option value="0">Select</option>
-                                        <option value='1' >Test Head</option>                                      
+                                        <option value='1' >Test Head</option>
                                         </select>-->
 
                                     </div>
-                                    
+
                                     <div class="form-group">
                                         <label>Username</label>
                                     <input name="emp_uname" id="emp_uname" type="text" class="form-control" value="<?= isset($employeedet[0]->v_UserID) ? $employeedet[0]->v_UserID : '' ?>"/ >
                                     </div>
-          
+
+                                    <div class="form-group">
+                                    <label>Employee Level</label>
+                                    <?php
+                                    $emp_lvl = array('0' => "Select",
+                                    'TP' => "Top Management (TP)",
+                                    'TM' => "Middle Management (TM)",
+                                    'SS' => "Support Service (SS)");
+                                    ?>
+                                    <?php echo form_dropdown('emp_lvl', $emp_lvl, set_value('emp_lvl',isset($employeedet[0]->v_ActiveUser) ? $employeedet[0]->v_ActiveUser : '0') ,  'id="emp_lvl" class="form-control"');?>
+                                    </div>
+
+                                    <div class="form-group">
+                                    <label>Date Join</label>
+                                    <input name="date_join" id="date_join" type="date" class="form-control" value="<?= isset($employeedet[0]->d_datejoin) ? date("Y-m-d", strtotime($employeedet[0]->d_datejoin)) : '' ?>" autocomplete="off">
+                                    </div>
+
                                     <?php if(!($employeedet)){ ?>
                                     <div class="form-group">
                                         <label>Password</label>
@@ -153,10 +169,10 @@
 										<input type="checkbox" name="del_user" value="D" <?=isset($employeedet[0]->v_Actionflag)&&($employeedet[0]->v_Actionflag =='D') ? 'checked' : '' ?>> Delete User
                                     </div>
                                     <input name="submit" type="submit" class="btn btn-default" id="button" value=" Submit " onClick="return validate_form();"/>
-                                </div>
 
+                                </div>
                             </div>
-							
+
                             </form>
                             <!-- /.row (nested) -->
                         </div>

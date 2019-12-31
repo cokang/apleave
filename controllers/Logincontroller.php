@@ -11,6 +11,9 @@ class LoginController extends CI_Controller {
 
 
 	public function index($em=''){
+
+		//echo "pak ::::";
+		//exit();
 			if( !$this->session->userdata("is_logged_in") ){
 			$data['errormsg']=$em;
 			$this->load->view('Login',$data);

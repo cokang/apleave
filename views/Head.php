@@ -185,7 +185,7 @@
 				err_msg="Mobile number should not be more than 10 digits<br>";
 				error=1;
 			}*/
-			if($("#leave_type").val()=="2" ){
+			if($("#leave_type").val()=="2" || $("#leave_type").val()=="4" ){
 				if($picture == "No_image_available.jpg"){
 					$("#file_name").css("border","red solid 1px");
 					error=1;
@@ -262,7 +262,7 @@
 			}else{
 				$("#duration option[value='Half Day']").remove();
 			}
-			var imgneeded = ['2','3','5','6','7','8','9','11','13','14'];//masukattattachmentsini
+			var imgneeded = ['2','3','4','5','6','7','8','9','11','13','14'];//masukattattachmentsini
 			$("#from").prop("disabled", false);
 			$("#to").prop("disabled", false);
 
@@ -416,6 +416,9 @@
 
 
 		function check_days_available(){
+
+			if($("#to").datepicker('getDate') === null)
+         return;
 
 			var duration = $("#leave_type").val();
 			var json = get_leave_balance(duration);

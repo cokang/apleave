@@ -24,13 +24,13 @@ function u_addheademployee($head_data,$userid){
 	$this->db->update('group', $head_data);
 }
 */
-function u_addheademployee($head_data,$userid){
+function u_addheademployee($head_data,$userid,$emptype){
 
 	$query = $this->db->get_where('group', array(//making selection
             'group_sup_id' => $userid,
         ));
 
- if ($query->num_rows() === 0) {
+ if ($query->num_rows() === 0 && $emptype=='Head') {
     $masukbaru = array('group_name'=>$head_data['group_name'],'group_sup_id'=>$userid,'report_to'=>$head_data['report_to']);
 	$this->db->insert('group', $masukbaru);
      }else {

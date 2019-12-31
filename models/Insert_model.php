@@ -90,6 +90,8 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 									 'site_state' => $this->input->post('hosp_code'),
 									 'v_email' => $this->input->post('emp_email'),
 									 'phone_no' => $this->input->post('phone_no'),
+									 'v_ActiveUser' => $this->input->post('emp_lvl'),
+									 'd_datejoin' => $this->input->post('date_join'),
 									 'v_Actionflag' => $af,
 									);
 				$this->update_model->u_addemployee($insert_data,$variable1,$variable2);
@@ -107,7 +109,7 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 											'group_sup_id' => $this->input->post('emp_uname').'D',
 											);
 				}
-						$this->update_model->u_addheademployee($head_data,$variable1);
+						$this->update_model->u_addheademployee($head_data,$variable1,$emp_type);
 
 
 				if ($this->input->post('probation_stat') != 'Y'){
@@ -204,6 +206,8 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 									 'site_state' => $this->input->post('hosp_code'),
 									 'v_email' => $this->input->post('emp_email'),
 									 'phone_no' => $this->input->post('phone_no'),
+									 'v_ActiveUser' => $this->input->post('emp_lvl'),
+									 'd_datejoin' => $this->input->post('date_join'),
 									 'v_Actionflag' => 'I',
 									 'v_password' => md5($this->input->post('emp_pass'))
 									);

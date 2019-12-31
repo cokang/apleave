@@ -47,7 +47,7 @@ parent::__construct();
 		return $query_result;
 	}
 	function getgroupdet($userid){
-		$this->db->select('v_UserID,v_GroupID');
+		$this->db->select('v_UserID,v_GroupID,v_ActiveUser,d_datejoin');
 		$this->db->from('pmis2_sa_user');
 		$this->db->where('v_UserID',$userid);
 		$this->db->group_start();
@@ -395,7 +395,10 @@ parent::__construct();
 		$this->db->from('employee_leave_req R');
 		$this->db->join('pmis2_sa_user U','R.user_id = U.v_UserID');
 		$this->db->where('YEAR(R.leave_from)',$year);
+		$this->db->group_start();
 		$this->db->where('R.leave_status','Approved');
+		$this->db->or_where('R.leave_status IS NULL', null, false);
+		$this->db->group_end();
 		if($dept!=''){
 			$this->db->where('U.v_GroupID',$dept);
 		}
@@ -1398,6 +1401,7 @@ parent::__construct();
 		/*$this->db->where('R.leave_from >=',$fromdate);
 		$this->db->where('R.leave_to <=',$todate);*/
 		$this->db->limit($limit,$start);
+		$this->db->order_by('leave_from', 'desc');
 		// $this->db->limit($limit);
 		$query = $this->db->get();
 		// echo $this->db->last_query();
@@ -1865,6 +1869,21 @@ parent::__construct();
 			//exit();
 		$query_result = $query->result();
 		return $query_result;
+		}
+
+
+		function emp_level_datejoin($user_id){
+			$this->db->select('v_ActiveUser,d_datejoin');
+			$this->db->from('pmis2_sa_user');
+			$this->db->where('v_UserID', $user_id);
+			$this->db->group_start();
+			$this->db->where('v_Actionflag');
+			$this->db->or_where('v_Actionflag !=','D');
+			$this->db->group_end();
+			$query = $this->db->get();
+			//echo $this->db->last_query();
+			$query_result = $query->result();
+			return $query_result;
 		}
 
 }
