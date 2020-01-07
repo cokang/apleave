@@ -580,8 +580,16 @@ class Controllers extends CI_Controller {
 			$data['next'] = ++$data['page'];
 		}
 		$data['getgroupdet'] = $this->display_model->getgroupdet($this->session->userdata('v_UserName'));
-		$data['datecalendar'] = $this->display_model->datecalendar(date("Y-m-d",strtotime($data['datecal'])), $data['limit'], $data['start'], date("Y-m-d",strtotime($data['datecalto'])), $data['getgroupdet'][0]->v_GroupID, $staffname, $apsbno);
-
+		if($datecal==date("d-m-Y"))
+		{
+			$data['datecalendar'] = $this->display_model->datecalendar(date("Y-m-d",strtotime($data['datecal'])), $data['limit'], $data['start'], date("Y-m-d",strtotime($data['datecalto'])), $data['getgroupdet'][0]->v_GroupID, $staffname, $apsbno);
+		}elseif($datecal!=date("d-m-Y")&&($_REQUEST['staffname']!=''||$_REQUEST['apsbno'])!=''){
+			$data['datecalendar'] = $this->display_model->datecalendar(date("Y-m-d",strtotime($data['datecal'])), $data['limit'], $data['start'], date("Y-m-d",strtotime($data['datecalto'])), $data['getgroupdet'][0]->v_GroupID, $staffname, $apsbno);
+		}elseif($staffname==''||$apsbno==''){
+			$data['datecalendar'] = array();
+			
+		}
+		
 		foreach ($data['datecalendar'] as $row) {
 			$todate = ($row->leave_to) ? $row->leave_to : $row->leave_from;
 			$row->noleave = $this->ap_leave->get_no_ofday($row->leave_from, $todate, $row->leave_type, $row->leave_duration, $row->v_hospitalcode, date('Y',strtotime($datecal)),$row->user_id);
