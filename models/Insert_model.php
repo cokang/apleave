@@ -92,11 +92,11 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 									 'phone_no' => $this->input->post('phone_no'),
 									 'v_ActiveUser' => $this->input->post('emp_lvl'),
 									 'd_datejoin' => $this->input->post('date_join'),
+									 'd_dateleft' => $this->input->post('date_terminate'),
 									 'v_Actionflag' => $af,
 									);
 				$this->update_model->u_addemployee($insert_data,$variable1,$variable2);
-					// echo $emp_type;
-					// exit();					
+
 				if ($emp_type == 'Head'){
 						$head_data = array(
 										   'group_name' => $this->input->post('dept_code'),
@@ -209,6 +209,7 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 									 'phone_no' => $this->input->post('phone_no'),
 									 'v_ActiveUser' => $this->input->post('emp_lvl'),
 									 'd_datejoin' => $this->input->post('date_join'),
+									 'd_dateleft' => $this->input->post('date_terminate'),
 									 'v_Actionflag' => 'I',
 									 'v_password' => md5($this->input->post('emp_pass'))
 									);

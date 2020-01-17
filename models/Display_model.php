@@ -254,27 +254,10 @@ parent::__construct();
 			$month = 12;
 		}
 
-		$this->db->select('L.*,U.v_UserName,U.v_UserName,ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
-		$this->db->select('L.*,U.v_UserName,FLOOR(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
-		$this->db->select('L.*,U.v_UserName,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()),4))as entitled');
-		$this->db->select('L.*,U.v_UserName,CASE WHEN (U.v_ActiveUser = "TP")
-        THEN (CASE 
-   WHEN TIMESTAMPDIFF(YEAR, U.d_datejoin, CURDATE())>=5  THEN  27
-			ELSE 21 
-END) 
-WHEN (U.v_ActiveUser = "TM")
-        THEN (CASE 
-   WHEN TIMESTAMPDIFF(YEAR, U.d_datejoin, CURDATE())>=5  THEN  22
-			ELSE 18 
-END)
-WHEN (U.v_ActiveUser = "SS")
-        THEN (CASE 
-   WHEN TIMESTAMPDIFF(YEAR, U.d_datejoin, CURDATE())>=5  THEN  17
-			ELSE 14 
-END)
-END as entitled');
-//$this->db->select('L.*,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * '.$month.',4))as entitled');
-$this->db->select('L.*,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * '.$month.',4))as entitled');
+		//$this->db->select('L.*,U.v_UserName,U.v_UserName,ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		//$this->db->select('L.*,U.v_UserName,FLOOR(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
+		//$this->db->select('L.*,U.v_UserName,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()),4))as entitled');
+		$this->db->select('L.*,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * if (year(u.d_dateleft)='.$year.',month(u.d_dateleft),'.$month.'),4))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		if($user_id!=''){
@@ -412,7 +395,10 @@ $this->db->select('L.*,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 1
 		$this->db->from('employee_leave_req R');
 		$this->db->join('pmis2_sa_user U','R.user_id = U.v_UserID');
 		$this->db->where('YEAR(R.leave_from)',$year);
+		$this->db->group_start();
 		$this->db->where('R.leave_status','Approved');
+		$this->db->or_where('R.leave_status IS NULL', null, false);
+		$this->db->group_end();
 		if($dept!=''){
 			$this->db->where('U.v_GroupID',$dept);
 		}
@@ -1139,7 +1125,7 @@ $this->db->select('L.*,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 1
 		$id_rpt=$this->db->get_where('group', array('group_sup_id =' => $userid))->result();
 		$this->db->select('a.v_UserID,a.v_UserName,a.v_GroupID');
 		$this->db->from('pmis2_sa_user a');
-		$this->db->join('group b','a.v_UserID = b.group_sup_id','left outer');
+		$this->db->join('group b',"a.v_UserID = b.group_sup_id AND a.v_Actionflag != 'D'",'left outer');
 		$this->db->group_start();
 		$this->db->where('a.v_Actionflag');
 		$this->db->or_where('a.v_Actionflag !=','D');
@@ -1311,7 +1297,6 @@ $this->db->select('L.*,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 1
 		$this->db->group_start();
 		$this->db->where("R.leave_status = 'Approved'");
 		$this->db->group_end();
-		
 
 		if( $staffname!='' ){
 			$this->db->like('U.v_UserName', $staffname);
@@ -1417,7 +1402,6 @@ $this->db->select('L.*,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 1
 		$this->db->where('R.leave_to <=',$todate);*/
 		$this->db->limit($limit,$start);
 		$this->db->order_by('leave_from', 'desc');
-		
 		// $this->db->limit($limit);
 		$query = $this->db->get();
 		// echo $this->db->last_query();
@@ -1848,18 +1832,6 @@ $this->db->select('L.*,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 1
 	$query_result = $query->result();
 	return $query_result;
 	}
-	function personal_fam(){
-		$this->db->select('fl.*');
-		$this->db->from('pmis2_sa_family_link fl');
-		$this->db->join('pmis2_sa_details d','fl.v_fam_id=d.id');
-		$this->db->where('d.v_user_id',$this->session->userdata('v_UserName'));
-		$this->db->where('fl.v_Actionflag <>','D');
-		$query = $this->db->get();
-			//echo $this->db->last_query();
-			//exit();
-		$query_result = $query->result();
-		return $query_result;
-		}
 
 		   function personal_child(){
 	$this->db->select('pmis2_sa_child.*');
@@ -1886,20 +1858,33 @@ $this->db->select('L.*,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 1
 	$query_result = $query->result();
 	return $query_result;
 	}
-
-	function emp_level_datejoin($user_id){
-		$this->db->select('v_ActiveUser,d_datejoin');
-		$this->db->from('pmis2_sa_user');
-		$this->db->where('v_UserID', $user_id);
-		$this->db->group_start();
-		$this->db->where('v_Actionflag');
-		$this->db->or_where('v_Actionflag !=','D');
-		$this->db->group_end();
+	function personal_fam(){
+		$this->db->select('fl.*');
+		$this->db->from('pmis2_sa_family_link fl');
+		$this->db->join('pmis2_sa_details d','fl.v_fam_id=d.id');
+		$this->db->where('d.v_user_id',$this->session->userdata('v_UserName'));
+		$this->db->where('fl.v_Actionflag <>','D');
 		$query = $this->db->get();
-		//echo $this->db->last_query();
+			//echo $this->db->last_query();
+			//exit();
 		$query_result = $query->result();
 		return $query_result;
-	}
+		}
+
+
+		function emp_level_datejoin($user_id){
+			$this->db->select('v_ActiveUser,d_datejoin');
+			$this->db->from('pmis2_sa_user');
+			$this->db->where('v_UserID', $user_id);
+			$this->db->group_start();
+			$this->db->where('v_Actionflag');
+			$this->db->or_where('v_Actionflag !=','D');
+			$this->db->group_end();
+			$query = $this->db->get();
+			//echo $this->db->last_query();
+			$query_result = $query->result();
+			return $query_result;
+		}
 
 }
 ?>
