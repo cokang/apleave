@@ -1873,12 +1873,14 @@ parent::__construct();
 
 
 		function emp_level_datejoin($user_id){
-			$this->db->select('v_ActiveUser,d_datejoin');
-			$this->db->from('pmis2_sa_user');
-			$this->db->where('v_UserID', $user_id);
+			$this->db->select('sa.v_ActiveUser,sa.d_datejoin,pro.action_flag');
+			$this->db->from('pmis2_sa_user sa');
+			$this->db->join('staff_probation pro', 'pro.userid = sa.v_UserID', 'left');
+			
+			$this->db->where('sa.v_UserID', $user_id);
 			$this->db->group_start();
-			$this->db->where('v_Actionflag');
-			$this->db->or_where('v_Actionflag !=','D');
+			$this->db->where('sa.v_Actionflag');
+			$this->db->or_where('sa.v_Actionflag !=','D');
 			$this->db->group_end();
 			$query = $this->db->get();
 			//echo $this->db->last_query();

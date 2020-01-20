@@ -9,7 +9,7 @@ class AP_leave {
     }
 
     public function get_leave_detail($leaveacc, $tleavetaken, $hajj='', $selected_year, $leave_type=''){
-        $baru= $this->getleavefield();
+		$baru= $this->getleavefield();
 		/* echo "<pre>";
 		print_r($baru);exit(); */
   		$is_selected_leave = (count($leave_type)==1) ? true : false;
@@ -92,7 +92,7 @@ class AP_leave {
   				//}
 			/* 	echo "<pre>";
                 print_r($tleavetaken);
-  				exit(); */
+				  exit(); */
 				foreach ($tleavetaken as $list){
 
   					$fromdate	= $list->leave_from;//($list->leave_from) ? $list->leave_from : $list->leave_to;
@@ -245,6 +245,11 @@ class AP_leave {
 							$row->carry_fwd_leave= $row->ALbalance<=$cfl_limit?$row->ALbalance:$cfl_limit;
 						}else{
 							$row->carry_fwd_leave= $row->ALbalance;
+						}
+
+						if($emp_lvl_date[0]->action_flag=='Y'){
+							$row->entitled=0;
+							$row->carry_fwd_leave=0;
 						}
   					$insert_data = array(
   						'user_id' => $row->user_id,
