@@ -10,6 +10,7 @@ class AP_leave {
 
     public function get_leave_detail($leaveacc, $tleavetaken, $hajj='', $selected_year, $leave_type=''){
 		$baru= $this->getleavefield();
+		//print_r($empl);
 		/* echo "<pre>";
 		print_r($baru);exit(); */
   		$is_selected_leave = (count($leave_type)==1) ? true : false;
@@ -93,6 +94,7 @@ class AP_leave {
 			/* 	echo "<pre>";
                 print_r($tleavetaken);
 				  exit(); */
+				  //print_r($tleavetaken);
 				foreach ($tleavetaken as $list){
 
   					$fromdate	= $list->leave_from;//($list->leave_from) ? $list->leave_from : $list->leave_to;
@@ -100,7 +102,7 @@ class AP_leave {
 
   					//$row->noleave = $this->get_no_ofday($fromdate, $todate, $list->leave_type, $list->leave_duration, $list->v_hospitalcode, $year);
             $row->noleave = $this->get_no_ofday($fromdate, $todate, $list->leave_type, $list->leave_duration, $list->v_hospitalcode, $year,$list->user_id);
-
+					
 
 
   					if($list->user_id == $row->user_id){
@@ -220,7 +222,7 @@ class AP_leave {
 					}
   					$row->ESLtaken = $row->EXLtaken;
 				  }
-
+				
   				if( $current_data==1 ){
 
 					  $this->ci->load->model('insert_model');
@@ -240,7 +242,7 @@ class AP_leave {
 							}
                    
 					  $row->year = $selected_year;
-					  $row->entitled= isset($entitled)?$entitled:($row->annual_leave!=null?$row->annual_leave:null);
+					  $row->annual_leave= isset($entitled)?$entitled:($row->annual_leave!=null?$row->annual_leave:null);
 						if($selected_year>=$effective_year){
 							$row->carry_fwd_leave= $row->ALbalance<=$cfl_limit?$row->ALbalance:$cfl_limit;
 						}else{
@@ -248,13 +250,21 @@ class AP_leave {
 						}
 
 						if($emp_lvl_date[0]->action_flag=='Y'){
-							$row->entitled=0;
+							$row->annual_leave=0;
 							$row->carry_fwd_leave=0;
+							$row->entitled= $row->annual_leave;
+						}else{
+							if($emp_lvl_date[0]->date_left){
+								$month=$emp_lvl_date[0]->date_left;
+							}else{
+								$month=(int)date("m");
+							}
+							$row->entitled= (FLOOR(ROUND($row->annual_leave / 12 * $month, 4)));
 						}
   					$insert_data = array(
   						'user_id' => $row->user_id,
   						'year' => $selected_year,
-						'annual_leave' => $row->entitled,
+						'annual_leave' => $row->annual_leave,
   						// 'carry_fwd_leave' => $row->ALbalance,
             		    'carry_fwd_leave' => $row->carry_fwd_leave,
   						'sick_leave' => $row->sick_leave,
@@ -265,11 +275,13 @@ class AP_leave {
   					
 					  //$row->ALbalance = $row->annual_leave + $row->carry_fwd_leave;
 						  //$row->carry_fwd_leave = $row->ALbalance;
-						  $row->ALbalance = (FLOOR(ROUND($row->entitled / 12 * (int)date("m"), 4))) + $row->carry_fwd_leave;
+						  $row->ALbalance = (FLOOR(ROUND($row->annual_leave / 12 * (int)date("m"), 4))) + $row->carry_fwd_leave;
 					  
             		$row->SLbalance = $row->sick_leave;
   					$row->UPLbalance = $row->UPLtaken + (isset($row->ALEtaken) ? $row->ALEtaken : 0);
 					$row->EXLbalance = $row->EXLtaken;
+					//echo $row->entitled;exit();
+					
 					  
   				     foreach ($baru as $key=>$nilai){
                if (isset($nilai['Bal'])){
