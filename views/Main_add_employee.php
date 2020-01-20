@@ -74,8 +74,15 @@
                                             <input name="phone_no" id="phone_no" type="text" class="form-control" value="<?= isset($employeedet[0]->phone_no) ? $employeedet[0]->phone_no : '' ?>"/ >
                                     </div>
 
-
-
+                                    <div class="form-group">
+                                    <label>Date Join</label>
+                                    <input name="date_join" id="date_join" type="date" class="form-control" value="<?= isset($employeedet[0]->d_datejoin) ? date("Y-m-d", strtotime($employeedet[0]->d_datejoin)) : '' ?>" autocomplete="off">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                    <label>Date Of Termination</label>
+                                    <input name="date_terminate" id="date_terminate" type="date" class="form-control" value="<?= isset($employeedet[0]->d_dateleft) ? date("Y-m-d", strtotime($employeedet[0]->d_dateleft)) : '' ?>" autocomplete="off">
+                                    </div>
 
                                       <!--<input type="submit" value=" Cancel " id="button" class="btn" name="cancel">-->
 
@@ -150,10 +157,7 @@
                                     <?php echo form_dropdown('emp_lvl', $emp_lvl, set_value('emp_lvl',isset($employeedet[0]->v_ActiveUser) ? $employeedet[0]->v_ActiveUser : '0') ,  'id="emp_lvl" class="form-control"');?>
                                     </div>
 
-                                    <div class="form-group">
-                                    <label>Date Join</label>
-                                    <input name="date_join" id="date_join" type="date" class="form-control" value="<?= isset($employeedet[0]->d_datejoin) ? date("Y-m-d", strtotime($employeedet[0]->d_datejoin)) : '' ?>" autocomplete="off">
-                                    </div>
+                                    
 
                                     <?php if(!($employeedet)){ ?>
                                     <div class="form-group">

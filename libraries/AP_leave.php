@@ -227,8 +227,9 @@ class AP_leave {
 					 	 $d1 = new DateTime($emp_lvl_date[0]->d_datejoin);
 				  		 $d2 = new DateTime();
 
-					  $yeardiff = $d2->diff($d1);
-					  $yeardiff= $yeardiff->y;
+					  //$yeardiff = $d2->diff($d1);
+					  //$yeardiff= $yeardiff->y;
+            $yeardiff = $d2->format('Y')-$d1->format('Y');
 
 						if($emp_lvl_date[0]->v_ActiveUser=='TP'){
 								$entitled=$yeardiff>=5?27:21;
@@ -246,6 +247,19 @@ class AP_leave {
 							$row->carry_fwd_leave= $row->ALbalance;
 						}
 
+            if($emp_lvl_date[0]->action_flag=='Y'){
+							$row->annual_leave=0;
+							$row->carry_fwd_leave=0;
+							$row->entitled= $row->annual_leave;
+						}else{
+							if($emp_lvl_date[0]->date_left){
+								$month=$emp_lvl_date[0]->date_left;
+							}else{
+								$month=(int)date("m");
+							}
+							$row->entitled= (FLOOR(ROUND($row->annual_leave / 12 * $month, 4)));
+						}
+
   					$insert_data = array(
   						'user_id' => $row->user_id,
   						'year' => $selected_year,
@@ -261,13 +275,17 @@ class AP_leave {
   					$row->carry_fwd_leave = $row->ALbalance;
   					//$row->ALbalance = $row->annual_leave + $row->carry_fwd_leave;
                     //$row->ALbalance = (FLOOR(ROUND($row->annual_leave / 12 * (int)date("m"), 4))) + $row->carry_fwd_leave;
-        					  if($selected_year>=$effective_year){
+                    /*
+                    if($selected_year>=$effective_year){
         						$row->carry_fwd_leave = $row->ALbalance<=$cfl_limit?$row->ALbalance:$cfl_limit;
         						$row->ALbalance = (FLOOR(ROUND($row->annual_leave / 12 * (int)date("m"), 4))) + ($row->carry_fwd_leave<=$cfl_limit?$row->carry_fwd_leave:$cfl_limit);
         					  }else{
         						  $row->carry_fwd_leave = $row->ALbalance;
         						  $row->ALbalance = (FLOOR(ROUND($row->annual_leave / 12 * (int)date("m"), 4))) + $row->carry_fwd_leave;
         					  }
+                    */
+                    $row->ALbalance = (FLOOR(ROUND($row->annual_leave / 12 * (int)date("m"), 4))) + $row->carry_fwd_leave;
+
                     $row->SLbalance = $row->sick_leave;
   					$row->UPLbalance = $row->UPLtaken + (isset($row->ALEtaken) ? $row->ALEtaken : 0);
   					$row->EXLbalance = $row->EXLtaken;
@@ -432,7 +450,8 @@ class AP_leave {
 	}
 
 	public function weekend_count(){
-		$weekend_count = array(4,5,7,13);
+		//$weekend_count = array(4,5,7,13);
+  	$weekend_count = array(5,7,13);
 		return $weekend_count;
 	}
 

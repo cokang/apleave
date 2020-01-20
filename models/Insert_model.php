@@ -68,6 +68,7 @@ function addheademployee($head_data){
 function addprobation($probation_stat){
 	$this->db->insert('staff_probation', $probation_stat);
 }
+
 function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 			$this->db->select("$value1, $value2");
 			$this->db->where($value1,$variable1);
@@ -92,6 +93,7 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 									 'phone_no' => $this->input->post('phone_no'),
 									 'v_ActiveUser' => $this->input->post('emp_lvl'),
 									 'd_datejoin' => $this->input->post('date_join'),
+									 'd_dateleft' => $this->input->post('date_terminate'),
 									 'v_Actionflag' => $af,
 									);
 				$this->update_model->u_addemployee($insert_data,$variable1,$variable2);
@@ -208,6 +210,7 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 									 'phone_no' => $this->input->post('phone_no'),
 									 'v_ActiveUser' => $this->input->post('emp_lvl'),
 									 'd_datejoin' => $this->input->post('date_join'),
+									 'd_dateleft' => $this->input->post('date_terminate'),
 									 'v_Actionflag' => 'I',
 									 'v_password' => md5($this->input->post('emp_pass'))
 									);
