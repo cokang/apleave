@@ -580,6 +580,7 @@ class Controllers extends CI_Controller {
 			$data['next'] = ++$data['page'];
 		}
 		$data['getgroupdet'] = $this->display_model->getgroupdet($this->session->userdata('v_UserName'));
+		//$data['datecalendar'] = $this->display_model->datecalendar(date("Y-m-d",strtotime($data['datecal'])), $data['limit'], $data['start'], date("Y-m-d",strtotime($data['datecalto'])), $data['getgroupdet'][0]->v_GroupID, $staffname, $apsbno);
 		if($datecal==date("d-m-Y"))
 		{
 			$data['datecalendar'] = $this->display_model->datecalendar(date("Y-m-d",strtotime($data['datecal'])), $data['limit'], $data['start'], date("Y-m-d",strtotime($data['datecalto'])), $data['getgroupdet'][0]->v_GroupID, $staffname, $apsbno);
@@ -587,9 +588,9 @@ class Controllers extends CI_Controller {
 			$data['datecalendar'] = $this->display_model->datecalendar(date("Y-m-d",strtotime($data['datecal'])), $data['limit'], $data['start'], date("Y-m-d",strtotime($data['datecalto'])), $data['getgroupdet'][0]->v_GroupID, $staffname, $apsbno);
 		}elseif($staffname==''||$apsbno==''){
 			$data['datecalendar'] = array();
-			
+
 		}
-		
+
 		foreach ($data['datecalendar'] as $row) {
 			$todate = ($row->leave_to) ? $row->leave_to : $row->leave_from;
 			$row->noleave = $this->ap_leave->get_no_ofday($row->leave_from, $todate, $row->leave_type, $row->leave_duration, $row->v_hospitalcode, date('Y',strtotime($datecal)),$row->user_id);
@@ -726,7 +727,20 @@ class Controllers extends CI_Controller {
 		$this->load->view('footer');
 	}
 
+	public function others()
+	{
+		$this->load->model('display_model');
+		$data['headrow']= $this->display_model->getheadrow($this->session->userdata('v_UserName'));
+		$data['hrrow']	= $this->display_model->gethrrow($this->session->userdata('v_UserName'));
+		$data['aarow']	= $this->display_model->getaarow($this->session->userdata('v_UserName'));
 
+
+		$this->load->view('Head',$data);
+		$this->load->view('top');
+		$this->load->view('left');
+		$this->load->view('main_other');
+		$this->load->view('footer');
+	}
 
 	public function administrative(){
 		$this->load->model('display_model');

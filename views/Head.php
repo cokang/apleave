@@ -190,10 +190,6 @@
 					$("#file_name").css("border","red solid 1px");
 					error=1;
 				}
-				if($("#reason").val()=="" || $("#reason").val()=="" ){
-				$("#reason").css("border-color","red");
-					error=1;
-			}
 			}
 			if( $("#leave_type").val()=="11" && $("#duration").val()=="Half Day" ){
 				if($("#from").val()=="" || $("#from").val()=="From"){
@@ -420,6 +416,9 @@
 
 
 		function check_days_available(){
+
+			if($("#to").datepicker('getDate') === null)
+         return;
 
 			var duration = $("#leave_type").val();
 			var json = get_leave_balance(duration);
@@ -1953,6 +1952,18 @@
 		}
 	</script>
 	<?php } elseif ('Controllers/administrative/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)) {?>
+	<style type="text/css">
+		.inline-block{
+			display: inline-block;
+		}
+		.left{
+			float: left;
+		}
+		.box{
+			padding: 19px;
+		}
+	</style>
+	<?php } elseif ('Controllers/others/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)) {?>
 	<style type="text/css">
 		.inline-block{
 			display: inline-block;

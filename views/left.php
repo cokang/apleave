@@ -32,7 +32,7 @@
 			<!-- code by bazli on 3/5/18 -->
 			<!--<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/employee_guide?tab=<?=$num++?>" class="ahref"><i class="fa fa-book fa-fw"></i>Employee Guide</a></li>-->
 			<!-- code by bazli on 13/6/18 -->
-			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/system_manual?tab=<?=$num++?>" class="ahref"><i class="fa fa-book fa-fw"></i>System Manual</a></li>
+			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/others?tab=<?=$num++?>" class="ahref"><i class="fa fa-book fa-fw"></i>System Manual</a></li>
 		<?php } else { ?>
 			<?= ($this->input->get('tab') == $num2++) ? '<li class="active">' : '<li>'?><a href="<?php echo base_url(); ?>index.php/Controllers/change_password?tab=<?=$num++?>" class="ahref"><i class="fa fa-lock fa-fw"></i>Change Password</a></li>
 		<?php } ?>
