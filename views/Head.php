@@ -1963,6 +1963,18 @@
 			padding: 19px;
 		}
 	</style>
+	<?php } elseif ('Controllers/others/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)) {?>
+	<style type="text/css">
+		.inline-block{
+			display: inline-block;
+		}
+		.left{
+			float: left;
+		}
+		.box{
+			padding: 19px;
+		}
+	</style>
 	<?php }elseif( 'Controllers/report_summary/' == $this->uri->slash_segment(1) . $this->uri->slash_segment(2) ){ ?>
 
 	<script type="text/javascript">
