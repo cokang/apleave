@@ -14,6 +14,10 @@
 	<script type="text/javascript" src="<?php echo base_url(); ?>js/jquery-ui.custom.js"></script>
 	<link  href="<?php echo base_url(); ?>js/jquery.fancybox.min.css" rel="stylesheet">
 	<script src="<?php echo base_url(); ?>js/jquery.fancybox.min.js"></script>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">  
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>  
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script> 
 
 	<!-- Page-Level Plugin CSS - Forms -->
 	<?php if ('Controllers/print_out/'== $this->uri->slash_segment(1) .$this->uri->slash_segment(2)) { ?>
@@ -1974,6 +1978,26 @@
 		.box{
 			padding: 19px;
 		}
+		.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  grid-gap: 10px;
+  background-color: white;
+  padding: 10px;
+}
+
+.grid-container > div {
+  background-color: rgba(255, 255, 255, 0.8);
+  /* border: 1px solid black; */
+  text-align: center;
+  /* font-size: 30px; */
+}
+
+.scrolloverflow {
+	max-height: 320px;
+	overflow: hidden; 
+	overflow-y:scroll;
+}
 	</style>
 	<?php }elseif( 'Controllers/report_summary/' == $this->uri->slash_segment(1) . $this->uri->slash_segment(2) ){ ?>
 

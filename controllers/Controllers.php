@@ -32,7 +32,7 @@ class Controllers extends CI_Controller {
 				$data['applied_date'] = $this->display_model->applied_date($this->session->userdata('v_UserName'));
 		///$url = $this->input->post('continue') ? $this->input->post('continue') : site_url('contentcontroller/select');
 		//$config['upload_path'] = 'C:\inetpub\wwwroot\FEMSHospital_v3\uploadfile';
-		$config['upload_path'] = 'C:\inetpub\wwwroot\apleave3\sick_leave_img';
+		$config['upload_path'] = 'C:\inetpub\wwwroot\apleave\sick_leave_img';
 		//$config['upload_path'] = "sick_leave_img/";
                 //$config['upload_path'] = '/var/www/vhosts/file.advancepact.com/httpdocs/sick_leave_img';
 		$config['allowed_types'] = 'gif|jpg|png';
@@ -727,20 +727,7 @@ class Controllers extends CI_Controller {
 		$this->load->view('footer');
 	}
 
-	public function others()
-	{
-		$this->load->model('display_model');
-		$data['headrow']= $this->display_model->getheadrow($this->session->userdata('v_UserName'));
-		$data['hrrow']	= $this->display_model->gethrrow($this->session->userdata('v_UserName'));
-		$data['aarow']	= $this->display_model->getaarow($this->session->userdata('v_UserName'));
 
-
-		$this->load->view('Head',$data);
-		$this->load->view('top');
-		$this->load->view('left');
-		$this->load->view('main_other');
-		$this->load->view('footer');
-	}
 
 	public function administrative(){
 		$this->load->model('display_model');
@@ -916,5 +903,108 @@ public function employee_profile()
 		$this->load->view('Main_employee_profile');
 		$this->load->view('footer');
 	}
+
+	public function others()
+	{
+		$this->load->model('display_model');
+		$data['headrow']= $this->display_model->getheadrow($this->session->userdata('v_UserName'));
+		$data['hrrow']	= $this->display_model->gethrrow($this->session->userdata('v_UserName'));
+		$data['aarow']	= $this->display_model->getaarow($this->session->userdata('v_UserName'));
+
+		$data['buletins'] = $this->display_model->get_ebuletin();
+		$data['editions'] = $this->display_model->get_edition();
+		$this->load->view('Head',$data);
+		$this->load->view('top');
+		$this->load->view('left');
+		$this->load->view('main_other');
+		$this->load->view('footer');
+	}
+	public function e_buletin()
+	{
+		$this->load->model('display_model');
+		$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
+		$data['hrrow'] = $this->display_model->gethrrow($this->session->userdata('v_UserName'));
+		$data['file_name']=$this->input->get('name');
+		$this->load->view('Head');
+		$this->load->view('top');
+		$this->load->view('left',$data);
+		$this->load->view('e_buletin');
+		$this->load->view('footer');
+	}
+
+	public function upload_buletin(){
+
+		if ($this->input->get('upload') == '1'){
+		if ($_FILES){
+			$config['upload_path']          = 'C:\wamp64\www\apleave\buletin_file';
+			//$config['upload_path']          = '/var/www/vhosts/camsis2.advancepact.com/httpdocs/uploadmrinfiles';
+			$config['allowed_types']        = 'jpg|jpeg|gif|tif|png|doc|docx|xls|xlsx|pdf';
+			$config['max_size']             = '8000';
+			$config['max_width']            = 'auto';
+			$config['max_height']           = 'auto';
+			$ext = explode(".",$_FILES["image_file"]['name']);
+
+			// if ($this->input->get('tag') == 'component'){
+				$new_name = 'buletin';
+			// }
+			// else{
+			// 	$new_name = 'attach_'.$data['attc_details'][0]->Attachment_no.'.'.$ext[1];
+			// }
+
+			$config['file_name'] = $new_name;
+
+			$this->load->library('upload', $config);
+
+			if ( ! $this->upload->do_upload('image_file'))
+			{
+					$data['error'] = array($this->upload->display_errors());
+			}
+			else
+			{
+
+					$data['upload_data'] = $this->upload->data();
+
+					if ($this->input->get('tag') == 'buletin'){
+						// $data['upload_data']['asset_no'] = $this->input->get('mrinno');
+						$data['upload_data']['bul_name'] = $this->input->post('att_name');
+						$data['upload_data']['bul_id'] = $data['upload_data']['file_name'];
+						$data['upload_data']['user_id'] = $this->session->userdata('v_UserName');
+						$data['upload_data']['bul_edition'] = $this->input->post('edition');
+					}
+					
+
+					//if ($this->input->get('id') == ''){
+						$this->load->model('insert_model');
+						if ($this->input->get('tag') == 'buletin'){
+							$insert_data = array(
+													// 'asset_no' => $data['upload_data']['asset_no'],
+												 'bul_name' => $data['upload_data']['bul_name'],
+												 'bul_id' => $data['upload_data']['bul_id'],
+												 'bul_path' => $data['upload_data']['file_path'],
+												 'flag' => 'I',
+												 'Date_time_stamp' => date("Y-m-d H:i:s"),
+												 'bul_edition' => $data['upload_data']['bul_edition'],
+												 'user_id' => $data['upload_data']['user_id']);
+
+							$data['insertid'] = $this->insert_model->save_buletin($insert_data);
+						}
+					//}
+				
+
+				
+			}
+		}
+	}
+		$this->load->view('Head');
+		$this->load->view('upload_buletin');
+	}
+
+	public  function deleteBuletin($id) {
+	  $this->load->model('update_model');
+	  $update_data = array('flag' => "D",
+						   'Date_time_stamp' => date("Y-m-d H:i:s"),
+							'user_id' => $this->session->userdata('v_UserName'));
+      $this->update_model->delete_buletin($id,$update_data);
+    }
 
 }

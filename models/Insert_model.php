@@ -68,6 +68,7 @@ function addheademployee($head_data){
 function addprobation($probation_stat){
 	$this->db->insert('staff_probation', $probation_stat);
 }
+
 function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 			$this->db->select("$value1, $value2");
 			$this->db->where($value1,$variable1);
@@ -393,5 +394,11 @@ return true;
 	$this->db->insert('pmis2_sa_family_link',$insert_data);
 return true;
   }
+
+  function save_buletin($insert_data){
+	$this->db->insert('ebuletin',$insert_data);
+	$id = $this->db->insert_id();
+	return $id;
+}
 }
 ?>

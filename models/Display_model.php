@@ -1890,5 +1890,26 @@ parent::__construct();
 			return $query_result;
 		}
 
+		function get_ebuletin(){
+			$this->db->select('*,right(bul_edition,4) as vol');
+			$this->db->from('ebuletin');
+			$this->db->where('flag <>', 'D');
+			if($this->input->get('edition')!=0)$this->db->having("vol=", $this->input->get('edition'));
+			$query = $this->db->get();
+			//echo $this->db->last_query();
+			$query_result = $query->result();
+			return $query_result;
+		}
+
+		function get_edition(){
+			$this->db->select('distinct right(bul_edition,4) as vol');
+			$this->db->from('ebuletin');
+			$query = $this->db->get();
+			//echo $this->db->last_query();
+			$query_result = $query->result();
+			return $query_result;
+			
+		}
+
 }
 ?>

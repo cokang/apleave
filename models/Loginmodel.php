@@ -179,11 +179,17 @@
 	function userdata(){
 		$this->db->where('v_userid', $this->input->post('name'));
 		$this->db->group_start();
+		$this->db->where('d_dateleft >', date('Y-m-d'));
+		$this->db->or_where('d_dateleft');
+		$this->db->group_end();
+		$this->db->group_start();
 		$this->db->where('v_Actionflag');
 		$this->db->or_where('v_Actionflag !=','D');
 		$this->db->group_end();
-		//$this->db->where('v_password',md5($this->input->post('password')));
+		$this->db->where('v_password',md5($this->input->post('password')));
 		$query = $this->db->get('pmis2_sa_user');
+	// 	echo $this->db->last_query();
+	// exit();
 		if( $query->num_rows()==1 ){
 			return $query->result_array();
 		}else{
