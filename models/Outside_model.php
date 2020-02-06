@@ -36,6 +36,7 @@ parent::__construct();
 	{
 		$DBo = $this->load->database('ibu', TRUE);
 		$DBo->where('v_userid', $this->input->post('name'));
+		$DBo->where('v_Actionflag <>', 'D');
 		$DBo->where('v_password',md5($this->input->post('password')));
 		$query = $DBo->get('pmis2_sa_user');
 		$DBo->close();
@@ -48,6 +49,7 @@ parent::__construct();
 	function matchpass(){
 	  $DBo = $this->load->database('ibu', TRUE);
 		$DBo->where('v_userid', $this->session->userdata('v_UserName'));
+		$DBo->where('v_Actionflag <>', 'D');
 		$DBo->where('v_password',md5($this->session->userdata('v_password')));
 		$query = $DBo->get('pmis2_sa_user');
 		$DBo->close();
@@ -62,6 +64,7 @@ parent::__construct();
 	$DBo = $this->load->database('ibu', TRUE);
 	$DBo->set('v_password',md5($npassword));
 	$DBo->set('v_sec_dt', 'now()',false);
+	$DBo->set('v_Actionflag', 'U');
 	$DBo->where('v_UserID', $username);
 	$DBo->update('pmis2_sa_user');
 	//echo $DBo->last_query();
@@ -76,6 +79,7 @@ parent::__construct();
 		$DBo = $this->load->database('ibu', TRUE);
 		$DBo->set('v_password',md5($npassword));
 		$DBo->set('v_sec_dt', 'DATE_ADD(NOW(), INTERVAL -5 MONTH)',false);
+		$DBo->set('v_Actionflag', 'U');
 		$DBo->where('v_UserID', $username);
 		$DBo->update('pmis2_sa_user');
 		//echo $DBo->last_query();
@@ -84,6 +88,21 @@ parent::__construct();
 			$DBo->close();
 
 	  	}
+
+			function changeflag($username, $npassword)
+				{
+				$DBo = $this->load->database('ibu', TRUE);
+				$DBo->set('v_Actionflag',$npassword);
+				$DBo->where('v_UserID', $username);
+				$DBo->update('pmis2_sa_user');
+				//echo $DBo->last_query();
+				//exit();
+			  	return $DBo->affected_rows() > 0;
+					$DBo->close();
+
+			  	}
+
+
 
 	function addemployee($insert_data){
 	$DBo = $this->load->database('ibu', TRUE);
@@ -94,7 +113,8 @@ parent::__construct();
 	{
 		$DBo = $this->load->database('ibu', TRUE);
 		$DBo->select('datediff(now(), IFNULL(a.v_sec_dt,now())) AS dayer, b.valid_period',false) ;
-		$DBo->where('v_userid', $userid);
+		$DBo->where('a.v_userid', $userid);
+		$DBo->where('a.v_Actionflag <>', 'D');
 		$DBo->join('pmis2_sa_passvalidity b','a.v_hospitalcode = b.hosp');
 		$query = $DBo->get('pmis2_sa_user a');
 

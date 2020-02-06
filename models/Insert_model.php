@@ -98,6 +98,9 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 									);
 				$this->update_model->u_addemployee($insert_data,$variable1,$variable2);
 
+				$this->load->model('outside_model');
+				$this->outside_model->changeflag($variable1,  $af);
+
 				if ($emp_type == 'Head'){
 						$head_data = array(
 										   'group_name' => $this->input->post('dept_code'),
@@ -238,7 +241,9 @@ function employee_exist($value1,$variable1,$value2,$variable2,$emp_type){
 				$insert_data2 = array(
 									 'v_UserID' => $this->input->post('emp_uname'),
 									 'v_UserName' => $this->input->post('emp_name'),
-									 'v_password' => md5($this->input->post('emp_pass'))
+									 'v_password' => md5($this->input->post('emp_pass')),
+									 'v_sec_dt'=> date("Y-m-d", strtotime('-5 month')),
+									 'v_Actionflag' => 'I'
 									);
 
 				$this->outside_model->addemployee($insert_data2);
@@ -394,5 +399,11 @@ return true;
 	$this->db->insert('pmis2_sa_family_link',$insert_data);
 return true;
   }
+
+  function save_buletin($insert_data){
+	$this->db->insert('ebuletin',$insert_data);
+	$id = $this->db->insert_id();
+	return $id;
+}
 }
 ?>

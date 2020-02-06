@@ -87,5 +87,11 @@ function delete_fam($del){
 	$this->db->update('pmis2_sa_family_link', $del_data);
 
 }
+function delete_buletin($id,$update_data){
+	$this->db->where('Id',$id);
+	$this->db->update('ebuletin',$update_data);
+	//echo $this->db->last_query();
+	//exit();
+}
 }
 ?>
