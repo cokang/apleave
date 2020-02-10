@@ -23,7 +23,7 @@
                                     <form role="form">
                                     <div class="form-group">
                                             <label>APSB No.</label>
-                                            <input name="emp_apsb" id="emp_apsb" type="text" oninput="this.value = this.value.toUpperCase()" class="form-control" value="<?= isset($employeedet[0]->apsb_no) ? $employeedet[0]->apsb_no : '' ?>"/ >
+                                            <input name="emp_apsb" id="emp_apsb" type="text" onkeypress="usernameFromApsbNo(this.value)" onkeyup="usernameFromApsbNo(this.value)" oninput="this.value = this.value.toUpperCase()" class="form-control usernameFromApsbNo" value="<?= isset($employeedet[0]->apsb_no) ? $employeedet[0]->apsb_no : '' ?>"/ >
                                     </div>
                                     <div class="form-group">
                                             <label>Name</label>
@@ -143,7 +143,7 @@
 
                                     <div class="form-group">
                                         <label>Username</label>
-                                    <input name="emp_uname" id="emp_uname" type="text" class="form-control" value="<?= isset($employeedet[0]->v_UserID) ? $employeedet[0]->v_UserID : '' ?>"/ >
+                                    <input name="emp_uname" oninput="this.value = this.value.toUpperCase()" id="emp_uname" type="text" class="form-control usernameFromApsbNo" value="<?= isset($employeedet[0]->v_UserID) ? $employeedet[0]->v_UserID : '' ?>"/ >
                                     </div>
 
                                     <div class="form-group">

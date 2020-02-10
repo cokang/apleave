@@ -1304,6 +1304,10 @@
 				return true;
 			}
 		}
+
+		function usernameFromApsbNo(username){
+			$('.usernameFromApsbNo').val(username);
+		}
 	</script>
 	<style>
 		div.ui-datepicker{
