@@ -258,7 +258,7 @@ parent::__construct();
 		//$this->db->select('L.*,U.v_UserName,FLOOR(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()))as entitled');
 		//$this->db->select('L.*,U.v_UserName,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * MONTH(CURRENT_DATE()),4))as entitled');
 		//$this->db->select('L.*,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * '.$month.',4))as entitled');
-		$this->db->select('L.*,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * if (year(U.d_dateleft)='.$year.',month(U.d_dateleft),'.$month.'),4))as entitled');
+		$this->db->select('L.*,U.v_UserName,FLOOR(ROUND(IFNULL(`L`.`annual_leave`,0) / 12 * if (year(U.d_dateleft)='.$year.',month(U.d_dateleft),'.$month.')))as entitled');
 		$this->db->from('employee_leave L');
 		$this->db->join('pmis2_sa_user U','L.user_id = U.v_UserID');
 		if($user_id!=''){
@@ -396,6 +396,7 @@ parent::__construct();
 		$this->db->from('employee_leave_req R');
 		$this->db->join('pmis2_sa_user U','R.user_id = U.v_UserID');
 		//$this->db->where('YEAR(R.leave_from)',$year);
+		//$this->db->where('YEAR(R.application_date)',$year);
 		$this->db->where('if(leave_type=3,YEAR(R.leave_from),YEAR(R.application_date))=',$year);
 		$this->db->group_start();
 		$this->db->where('R.leave_status','Approved');
@@ -1908,8 +1909,9 @@ parent::__construct();
 			//echo $this->db->last_query();
 			$query_result = $query->result();
 			return $query_result;
-			
+
 		}
+
 
 }
 ?>
