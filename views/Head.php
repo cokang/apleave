@@ -2009,7 +2009,7 @@
 		{
 			// winProp = 'width=600,height=1000,left=' + ((screen.width - 1000) / 2) +',top=' + ((screen.height - 1000) / 2) + ',menubar=no, directories=no, location=no, scrollbars=yes, statusbar=no, toolbar=no, resizable=no';
 			winProp = 'width=1000,height=600,left=' + ((screen.width - 1000) / 2) +',top=' + ((screen.height - 1000) / 2) + ',menubar=no, directories=no, location=no, scrollbars=yes, statusbar=no, toolbar=no, resizable=no';
-			Win = window.open('report_summary?year='+year+'&apsbno='+apsbno+'&print_type='+print_type+'&rowlimit=&no=1&location=<?=$_REQUEST['location'];?>', winProp);
+			Win = window.open('report_summary?year='+year+'&apsbno='+apsbno+'&print_type='+print_type+'&rowlimit=&no=1&location=<?php echo $location;?>', winProp);
 			Win.window.focus();
 		}
 	</script>
