@@ -20,7 +20,7 @@
 
 	<div class="col-lg-12">
 		<div style="display:inline-block; float:left; margin-left: 77px">
-			<h6>SUMMARY DATA AS AT SEPT 2018</h6>
+			<h6>SUMMARY DATA AS AT <?php echo date("F Y")?></h6>
 		</div>
 	</div>
 	<div class="row" >
@@ -44,19 +44,21 @@
 								<th class="clear"></th>
 								<th colspan="3">FAMILY SICK</th>
 								<th class="clear"></th>
-								<th class="warning">2018</th>
+								<th class="warning"><?=$fyear?></th>
 								<th class="clear"></th>
-								<th class="warning">2018</th>
+								<th class="warning"><?=$fyear?></th>
 								<th class="clear"></th>
-								<th class="warning">2018</th>
+								<th class="warning"><?=$fyear?></th>
 								<th class="clear"></th>
-								<th class="warning">2018</th>
+								<th class="warning"><?=$fyear?></th>
 								<th class="clear"></th>
-								<th class="warning">2018</th>
+								<th class="warning"><?=$fyear?></th>
 								<th class="clear"></th>
-								<th class="warning">2018</th>
+								<th class="warning"><?=$fyear?></th>
 								<th class="clear"></th>
-								<th class="warning">2018</th>
+								<th class="warning"><?=$fyear?></th>
+								<th class="clear"></th>
+								<th class="warning"><?=$fyear?></th>
 							</tr>
 							<tr>
 								<th class="warning">Annual Entitlement</th>
@@ -90,6 +92,8 @@
 								<th class="warning">Transfer Leave</th>
 								<th class="clear"></th>
 								<th class="warning">Hajj Leave</th>
+								<th class="clear"></th>
+								<th class="warning">Hospitalisation Leave</th>
 							</tr>
 	<?php } ?>
 
@@ -128,6 +132,9 @@
 								<td><?=$row->TLbalance;?></td>
 								<td></td>
 								<td><?=$row->HLbalance;?></td>
+								<td></td>
+								<td><?=$row->HPLbalance;?></td>
+								
 							</tr>
 
 	<?php if ($no % 18 == 0) { ?>
