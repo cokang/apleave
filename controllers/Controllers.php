@@ -1005,6 +1005,18 @@ public function employee_profile()
 						   'Date_time_stamp' => date("Y-m-d H:i:s"),
 							'user_id' => $this->session->userdata('v_UserName'));
       $this->update_model->delete_buletin($id,$update_data);
-    }
+	}
+	
+	public function staffhandbook()
+	{
+		$this->load->model('display_model');
+		$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
+		$data['hrrow'] = $this->display_model->gethrrow($this->session->userdata('v_UserName'));
+		$this->load->view('Head');
+		$this->load->view('top');
+		$this->load->view('left',$data);
+		$this->load->view('staffhandbook');
+		$this->load->view('footer');
+	}
 
 }
