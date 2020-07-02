@@ -14,8 +14,8 @@
 	<script type="text/javascript" src="<?php echo base_url(); ?>js/jquery-ui.custom.js"></script>
 	<link  href="<?php echo base_url(); ?>js/jquery.fancybox.min.css" rel="stylesheet">
 	<script src="<?php echo base_url(); ?>js/jquery.fancybox.min.js"></script>
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">  
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script> 
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
 
 	<!-- Page-Level Plugin CSS - Forms -->
 	<?php if ('Controllers/print_out/'== $this->uri->slash_segment(1) .$this->uri->slash_segment(2)) { ?>
@@ -1304,6 +1304,10 @@
 				return true;
 			}
 		}
+
+		function usernameFromApsbNo(username){
+			$('.usernameFromApsbNo').val(username);
+		}
 	</script>
 	<style>
 		div.ui-datepicker{
@@ -1993,7 +1997,7 @@
 
 .scrolloverflow {
 	max-height: 320px;
-	overflow: hidden; 
+	overflow: hidden;
 	overflow-y:scroll;
 }
 	</style>
@@ -2001,13 +2005,13 @@
 
 	<script type="text/javascript">
 
-		function print_report_summary(dept,staff,year,apsbno,print_type)
-		{
-			// winProp = 'width=600,height=1000,left=' + ((screen.width - 1000) / 2) +',top=' + ((screen.height - 1000) / 2) + ',menubar=no, directories=no, location=no, scrollbars=yes, statusbar=no, toolbar=no, resizable=no';
-			winProp = 'width=1000,height=600,left=' + ((screen.width - 1000) / 2) +',top=' + ((screen.height - 1000) / 2) + ',menubar=no, directories=no, location=no, scrollbars=yes, statusbar=no, toolbar=no, resizable=no';
-			Win = window.open('report_summary?year='+year+'&apsbno='+apsbno+'&print_type='+print_type+'&rowlimit=&no=1&location=<?=$_REQUEST['location'];?>', winProp);
-			Win.window.focus();
-		}
+	function print_report_summary(dept,staff,year,apsbno,print_type)
+	{
+		// winProp = 'width=600,height=1000,left=' + ((screen.width - 1000) / 2) +',top=' + ((screen.height - 1000) / 2) + ',menubar=no, directories=no, location=no, scrollbars=yes, statusbar=no, toolbar=no, resizable=no';
+		winProp = 'width=1000,height=600,left=' + ((screen.width - 1000) / 2) +',top=' + ((screen.height - 1000) / 2) + ',menubar=no, directories=no, location=no, scrollbars=yes, statusbar=no, toolbar=no, resizable=no';
+		Win = window.open('report_summary?year='+year+'&apsbno='+apsbno+'&print_type='+print_type+'&rowlimit=&no=1&location=<?php echo $location;?>', winProp);
+		Win.window.focus();
+	}
 	</script>
 
 	<?php } elseif ('Controllers/employee_profile/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)) {?>

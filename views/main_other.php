@@ -15,11 +15,11 @@
 
 				<div class="panel-body">
 					<div class="table-responsive inline-block">
-						<a href="<?php echo base_url(); ?>index.php/Controllers/system_manual?tab=<?=$this->input->get('tab');?>&parent=1" class="left box">
+						<a href="<?php echo base_url(); ?>index.php/Controllers/e_handbook?name=staffhandbook.pdf" class="left box">
 							<div align="center">
 								<img height="99px" src="<?=base_url()?>images/icon/guide.png">
 								<br>
-								System Manual
+								Staff Handbook
 							</div>
 						</a>
 						<!-- <?php if( $hrrow=='HR' ){ ?>
@@ -57,7 +57,7 @@
                                     $year[$edition->vol] = $edition->vol;
                                     }
 									?>
-									
+
 				<?php echo form_dropdown('edition', $year, set_value('edition',$this->input->get('edition')) ,  'id="edition" onchange="submitForm();"');?>
 			</td><?php if( $this->input->get('act')=='edit' ){ ?>
 				<td align="right" style="padding-right: 50px;width:10%">
@@ -71,23 +71,23 @@
 				<a  href="<?php echo base_url(); ?>index.php/Controllers/others?<?=$this->input->get('act')!='edit'?'act=edit':''?>"  ><span class="fa fa-pencil-square-o" style="font-size:12px; color:green;" ></span> Edit </a></div>
 				</td>
 			<?php }?>
-			
+
 			</tr></table>
 				<div class="panel-body">
 					<div class="table-responsive grid-container scrolloverflow" >
-						
+
 							<?php  foreach($buletins as $buletin){ ?>
 							<div style="width:70%">
 							<?php if( $this->input->get('act')=='edit' ){ ?>
-							<a  class="fa fa-times " style=" color:red;" href="javascript:void(0)" onclick="deleteBuletin('<?=$buletin->Id?>','<?=$buletin->bul_name?>')" > </a>	
+							<a  class="fa fa-times " style=" color:red;" href="javascript:void(0)" onclick="deleteBuletin('<?=$buletin->Id?>','<?=$buletin->bul_name?>')" > </a>
 							<?php }?>
 							<a href="<?php echo base_url(); ?>index.php/Controllers/e_buletin?name=<?=$buletin->bul_id?>" class="left box">
-							
+
 									<img height="99px" src="<?=base_url()?>images/icon/newspaper.png">
 									<br>
 									<!-- e-Buletin (Jan2020) -->
 									<?= $buletin->bul_name?>
-								
+
 							</a>
 								</div>
 							<?php }?>
@@ -117,6 +117,13 @@
 								<img height="99px" src="<?=base_url()?>images/icon/suitcase.png">
 								<br>
 								SOP
+							</div>
+						</a>
+						<a href="<?php echo base_url(); ?>index.php/Controllers/system_manual?tab=<?=$this->input->get('tab');?>&parent=1" class="left box">
+							<div align="center">
+								<img height="99px" src="<?=base_url()?>images/icon/suitcase.png">
+								<br>
+								System Manual
 							</div>
 						</a>
 						<!-- <?php if( $hrrow=='HR' ){ ?>
@@ -181,7 +188,7 @@
  		var r = confirm('Delete file '+filename+'?');
   		if (r == true) {
 			$(document).ready(function() {
-            
+
             //  alert(selectedText); //exit();
             if(id) {
                 $.ajax({
@@ -196,14 +203,14 @@
                 });
 				location.reload();
             }
-       
+
     });
 		  }
 	}
-	function submitForm(){ 
+	function submitForm(){
   // Call submit() method on <form id='myform'>
-  document.getElementById('editionform').submit(); 
-} 
+  document.getElementById('editionform').submit();
+}
 	</script>
 
 </div>

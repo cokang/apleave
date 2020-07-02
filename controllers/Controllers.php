@@ -934,6 +934,19 @@ public function employee_profile()
 		$this->load->view('footer');
 	}
 
+	public function e_handbook()
+	{
+		$this->load->model('display_model');
+		$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
+		$data['hrrow'] = $this->display_model->gethrrow($this->session->userdata('v_UserName'));
+		$data['file_name']=$this->input->get('name');
+		$this->load->view('Head');
+		$this->load->view('top');
+		$this->load->view('left',$data);
+		$this->load->view('e_handbook');
+		$this->load->view('footer');
+	}
+
 	public function upload_buletin(){
 
 		if ($this->input->get('upload') == '1'){

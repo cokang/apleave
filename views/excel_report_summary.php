@@ -35,7 +35,7 @@ echo '<table>
 			<th rowspan="3" class="danger">Nama</th>
 			<!--<th colspan="31" class="danger">JENIS CUTI</th>-->
 			<!--<th colspan="21" class="danger">JENIS CUTI</th>-->
-			<th colspan="35" class="danger">JENIS CUTI</th>
+			<th colspan="44" class="danger">JENIS CUTI</th>
 		</tr>
 		<tr>
 			<th colspan="5" class="warning">ANNUAL LEAVE</th>
@@ -59,6 +59,9 @@ echo '<table>
 			<th colspan="3" class="warning">Transfer Leave</th>
 			<!--<th class="clear"></th>-->
 			<th colspan="3" class="warning">Hajj Leave</th>
+			<th colspan="3" class="warning">Extended Leave Sick	</th>
+			<th colspan="3" class="warning">Unpaid Leave</th>
+			<th colspan="3" class="warning">Hospitalisation Leave</th>
 		</tr>
 		<tr>
 			<th class="warning">Annual Entitlement</th>
@@ -78,6 +81,18 @@ echo '<table>
 			<th>Annual Entitlement</th>
 			<th>Taken</th>
 			<th>Balance</th>
+			<!--<th class="clear"></th>-->
+			<th class="warning">Annual Entitlement</th>
+			<th class="warning">Taken</th>
+			<th class="warning">Balance</th>
+			<!--<th class="clear"></th>-->
+			<th class="warning">Annual Entitlement</th>
+			<th class="warning">Taken</th>
+			<th class="warning">Balance</th>
+			<!--<th class="clear"></th>-->
+			<th class="warning">Annual Entitlement</th>
+			<th class="warning">Taken</th>
+			<th class="warning">Balance</th>
 			<!--<th class="clear"></th>-->
 			<th class="warning">Annual Entitlement</th>
 			<th class="warning">Taken</th>
@@ -166,6 +181,15 @@ $no=1;foreach ( $leaveacc as $row ){
 			<td>'.( isset($leave_type[12]->entitle_days) ? $leave_type[12]->entitle_days : 0 ).'</td>
 			<td>'.( $row->HLtaken + $row->HLEtaken ).'</td>
 			<td>'.$row->HLbalance.'</td>
+			<td>'.( isset($leave_type[4]->entitle_days) ? $leave_type[4]->entitle_days : 0 ).'</td>
+			<td>'.( $row->EXLtaken ).'</td>
+			<td>-</td>
+			<td>'.( isset($leave_type[3]->entitle_days) ? $leave_type[3]->entitle_days : 0 ).'</td>
+			<td>'.( $row->UPLtaken ).'</td>
+			<td>-</td>
+			<td>'.( isset($leave_type[13]->entitle_days) ? $leave_type[13]->entitle_days : 0 ).'</td>
+			<td>'.( $row->HPLtaken + $row->HPLEtaken ).'</td>
+			<td>'.$row->HPLbalance.'</td>
 		</tr>';
 		$no++;
 }
