@@ -19,7 +19,7 @@
 							<div align="center">
 								<img height="99px" src="<?=base_url()?>images/icon/guide.png">
 								<br>
-								System Manual
+								StaffHandbook
 							</div>
 						</a>
 						<!-- <?php if( $hrrow=='HR' ){ ?>
@@ -117,6 +117,13 @@
 								<img height="99px" src="<?=base_url()?>images/icon/suitcase.png">
 								<br>
 								SOP
+							</div>
+						</a>
+						<a href="<?php echo base_url(); ?>index.php/Controllers/system_manual?tab=<?=$this->input->get('tab');?>&parent=1" class="left box">
+							<div align="center">
+								<img height="99px" src="<?=base_url()?>images/icon/suitcase.png">
+								<br>
+								System Manual
 							</div>
 						</a>
 						<!-- <?php if( $hrrow=='HR' ){ ?>
