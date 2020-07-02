@@ -15,7 +15,7 @@
 
 				<div class="panel-body">
 					<div class="table-responsive inline-block">
-						<a href="<?php echo base_url(); ?>index.php/Controllers/system_manual?tab=<?=$this->input->get('tab');?>&parent=1" class="left box">
+						<a href="<?php echo base_url(); ?>index.php/Controllers/staffhandbook?tab=<?=$this->input->get('tab');?>&parent=1" class="left box">
 							<div align="center">
 								<img height="99px" src="<?=base_url()?>images/icon/guide.png">
 								<br>
