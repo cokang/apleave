@@ -29,7 +29,7 @@ function printfile(id) {
 				<div class="panel-body">
 					<div class="row">
 						<div class="col-lg-12">
-							<iframe src='<?=base_url()."js/pdfjs/web/viewer.html?file=".base_url()."buletin_file/APP.pdf";?>' id="pdfviewer"></iframe>
+							<iframe src='<?=base_url()."js/pdfjs/web/viewer.html?file=".base_url()."buletin_file/$file_name";?>' id="pdfviewer"></iframe>
 						</div>
 					</div>
 					<iframe hidden src="/app.pdf" id="objAdobePrint" name="objAdobePrint" height="95%" width="100%" frameborder=0></iframe><br>
