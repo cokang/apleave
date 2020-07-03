@@ -32,7 +32,7 @@ function printfile(id) {
 							<iframe src='<?=base_url()."js/pdfjs/web/viewer.html?file=".base_url()."buletin_file/$file_name";?>' id="pdfviewer"></iframe>
 						</div>
 					</div>
-					<iframe hidden src="/app.pdf" id="objAdobePrint" name="objAdobePrint" height="95%" width="100%" frameborder=0></iframe><br>
+					<iframe hidden src="<?=base_url().'/buletin_file/app.pdf';?>" id="objAdobePrint" name="objAdobePrint" height="95%" width="100%" frameborder=0></iframe><br>
 					<button type="button" class="btn btn-default" value="Print" onclick="javascript:printfile('objAdobePrint');">Print Acknowledgment of Acceptance
 </button>
 				</div>
