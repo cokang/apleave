@@ -93,7 +93,7 @@ $results = $get_result;
 
 //$sabtuahad=array('JB'=>array(5,6));
 foreach ($results as $event) {
-  if (($event['month']==$month)&&($event['year']==$year)){
+  if (($event['year']==$year)){
 
 		$begin = strtotime($event['date']);
 		$end   = strtotime($event['leave_to']);
