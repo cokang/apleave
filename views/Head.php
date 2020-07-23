@@ -344,6 +344,7 @@
 						$("#to").val("");
 						$("#from").prop("disabled", true);
 						$("#to").prop("disabled", true);
+						$("#sick_leave_img").slideUp();
 					}
 				}else if (duration=="1") {
 					if (json['probation'] <= 0){

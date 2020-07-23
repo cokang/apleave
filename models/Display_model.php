@@ -1745,7 +1745,11 @@ parent::__construct();
 		$this->db->or_where('R.leave_status IS NULL');
 		$this->db->group_end();
         $this->db->where('year(R.leave_from)', $year);
-        $this->db->where('month(R.leave_from)', $month);
+        //$this->db->where('month(R.leave_from)', $month);
+				$this->db->group_start();
+				$this->db->where('month(R.leave_from)', $month);
+				$this->db->or_where('month(R.leave_to)', $month);
+				$this->db->group_end();
         $this->db->where('leave_to is not null');
 
 		if( !in_array($login_as, array("AA","HR")) ){
