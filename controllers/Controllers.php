@@ -570,7 +570,7 @@ class Controllers extends CI_Controller {
 		$data['hrrow']			= $this->display_model->gethrrow($this->session->userdata('v_UserName'));
 		$data['applied_date']	= $this->display_model->applied_date($this->session->userdata('v_UserName'));
 
-		$data['limit'] = 5;
+		$data['limit'] = 10;
 		isset($_GET['p']) ? $data['page'] = $_GET['p'] : $data['page'] = 1;
 		$data['start'] = ($data['page'] * $data['limit']) - $data['limit'];
 
@@ -588,7 +588,7 @@ class Controllers extends CI_Controller {
 			$data['datecalendar'] = $this->display_model->datecalendar(date("Y-m-d",strtotime($data['datecal'])), $data['limit'], $data['start'], date("Y-m-d",strtotime($data['datecalto'])), $data['getgroupdet'][0]->v_GroupID, $staffname, $apsbno);
 		}elseif($staffname==''||$apsbno==''){
 			$data['datecalendar'] = array();
-
+			$data['datecalendar'] = $this->display_model->datecalendar(date("Y-m-d",strtotime($data['datecal'])), $data['limit'], $data['start'], date("Y-m-d",strtotime($data['datecalto'])), $data['getgroupdet'][0]->v_GroupID);
 		}
 
 		foreach ($data['datecalendar'] as $row) {
@@ -932,6 +932,19 @@ public function employee_profile()
 		$this->load->view('footer');
 	}
 
+	public function e_handbook()
+	{
+		$this->load->model('display_model');
+		$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
+		$data['hrrow'] = $this->display_model->gethrrow($this->session->userdata('v_UserName'));
+		$data['file_name']=$this->input->get('name');
+		$this->load->view('Head');
+		$this->load->view('top');
+		$this->load->view('left',$data);
+		$this->load->view('e_handbook');
+		$this->load->view('footer');
+	}
+
 	public function upload_buletin(){
 
 		if ($this->input->get('upload') == '1'){
@@ -1005,18 +1018,6 @@ public function employee_profile()
 						   'Date_time_stamp' => date("Y-m-d H:i:s"),
 							'user_id' => $this->session->userdata('v_UserName'));
       $this->update_model->delete_buletin($id,$update_data);
-	}
-	
-	public function staffhandbook()
-	{
-		$this->load->model('display_model');
-		$data['headrow'] = $this->display_model->getheadrow($this->session->userdata('v_UserName'));
-		$data['hrrow'] = $this->display_model->gethrrow($this->session->userdata('v_UserName'));
-		$this->load->view('Head');
-		$this->load->view('top');
-		$this->load->view('left',$data);
-		$this->load->view('staffhandbook');
-		$this->load->view('footer');
-	}
+    }
 
 }
