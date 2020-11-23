@@ -41,11 +41,8 @@ class add_employee_ctrl extends CI_Controller{
 		$insert_data=array('v_user_id'=>$this->session->userdata('v_UserName'),
 											 'v_add1'=>$this->input->post('address'),
 											 'v_add2'=>$this->input->post('poscode'),
-											 'v_pos_add1'=>$this->input->post('pos_address'),
-											 'v_pos_add2'=>$this->input->post('pos_poscode'),
 											 'v_tel_1'=>$this->input->post('phone_no'),
 											 'v_tel_2'=>$this->input->post('phone_no1'),
-											 'v_tel_comp'=>$this->input->post('phone_no2'),
 											 'v_marital_st'=>$this->input->post('mstatus'),
 											 'v_spouse_name'=>$this->input->post('nama_psgn'),
 											 'v_race'=>$this->input->post('bstatus'),
@@ -57,16 +54,16 @@ class add_employee_ctrl extends CI_Controller{
 											 'v_spouse_cr'=>$this->input->post('jobpsgn'),
 											 'v_spouse_emp'=>$this->input->post('emppsgn'),
 											 'v_spouse_tel'=>$this->input->post('phonpsgn'),
-											 'D_timestamp' => date('Y-m-d H:i:s')
+											 'D_timestamp' => date('Y-m-d H:i:s'),
+											 'v_pos_add1'=>$this->input->post('pos_address'),
+											 'v_pos_add2'=>$this->input->post('pos_poscode'),
+											 'v_tel_comp'=>$this->input->post('phone_no2')
 							 );
 
 			$update_data=array('v_add1'=>$this->input->post('address'),
 											 'v_add2'=>$this->input->post('poscode'),
-											 'v_pos_add1'=>$this->input->post('pos_address'),
-											 'v_pos_add2'=>$this->input->post('pos_poscode'),
 											 'v_tel_1'=>$this->input->post('phone_no'),
 											 'v_tel_2'=>$this->input->post('phone_no1'),
-											 'v_tel_comp'=>$this->input->post('phone_no2'),
 											 'v_marital_st'=>$this->input->post('mstatus'),
 											 'v_spouse_name'=>$this->input->post('nama_psgn'),
 											 'v_race'=>$this->input->post('bstatus'),
@@ -78,7 +75,10 @@ class add_employee_ctrl extends CI_Controller{
 											 'v_spouse_cr'=>$this->input->post('jobpsgn'),
 											 'v_spouse_emp'=>$this->input->post('emppsgn'),
 											 'v_spouse_tel'=>$this->input->post('phonpsgn'),
-											 'D_timestamp' => date('Y-m-d H:i:s')
+											 'D_timestamp' => date('Y-m-d H:i:s'),
+											 'v_pos_add1'=>$this->input->post('pos_address'),
+											 'v_pos_add2'=>$this->input->post('pos_poscode'),
+											 'v_tel_comp'=>$this->input->post('phone_no2')
 							 );
 
 			$ins=$this->insert_model->simpan_personal($insert_data,$update_data);
@@ -87,7 +87,7 @@ class add_employee_ctrl extends CI_Controller{
 			$delc=explode(",",$this->input->post('del_c'));
 			$delc1=explode(",",$this->input->post('del_c1'));
 			$delc2=explode(",",$this->input->post('del_c2'));
-			
+
 			if($delc){
 			$this->update_model->delete_anak($delc);
 			}
@@ -95,9 +95,8 @@ class add_employee_ctrl extends CI_Controller{
 			$this->update_model->delete_emg($delc1);
 			}
 			if($delc2){
-				// print_r($delc2);exit();
-				$this->update_model->delete_fam($delc2);
-				}
+			$this->update_model->delete_fam($delc2);
+			}
 			//echo "<pre>";
 			//print_r($delc);exit();
 		 //$id=($this->input->post('id')) ? $this->input->post('id') : $this->db->insert_id();
@@ -107,15 +106,15 @@ class add_employee_ctrl extends CI_Controller{
 		$child_data=array(
 		'v_ch_name'=>$this->input->post('nama_son')[$key],
 		'v_marital_st'=>$this->input->post('sts_son')[$key],
+		'v_oku'=>$this->input->post('oku')[$key],
 		'v_career'=>$this->input->post('crc_son')[$key],
+		'v_gender'=>$this->input->post('gdr_son')[$key],
 		'v_school'=>$this->input->post('school_son')[$key],
 		'v_country'=>$this->input->post('country_son')[$key],
-		'v_gender'=>$this->input->post('gdr_son')[$key],
 		'v_birth_dt'=>($this->input->post('bfdate')[$key]) ? date('y-m-d',strtotime($this->input->post('bfdate')[$key])) : null,
 		'v_ch_id'=>$this->input->post('id_son')[$key],
 		'v_ch_ps'=>$this->input->post('ps_son')[$key]
 		);
-		
 		$this->update_model->update_anak($key,$child_data);
 		}
 		}
@@ -125,10 +124,11 @@ class add_employee_ctrl extends CI_Controller{
 		'v_row_id'=>$id,
 		'v_ch_name'=>$nilai,
 		'v_marital_st'=>$this->input->post('sts_son')[$key],
+		'v_oku'=>$this->input->post('oku')[$key],
 		'v_career'=>$this->input->post('crc_son')[$key],
+		'v_gender'=>$this->input->post('gdr_son')[$key],
 		'v_school'=>$this->input->post('school_son')[$key],
 		'v_country'=>$this->input->post('country_son')[$key],
-		'v_gender'=>$this->input->post('gdr_son')[$key],
 		'v_birth_dt'=>($this->input->post('bfdate')[$key]) ? date('y-m-d',strtotime($this->input->post('bfdate')[$key])) : null,
 		'v_ch_id'=>$this->input->post('id_son')[$key],
 		'v_ch_ps'=>$this->input->post('ps_son')[$key]
@@ -150,10 +150,6 @@ class add_employee_ctrl extends CI_Controller{
 		$this->update_model->update_emg($key1,$emg_data);
 		}
 		 }
-		//  print_r( $this->input->post('id_c1'));
-		// echo $emg_data[1];
-		//  print_r($emg_data);
-		// exit();
 		foreach($this->input->post('emg_name') as $key1=>$nilai1){
 		if(!in_array($key1,$this->input->post('id_c1'))){
 		$emg_data=array(
@@ -167,7 +163,9 @@ class add_employee_ctrl extends CI_Controller{
 		}
 			 }
 		}
-		
+
+
+
 		if($this->input->post('id_c2')){
 			foreach($this->input->post('id_c2')as $key2){
 				$famLink_data=array(
@@ -177,7 +175,7 @@ class add_employee_ctrl extends CI_Controller{
 					'v_fam_loc'=>$this->input->post('loc_fam')[$key2],
 					'v_fam_relay'=>$this->input->post('rel_fam')[$key2],
 				);
-			
+
 				$this->update_model->update_fam($key2,$famLink_data);
 			}
 		}
@@ -198,6 +196,7 @@ class add_employee_ctrl extends CI_Controller{
 			}
 		}
 		
+
 		redirect('Controllers/employee_profile?tab=3');
 		}else{
 			$this->load->helper('url');
