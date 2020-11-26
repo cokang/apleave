@@ -106,8 +106,11 @@ class add_employee_ctrl extends CI_Controller{
 		$child_data=array(
 		'v_ch_name'=>$this->input->post('nama_son')[$key],
 		'v_marital_st'=>$this->input->post('sts_son')[$key],
+		'v_oku'=>$this->input->post('oku')[$key],
 		'v_career'=>$this->input->post('crc_son')[$key],
 		'v_gender'=>$this->input->post('gdr_son')[$key],
+		'v_school'=>$this->input->post('school_son')[$key],
+		'v_country'=>$this->input->post('country_son')[$key],
 		'v_birth_dt'=>($this->input->post('bfdate')[$key]) ? date('y-m-d',strtotime($this->input->post('bfdate')[$key])) : null,
 		'v_ch_id'=>$this->input->post('id_son')[$key],
 		'v_ch_ps'=>$this->input->post('ps_son')[$key]
@@ -121,8 +124,11 @@ class add_employee_ctrl extends CI_Controller{
 		'v_row_id'=>$id,
 		'v_ch_name'=>$nilai,
 		'v_marital_st'=>$this->input->post('sts_son')[$key],
+		'v_oku'=>$this->input->post('oku')[$key],
 		'v_career'=>$this->input->post('crc_son')[$key],
 		'v_gender'=>$this->input->post('gdr_son')[$key],
+		'v_school'=>$this->input->post('school_son')[$key],
+		'v_country'=>$this->input->post('country_son')[$key],
 		'v_birth_dt'=>($this->input->post('bfdate')[$key]) ? date('y-m-d',strtotime($this->input->post('bfdate')[$key])) : null,
 		'v_ch_id'=>$this->input->post('id_son')[$key],
 		'v_ch_ps'=>$this->input->post('ps_son')[$key]
@@ -189,7 +195,7 @@ class add_employee_ctrl extends CI_Controller{
 				}
 			}
 		}
-		
+
 
 		redirect('Controllers/employee_profile?tab=3');
 		}else{

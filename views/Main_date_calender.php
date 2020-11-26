@@ -187,7 +187,7 @@ function tengokcuti(status,date){
         dataType: "html",   //expect html to be returned
         success: function(response){
          $("#myModal").dialog();
-		$('.ui-dialog').css('height', '50%');
+		$('.ui-dialog').css('height', '60%');
 		$('.ui-dialog').css('top', '285px');
 		$('.ui-dialog-content').css('overflow', 'hidden');
 		$('#ui-id-1').html(status+" "+date);
@@ -199,4 +199,3 @@ function tengokcuti(status,date){
     });
         }
 </script>
-

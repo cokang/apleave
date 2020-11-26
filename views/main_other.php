@@ -15,6 +15,15 @@
 
 				<div class="panel-body">
 					<div class="table-responsive inline-block">
+						<?php if (substr($this->session->userdata('v_UserName'), 0, 3) == "MGP") { ?>
+							<a href="<?php echo base_url(); ?>index.php/Controllers/e_handbook?name=handbookmg.pdf" class="left box">
+								<div align="center">
+									<img height="99px" src="<?=base_url()?>images/icon/guide.png">
+									<br>
+									Staff Handbook
+								</div>
+							</a>
+						<?php } else {?>
 						<a href="<?php echo base_url(); ?>index.php/Controllers/e_handbook?name=staffhandbook.pdf" class="left box">
 							<div align="center">
 								<img height="99px" src="<?=base_url()?>images/icon/guide.png">
@@ -22,6 +31,7 @@
 								Staff Handbook
 							</div>
 						</a>
+						<?php } ?>
 						<!-- <?php if( $hrrow=='HR' ){ ?>
 						<a href="<?php echo base_url(); ?>index.php/Controllers/report_summary?tab=<?=$this->input->get('tab');?>&parent=1" class="left box">
 							<div align="left">

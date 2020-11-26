@@ -487,23 +487,51 @@
 			<tr class="tr1">
 				<td>Name</td>
 				<td>Marital Status</td>
+				<td>OKU</td>
 				<td>Status</td>
-				<td>School/College</td>
-				<td>Inside/Outside Country</td>
+				<td>Education Level</td>
+				<td>Local/Overseas</td>
 				<td>Gender</td>
 				<td>Date of Birth</td>
-				<td>No IC/Birth Certification</td>
-				<td>No Passport</td>
+				<td>IC No</td>
+				<td>Passport No</td>
 			</tr>
-			<?php if ($p_child) { ?>
-			<?php foreach($p_child as $row){ ?>
+			<?php $oku = array('No' => 'No', 
+								'Yes'=> 'Yes'); 
+				$martial = array('Single' => 'Single', 
+								'Married' => 'Married',
+								'Separate' => 'Separate');
+				$loc = array('Local' => 'Local',
+							 'Oversea'=> 'Oversea' );
+				$gender = array('Male' => 'Male',
+							 'Female'=> 'Female' );
+				$status = array('Study' => 'Study',
+							 'Working'=> 'Working' );
+				$edu = array('School' => 'School',
+							 'College'=> 'College',
+							 'IPT'=>'IPT',
+							 'IPTA'=>'IPTA' );
+			?>
+			<?php if ($p_child) { 
+				$disable='';?>
+			<?php foreach($p_child as $row){ 
+				if($row->v_career=='Working'){
+					$disable='disabled';
+				}
+				?>
 			<tr>
 			    <td><input style="width: 100%;" type="text" name="nama_son[<?=$row->id;?>]" value="<?=$row->v_ch_name;?>" ></td>
-			    <td><input style="width: 100%;" type="text" name="sts_son[<?=$row->id;?>]" value="<?=$row->v_marital_st;?>" ></td>
-			    <td><input style="width: 100%;" type="text" name="crc_son[<?=$row->id;?>]"  value="<?=$row->v_career;?>"></td>
-				<td><input style="width: 100%;" type="text" name="school_son[<?=$row->id;?>]"  value="<?=$row->v_school;?>" ></td>
-			    <td><input style="width: 100%;" type="text" name="country_son[<?=$row->id;?>]"  value="<?=$row->v_country;?>" ></td>
-			    <td><input style="width: 100%;" type="text" name="gdr_son[<?=$row->id;?>]"  value="<?=$row->v_gender;?>" ></td>
+			    <!-- <td><input style="width: 100%;" type="text" name="sts_son[<?=$row->id;?>]" value="<?=$row->v_marital_st;?>" ></td> -->
+				<td><?=form_dropdown('sts_son['.$row->id.']', $martial ,set_value('sts_son['.$row->id.']',isset($row->v_marital_st)?$row->v_marital_st:''), '   ');?></td>
+				<td><?=form_dropdown('oku['.$row->id.']', $oku ,set_value('oku['.$row->id.']',isset($row->v_oku)?$row->v_oku:''), '   ');?></td>
+			    <!-- <td><input style="width: 100%;" type="text" name="crc_son[<?=$row->id;?>]"  value="<?=$row->v_career;?>"></td> -->
+				<!-- <td><input style="width: 100%;" type="text" name="school_son[<?=$row->id;?>]"  value="<?=$row->v_school;?>" ></td> -->
+				<td><?=form_dropdown('crc_son['.$row->id.']', $status ,set_value('crc_son['.$row->id.']',isset($row->v_career)?$row->v_career:''), ' onchange="ifworking(this,'.$row->id.')"  ');?></td>
+				<td><?=form_dropdown('school_son['.$row->id.']', $edu ,set_value('school_son['.$row->id.']',isset($row->v_school)?$row->v_school:''), $disable);?></td>
+			    <!-- <td><input style="width: 100%;" type="text" name="country_son[<?=$row->id;?>]"  value="<?=$row->v_country;?>" ></td> -->
+			    <td><?=form_dropdown('country_son['.$row->id.']', $loc ,set_value('country_son['.$row->id.']',isset($row->v_country)?$row->v_country:''), '   ');?></td>
+				<!-- <td><input style="width: 100%;" type="text" name="gdr_son[<?=$row->id;?>]"  value="<?=$row->v_gender;?>" ></td> -->
+				<td><?=form_dropdown('gdr_son['.$row->id.']', $gender ,set_value('gdr_son['.$row->id.']',isset($row->v_gender)?$row->v_gender:''), '   ');?></td>
 				<td><input style="width: 100%;" type="text" name='bfdate[<?=$row->id;?>]' value="<?= isset($row->v_birth_dt) ? date('d-m-Y',strtotime($row->v_birth_dt)) : '' ?>" onclick="test(<?=$row->id;?>)"  id="datepilih<?=$row->id;?>" readonly autocomplete="off"></td>
 			    <td><input style="width: 100%;" type="text" name="id_son[<?=$row->id;?>]" value="<?=$row->v_ch_id;?>"></td>  
 			    <td><input style="width: 100%;" type="text" name="ps_son[<?=$row->id;?>]" value="<?=$row->v_ch_ps;?>"></td> 
@@ -515,15 +543,22 @@
 			 <?php echo form_hidden('del_c','');?>	
 			<?php }else{ ?>
 			<tr>
-			    <td><input style="width: 100%;" type="text" name="nama_son[]"></td>
-			    <td><input style="width: 100%;" type="text" name="sts_son[]"></td>
-			    <td><input style="width: 100%;" type="text" name="crc_son[]"></td>
-				<td><input style="width: 100%;" type="text" name="school_son[]"></td>
-				<td><input style="width: 100%;" type="text" name="country_son[]"></td>
-				<td><input style="width: 100%;" type="text" name="gdr_son[]"></td>
-			    <td><input style="width: 100%;" type="text" name='bfdate[]' onclick="test(0)"  id="datepilih0" readonly autocomplete="off"></td>
-			    <td><input style="width: 100%;" type="text" name="id_son[]"></td>  
-			    <td><input style="width: 100%;" type="text" name="ps_son[]"></td> 
+			    <td><input style="width: 100%;" type="text" name="nama_son[0]"></td>
+			    <!-- <td><input style="width: 100%;" type="text" name="sts_son[]"></td>
+				<td><input style="width: 100%;" type="text" name="oku[]"></td> -->
+				<td><?=form_dropdown('sts_son[0]', $martial ,'');?></td>
+				<td><?=form_dropdown('oku[0]', $oku ,'');?></td>
+			    <!-- <td><input style="width: 100%;" type="text" name="crc_son[]"></td>
+				<td><input style="width: 100%;" type="text" name="school_son[]"></td> -->
+				<td><?=form_dropdown('crc_son[0]', $status ,'','onchange="ifworking(this,0)"');?></td>
+				<td><?=form_dropdown('school_son[0]', $edu ,'');?></td>
+				<!-- <td><input style="width: 100%;" type="text" name="country_son[]"></td> -->
+				<td><?=form_dropdown('country_son[0]', $loc ,'');?></td>
+				<td><?=form_dropdown('gdr_son[0]', $gender ,'');?></td>
+				<!-- <td><input style="width: 100%;" type="text" name="gdr_son[]"></td> -->
+			    <td><input style="width: 100%;" type="text" name='bfdate[0]' onclick="test(0)"  id="datepilih0" readonly autocomplete="off"></td>
+			    <td><input style="width: 100%;" type="text" name="id_son[0]"></td>  
+			    <td><input style="width: 100%;" type="text" name="ps_son[0]"></td> 
 			    <td><input  type="checkbox" name="record"></td>  
           </tr>
 			<?php } ?>
@@ -578,10 +613,10 @@
 		test(<?=$row->id;?>);
 		<?php } ?>
 		
-
+		// <td><select name='oku[]'><option value='No'>No</option><option value='Yes'>Yes</option></select></td>
         $(".add-row").click(function(){
 			var id=num++;
-            var markup = "<tr><td><input type='text' style='width: 100%;' id='add-tera"+id+"' name='nama_son[]'></td><td><input type='text' style='width: 100%;'  name='sts_son[]'></td><td><input type='text' style='width: 100%;'  name='crc_son[]'></td><td><input type='text' style='width: 100%;' name='school_son[]'></td><td><input type='text' style='width: 100%;' name='country_son[]'></td><td><input type='text' style='width: 100%;' name='gdr_son[]'></td><td><input type='text' name='bfdate[]' autocomplete='off'  style='width: 100%;' id='datepilih"+id+"' readonly></td><td><input type='text' name='id_son[]' style='width: 100%;'></td><td><input type='text' style='width: 100%;' name='ps_son[]'></td><td><input  type='checkbox' name='record'></td></tr>";
+            var markup = "<tr><td><input type='text' style='width: 100%;' id='add-tera"+id+"' name='nama_son["+id+"]'></td><td><select name='sts_son["+id+"]'><option value='Single'>Single</option><option value='Married'>Married</option><option value='Separate'>Separate</option></select></td><td><select name='oku["+id+"]'><option value='No'>No</option><option value='Yes'>Yes</option></select></td><td><select name='crc_son["+id+"]' onchange=ifworking(this,"+id+")><option value='Study'>Study</option><option value='Working'>Working</option></select></td><td><select name='school_son["+id+"]' ><option value='School'>School</option><option value='College'>College</option><option value='IPT'>IPT</option><option value='IPTA'>IPTA</option></select></td><td><select name='country_son["+id+"]'><option value='Local'>Local</option><option value='Oversea'>Oversea</option></select></td><td><select name='gdr_son["+id+"]'><option value='Male'>Male</option><option value='Female'>Female</option></select></td><td><input type='text' name='bfdate["+id+"]' autocomplete='off'  style='width: 100%;' id='datepilih"+id+"' readonly></td><td><input type='text' name='id_son["+id+"]' style='width: 100%;'></td><td><input type='text' style='width: 100%;' name='ps_son["+id+"]'></td><td><input  type='checkbox' name='record'></td></tr>";
             $("#tera tbody").append(markup);
 			test(id);
 			//alert(JSON.parse(arr));
@@ -647,6 +682,9 @@
             });
 			return false;
         });
+
+		
+	
     });   
 
 	  function test(angka){
@@ -654,6 +692,17 @@
 		$("#datepilih"+angka).datepicker({ dateFormat: 'dd-mm-yy', changeYear: true,});
 		
 		   }
+		   function ifworking(work,id){
+			// var x = document.getElementById("mySelect").selectedIndex;
+			// alert(document.getElementsByTagName("option")[x].value);
+			if(work.value=='Working'){
+				document.getElementsByName("school_son["+id+"]")[0].disabled= true;
+			}
+			else{
+				document.getElementsByName("school_son["+id+"]")[0].disabled= false;
+			}
+		}
+		
 </script>
 
 <style type="text/css">

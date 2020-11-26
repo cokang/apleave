@@ -1309,6 +1309,14 @@
 		function usernameFromApsbNo(username){
 			$('.usernameFromApsbNo').val(username);
 		}
+
+		$(function(){
+  $('#emp_apsb').bind('input', function(){
+    $(this).val(function(_, v){
+     return v.replace(/\s+/g, '');
+    });
+  });
+});
 	</script>
 	<style>
 		div.ui-datepicker{

@@ -67,7 +67,7 @@
                 <div class="form-group">
                   <label>Leave From</label>
                   <?php if (in_array($this->input->post('leave_type'), $whatimg)) { ?>
-                  <input name="from_leavedate" id="from" type="text" class="form-control" value="<?php echo set_value('from_leavedate') ?>"/ onchange="return check_days_available()" autocomplete="off">
+                  <input name="from_leavedate" id="from" type="text" class="form-control" value="<?php echo set_value('from_leavedate') ?>"/ onchange="return check_days_available()" readonly autocomplete="off">
                   <?php } else { ?>
                   <input name="from_leavedate" id="from" type="text" class="form-control" value="<?php echo set_value('from_leavedate') ?>"/ disabled="disabled" onchange="return check_days_available()" readonly autocomplete="off">
                   <?php } ?>
@@ -76,7 +76,7 @@
 
                   <?php if ((in_array($this->input->post('leave_type'), $whatimg)) AND $this->input->post('duration') == 'Full Day') { ?>
                   <label>To</label>
-                  <input name="to_leavedate" id="to" type="text" class="form-control" value="<?php echo set_value('to_leavedate') ?>" onchange="return check_days_available()" autocomplete="off" />
+                  <input name="to_leavedate" id="to" type="text" class="form-control" value="<?php echo set_value('to_leavedate') ?>" readonly onchange="return check_days_available()" autocomplete="off" />
                   <?php } elseif ((in_array($this->input->post('leave_type'), $whatimg)) AND $this->input->post('duration') == 'Half Day') { ?>
                   <input name="to_leavedate" id="to" type="text" class="form-control" value="" onchange="return check_days_available()" style="display:none" autocomplete="off" />
                   <?php } else { ?>

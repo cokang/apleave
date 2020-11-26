@@ -1817,13 +1817,18 @@ parent::__construct();
 			}
 		}
 		if( $login_as=="AA" ){
+			//if ($group=="NSMKABEMS") {
+			//	$this->db->where("U.site_state", "NS");
+			//	$this->db->or_where("U.site_state", "MKA");
+			//}else{
 			$this->db->where("U.site_state", $site_state);
 			// $this->db->or_where("U.v_GroupID", $group);
+			//}
 		}
 
 
    $query = $this->db->get()->result_array();
- //echo $this->db->last_query();
+ echo $this->db->last_query();
  //exit();
 	return $query;
 	}

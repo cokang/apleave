@@ -32,7 +32,11 @@ function printfile(id) {
 							<iframe src='<?=base_url()."js/pdfjs/web/viewer.html?file=".base_url()."buletin_file/APP.pdf";?>' id="pdfviewer"></iframe>
 						</div>
 					</div>
-					<iframe hidden src="/app.pdf" id="objAdobePrint" name="objAdobePrint" height="95%" width="100%" frameborder=0></iframe><br>
+          <?php if (substr($this->session->userdata('v_UserName'), 0, 3) == "MGP") { ?>
+					<iframe hidden src="/app2.pdf" id="objAdobePrint" name="objAdobePrint" height="95%" width="100%" frameborder=0></iframe><br>
+          <?php } else {?>
+          <iframe hidden src="/app.pdf" id="objAdobePrint" name="objAdobePrint" height="95%" width="100%" frameborder=0></iframe><br>
+          <?php } ?>
 					<button type="button" class="btn btn-default" value="Print" onclick="javascript:printfile('objAdobePrint');">Print Acknowledgment of Acceptance
 </button>
 				</div>
